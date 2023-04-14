@@ -21,7 +21,7 @@
     "@aws-sdk/client-dynamodb": "3.31.0",
     "@aws-sdk/client-ec2": "3.31.0",
     "aws-cdk-lib": "2.72.0",
-    "cdk-nag": "2.25.5",
+    "cdk-nag": "2.25.11",
     "constructs": "10.0.12",
     "source-map-support": "^0.5.16",
     "vm2": "^3.9.16"

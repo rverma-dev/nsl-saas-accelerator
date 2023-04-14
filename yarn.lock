@@ -3317,10 +3317,10 @@ caseless@^0.12.0, caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-cdk-nag@2.25.5:
-  version "2.25.5"
-  resolved "https://registry.npmjs.org/cdk-nag/-/cdk-nag-2.25.5.tgz"
-  integrity sha512-LTxiNd1BP5NM0ztJ7wAD3r5SNWVkcjbT09OtccFAAZ6xRU3RRVkGxNKqS1rFmdyleNGXpw4Dwe1wkgsc61zppw==
+cdk-nag@2.25.11:
+  version "2.25.11"
+  resolved "https://registry.yarnpkg.com/cdk-nag/-/cdk-nag-2.25.11.tgz#aa103b854e46211fab1bbe99e03453d3050b3d65"
+  integrity sha512-jBIVvXFUHxhPzZEpIoCeMQOcCzolWMpSU9/QSDMeYPS3KtWI8VHDxLkV0CoKvwo1OhdF6vs0uI962dAPR24wug==
 
 chalk@4.1.0:
   version "4.1.0"
