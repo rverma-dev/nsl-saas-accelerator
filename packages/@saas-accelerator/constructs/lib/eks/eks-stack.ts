@@ -6,21 +6,14 @@ import * as kms from 'aws-cdk-lib/aws-kms';
 import * as eks from 'aws-cdk-lib/aws-eks';
 import * as blueprints from '@aws-quickstart/eks-blueprints';
 import * as addons from './addon';
+import { ClusterConstructProps } from './eks-stack-param';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.large')];
-
-export interface ClusterConstructProps {
-  env: { account: string; region: string | undefined };
-  stackName: string;
-  vpcID?: string;
-  platformTeamRole: string;
-  repoBranch: string;
-}
 
 export default class EksCluster {
   testStack!: cdk.Stack;
   constructor(scope: Construct, props: ClusterConstructProps) {
-    const blueprintID = `blueprint-${props.stackName}`;
+    const stackName = props.stackName;
     const teams = [
       new blueprints.PlatformTeam({
         name: 'platform',
@@ -28,10 +21,6 @@ export default class EksCluster {
       }),
     ];
 
-    // Custom resource to fetch VPC ID from SSM Parameter
-    // const vpcId =
-    //   scope.node.tryGetContext('vpcId') ||
-    //   ssm.StringParameter.valueFromLookup(scope, '/devops/network/workspace/vpc/id');
     // AddOns for the cluster.
     const addOns: Array<blueprints.ClusterAddOn> = [
       new blueprints.addons.MetricsServerAddOn(),
@@ -39,8 +28,8 @@ export default class EksCluster {
         kmsKeys: [
           blueprints.getResource(
             context =>
-              new kms.Key(context.scope, `${blueprintID}-ebs-csi-driver`, {
-                alias: `${blueprintID}/csi-driver`,
+              new kms.Key(context.scope, `${stackName}-ebs-csi-driver`, {
+                alias: `${stackName}/csi-driver`,
                 enableKeyRotation: true,
               }),
           ),
@@ -52,7 +41,7 @@ export default class EksCluster {
           ['kubernetes.io/role/internal-elb']: '1',
         },
         securityGroupTags: {
-          [`kubernetes.io/cluster/blueprint-${blueprintID}`]: 'owned',
+          [`kubernetes.io/cluster/blueprint-${stackName}`]: 'owned',
         },
       }),
       new blueprints.addons.AwsLoadBalancerControllerAddOn(),
@@ -65,9 +54,9 @@ export default class EksCluster {
       new blueprints.addons.SecretsStoreAddOn(),
       new addons.FluxV2Addon({
         credentialsType: 'USERNAME',
-        repoBranch: props.repoBranch,
-        repoUrl: cdk.Fn.importValue('CodeCommitRepoUrlExport'),
-        secretName: cdk.Fn.importValue('CodeCommitSecretNameExport'),
+        repoBranch: props.gitopsRepoBranch,
+        repoUrl: props.gitopsRepoUrl,
+        secretName: props.gitopsRepoSecret,
       }),
     ];
 
@@ -92,7 +81,7 @@ export default class EksCluster {
       .clusterProvider(clusterProvider)
       .teams(...teams)
       .enableControlPlaneLogTypes(blueprints.ControlPlaneLogType.API)
-      .build(scope, blueprintID);
+      .build(scope, stackName);
 
     NagSuppressions.addStackSuppressions(
       cluster,
@@ -101,8 +90,10 @@ export default class EksCluster {
         { id: 'AwsSolutions-IAM4', reason: 'Managed IAM Policies' },
         { id: 'AwsSolutions-IAM5', reason: 'Wildcard policies for AWS Load Balancer Controller' },
         { id: 'AwsSolutions-EKS1', reason: 'Public access for demo purposes' },
+        { id: 'AwsSolutions-EKS2', reason: 'Public access for demo purposes' },
         { id: 'AwsSolutions-AS3', reason: 'Notifications disabled' },
         { id: 'AwsSolutions-VPC7', reason: 'Sample code for demo purposes, flow logs disabled' },
+        { id: 'AwsSolutions-KMS5', reason: 'Sample code for demo purposes, flow logs disabled' },
       ],
       true,
     );

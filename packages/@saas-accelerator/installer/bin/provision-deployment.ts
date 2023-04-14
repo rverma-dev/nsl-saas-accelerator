@@ -50,12 +50,15 @@ if (process.env['COMPONENT_ACCOUNT'] === undefined) {
 if (process.env['COMPONENT_REGION'] === undefined) {
   throw new Error('Missing required env variable COMPONENT_REGION');
 }
-
+if (process.env['COMPONENT_WORKSPACE'] === undefined) {
+  throw new Error('Missing workspace env variable COMPONENT_WORKSPACE');
+}
 const newRecord: DeploymentRecord = {
   id: process.env['DEPLOYMENT_ID'],
   type: process.env['DEPLOYMENT_TYPE'],
   account: process.env['COMPONENT_ACCOUNT'],
   region: process.env['COMPONENT_REGION'],
+  workspace: process.env['COMPONENT_WORKSPACE'],
 };
 
 console.log('New deployment record:');
@@ -70,7 +73,7 @@ processRecord(newRecord).catch(error => {
 async function processRecord(record: DeploymentRecord): Promise<void> {
   const regions = await getRegions();
   if (isValidDeploymentRecord(record, regions)) {
-    console.log('Provisioning new deployment ' + record.id);
+    console.log(`Provisioning new deployment ${record.id}`);
     await provisionPipelineStack(record);
   }
 }
@@ -79,7 +82,7 @@ async function processRecord(record: DeploymentRecord): Promise<void> {
 async function provisionPipelineStack(record: DeploymentRecord): Promise<void> {
   const stackName = `${record.type}-${record.id}-pipeline`;
   const command =
-    `npx cdk deploy ${stackName} --require-approval never` +
+    `yarn workspace ${record.workspace} cdk deploy ${stackName} --require-approval never` +
     ` -c deployment_type=${record.type}` +
     ` -c deployment_id=${record.id}` +
     ` -c component_account=${record.account}` +

@@ -33,7 +33,7 @@ export class WorkloadPipelineStack extends Stack {
     super(scope, id, props);
 
     const synthCdkParams = ` -c deployment_type=${props.deploymentType} -c deployment_id=${props.deploymentId}
-     -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region}`;
+     -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region} `;
 
     const codecommitInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
       trigger: GitHubTrigger.NONE,

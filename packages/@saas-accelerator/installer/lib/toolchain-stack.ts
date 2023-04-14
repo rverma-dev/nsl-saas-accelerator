@@ -56,7 +56,11 @@ export class ToolchainStack extends Stack {
           jsonField: 'github_token',
         }),
       }),
-      commands: ['yarn install --frozen-lockfile', 'yarn workspace @saas-accelerator/saas cdk synth -q --verbose'],
+      commands: [
+        'yarn install --frozen-lockfile',
+        'yarn build',
+        'yarn workspace @saas-accelerator/installer cdk synth -q --verbose',
+      ],
     });
 
     const pipeline = new CodePipeline(this, 'cicd-pipeline', {
@@ -108,11 +112,12 @@ export class ToolchainStack extends Stack {
         new CodeBuildStep('update-deployments', {
           commands: [
             'yarn install --frozen-lockfile',
-            'yarn workspace @saas-accelerator/saas ts-node bin/get-deployments.ts',
-            'yarn workspace @saas-accelerator/saas ts-node bin/update-deployments.ts',
+            'yarn build',
+            'yarn workspace @saas-accelerator/installer ts-node bin/get-deployments.ts',
+            'yarn workspace @saas-accelerator/installer ts-node bin/update-deployments.ts',
           ],
           buildEnvironment: {
-            buildImage: LinuxBuildImage.STANDARD_5_0,
+            buildImage: LinuxBuildImage.STANDARD_6_0,
           },
           role: updateDeploymentsRole,
         }),
@@ -128,7 +133,7 @@ export class ToolchainStack extends Stack {
         branchOrRef: 'refs/heads/main',
       }),
       environment: {
-        buildImage: LinuxBuildImage.STANDARD_5_0,
+        buildImage: LinuxBuildImage.STANDARD_6_0,
       },
       buildSpec: BuildSpec.fromObject({
         version: '0.2',
@@ -136,7 +141,8 @@ export class ToolchainStack extends Stack {
           build: {
             commands: [
               'yarn install --frozen-lockfile',
-              'yarn workspace @saas-accelerator/saas ts-node bin/provision-deployment.ts',
+              'yarn build',
+              'yarn workspace @saas-accelerator/installer ts-node bin/provision-deployment.ts',
             ],
           },
         },
@@ -148,30 +154,9 @@ export class ToolchainStack extends Stack {
       new PolicyStatement({
         actions: ['sts:AssumeRole'],
         resources: [
-          'arn:aws:iam::' +
-            this.account +
-            ':role/cdk-' +
-            DefaultStackSynthesizer.DEFAULT_QUALIFIER +
-            '-deploy-role-' +
-            this.account +
-            '-' +
-            this.region,
-          'arn:aws:iam::' +
-            this.account +
-            ':role/cdk-' +
-            DefaultStackSynthesizer.DEFAULT_QUALIFIER +
-            '-file-publishing-role-' +
-            this.account +
-            '-' +
-            this.region,
-          'arn:aws:iam::' +
-            this.account +
-            ':role/cdk-' +
-            DefaultStackSynthesizer.DEFAULT_QUALIFIER +
-            '-image-publishing-role-' +
-            this.account +
-            '-' +
-            this.region,
+          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${this.account}-${this.region}`,
+          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${this.account}-${this.region}`,
+          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${this.account}-${this.region}`,
         ],
         effect: Effect.ALLOW,
       }),
@@ -189,7 +174,7 @@ export class ToolchainStack extends Stack {
 
     // Lambda Function for DynamoDB Streams
     const streamLambda = new Function(this, 'stream-lambda', {
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_18_X,
       handler: 'index.handler',
       code: Code.fromAsset(path.join(__dirname, 'lambdas/stream-lambda')),
       environment: {

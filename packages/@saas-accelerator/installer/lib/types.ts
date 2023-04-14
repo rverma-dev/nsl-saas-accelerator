@@ -16,17 +16,20 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const WORKSPACES = ['@saas-accelerator/eks'] as const;
+
 export interface DeploymentRecord {
   id: string;
   type: string;
   account: string;
   region: string;
+  workspace: string;
 }
 
-export interface Deployment {
-  id: string;
-  type: string;
-  account: string;
-  region: string;
+export interface Deployment extends DeploymentRecord {
   provisioned?: boolean;
+}
+
+export function isValidWorkspace(value: string): value is (typeof WORKSPACES)[number] {
+  return WORKSPACES.includes(value as (typeof WORKSPACES)[number]);
 }

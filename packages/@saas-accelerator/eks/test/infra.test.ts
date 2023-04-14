@@ -33,8 +33,10 @@ describe(testNamePrefix2, () => {
         region: 's-east-1,',
       },
       platformTeamRole: 'AWSAdministratorAccess',
-      repoBranch: 'main',
+      gitopsRepoBranch: 'main',
       stackName: 'demo',
+      gitopsRepoUrl: 'demourl',
+      gitopsRepoSecret: 'demosecret',
     }).testStack,
   );
 });

@@ -17,7 +17,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { Deployment, DeploymentRecord } from './types';
+import { Deployment, DeploymentRecord, isValidWorkspace } from './types';
 import * as path from 'path';
 
 // Read deployment configuration data from disk
@@ -76,6 +76,13 @@ export function isValidDeploymentRecord(record: DeploymentRecord | Deployment, r
   if (!record.region) {
     throw new Error('Missing required attribute region');
   } else if (!regions.includes(record.region)) {
+    throw new Error('Attribute region has invalid AWS region');
+  }
+
+  // Check that attribute workspace exists and is one of correct one
+  if (!record.workspace) {
+    throw new Error('Missing required attribute region');
+  } else if (isValidWorkspace(record.workspace)) {
     throw new Error('Attribute region has invalid AWS region');
   }
 

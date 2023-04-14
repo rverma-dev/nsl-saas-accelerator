@@ -57,6 +57,7 @@ export async function scanDynamoDB(): Promise<Array<DeploymentRecord>> {
         type: item['type'].S as string,
         account: item['account'].S as string,
         region: item['region'].S as string,
+        workspace: item['workspace'].S as string,
       };
       records.push(record);
     });

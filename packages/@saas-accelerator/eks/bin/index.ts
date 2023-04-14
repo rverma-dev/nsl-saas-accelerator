@@ -3,9 +3,9 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { Aspects } from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
-import EksCluster from '@saas-accelerator/constructs/lib/eks/eks-stack';
 import { CodeCommitRepositoryStack } from '../lib/repository-stack';
-import { environmentInputs, stackName } from '../lib/constants';
+import { clusterConstructPropsBuilder } from '@saas-accelerator/constructs/lib/eks/eks-stack-param';
+import EksCluster from '@saas-accelerator/constructs/lib/eks/eks-stack';
 
 const app = new cdk.App();
 const env = { region: 'ap-south-1', account: 'demo' };
@@ -16,9 +16,21 @@ Aspects.of(app).add(new AwsSolutionsChecks());
 new CodeCommitRepositoryStack(app, 'CodeCommitRepositoryStack', { env: env });
 
 // Build an eks cluster
-const appInputs = { env, ...environmentInputs, stackName: stackName };
+const appInputs = clusterConstructPropsBuilder()
+  .withStackName(process.env['STACK_NAME']!)
+  .withVpcID(process.env['VPC_ID']!)
+  .withGitopsRepoBranch(process.env['GITOPS_REPO_BRANCH']!)
+  .withPlatformTeamRole(process.env['PLATFORM_TEAM_ROLE']!)
+  .withGitopsRepoUrl(
+    process.env['GITOPS_REPO_URL'] ? process.env['GITOPS_REPO_URL'] : cdk.Fn.importValue('CodeCommitRepoUrlExport'),
+  )
+  .withGitopsRepoSecret(
+    process.env['GITOPS_REPO_SECRET']
+      ? process.env['GITOPS_REPO_SECRET']
+      : cdk.Fn.importValue('CodeCommitSecretNameExport'),
+  )
+  .build();
 new EksCluster(app, appInputs);
-
 // const r53arc = new Route53ARCStack(app, 'Route53ARCStack', { env: env });
 
 // new EKSStack(app, 'HYD-EKSStack', {

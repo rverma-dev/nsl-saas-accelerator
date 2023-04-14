@@ -41,7 +41,7 @@ let errors = 0;
 console.log('Triggering each configured deployment to self-update.');
 processDeployments(allDeployments).then(
   () => {
-    console.log('Finished with ' + errors + ' error(s).');
+    console.log(`Finished with ${errors} error(s).`);
   },
   (error: Error) => {
     console.error(error);
@@ -51,7 +51,7 @@ processDeployments(allDeployments).then(
 
 function incrementErrors() {
   if (++errors >= error_budget) {
-    console.error('Error budget ' + error_budget + ' exhausted, aborting.');
+    console.error(`Error budget ${error_budget} exhausted, aborting.`);
     process.exit(1);
   }
 }
@@ -63,8 +63,8 @@ async function processDeployments(deployments: Array<Deployment>) {
       continue;
     }
 
-    console.log('Starting execution of ' + deployment.type + ' deployment pipeline ' + deployment.id);
-    const pipelineName = deployment.type + '-' + deployment.id + '-pipeline';
+    console.log(`Starting execution of ${deployment.type} deployment pipeline ${deployment.id}`);
+    const pipelineName = `${deployment.type}-${deployment.id}-pipeline`;
 
     let startResult;
     try {
@@ -81,7 +81,7 @@ async function processDeployments(deployments: Array<Deployment>) {
       continue;
     }
 
-    console.log('Pipeline execution started with executionId ' + startResult.pipelineExecutionId);
+    console.log(`Pipeline execution started with executionId ${startResult.pipelineExecutionId}`);
 
     let waitResult;
     try {

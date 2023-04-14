@@ -41,10 +41,11 @@
     "prettier": "lerna run prettier --stream",
     "test": "lerna run test --stream",
     "test:clean": "rm -f ./test-reports/*.xml",
-    "viper-scan": "aws s3 cp s3://viperlight-scanner/latest/viperlight.zip . && unzip -qo viperlight.zip -d ../viperlight && rm -r ./viperlight.zip && ../viperlight/bin/viperlight scan"
+    "viper-scan": "aws s3 cp s3://viperlight-scanner/latest/viperlight.zip . && unzip -qo viperlight.zip -d ../viperlight && rm -r ./viperlight.zip && ../viperlight/bin/viperlight scan",
+    "lerna-dockerize": "lerna-dockerize"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@nrwl/nx-cloud": "latest",
     "@types/jest": "^29.2.1",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "18.15.11",
@@ -56,20 +57,21 @@
     "conventional-changelog-cli": "^2.2.2",
     "copyfiles": "^2.4.1",
     "eslint": "^8.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
     "fs-extra": "^11.1.1",
     "graceful-fs": "^4.2.10",
     "jest": "^29.2.2",
     "jest-junit": "^15.0.0",
-    "json-schema-to-typescript": "^12.0.0",
     "jest-sonar-reporter": "2.0.0",
+    "json-schema-to-typescript": "^12.0.0",
     "lerna": "^6.6.1",
+    "lerna-dockerize": "^1.0.7",
     "nx": "15.9.2",
     "patch-package": "^6.5.1",
     "prettier": "2.8.7",
@@ -78,8 +80,7 @@
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.19",
-    "typescript": "~5.0.4",
-    "@nrwl/nx-cloud": "latest"
+    "typescript": "~5.0.4"
   },
   "packageManager": "yarn@1.22.19"
 }

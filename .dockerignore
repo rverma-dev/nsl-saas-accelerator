@@ -1,0 +1,8 @@
+*.log
+**/dist/
+**/cdk.out/**
+**/cdk.json
+**/node_modules/**
+**/.prettierrc
+.husky
+.vscode

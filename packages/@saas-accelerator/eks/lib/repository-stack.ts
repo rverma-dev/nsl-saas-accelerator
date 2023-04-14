@@ -51,12 +51,12 @@ export class CodeCommitRepositoryStack extends Stack {
     NagSuppressions.addStackSuppressions(
       this,
       [
-        { id: 'AwsSolutions-L1', reason: 'Internal EKS Construct' },
-        { id: 'AwsSolutions-IAM4', reason: 'Managed IAM Policies' },
-        { id: 'AwsSolutions-IAM5', reason: 'Wildcard policies for AWS Load Balancer Controller' },
-        { id: 'AwsSolutions-EKS1', reason: 'Public access for demo purposes' },
-        { id: 'AwsSolutions-AS3', reason: 'Notifications disabled' },
-        { id: 'AwsSolutions-VPC7', reason: 'Sample code for demo purposes, flow logs disabled' },
+        // { id: 'AwsSolutions-L1', reason: 'Internal EKS Construct' },
+        // { id: 'AwsSolutions-IAM4', reason: 'Managed IAM Policies' },
+        // { id: 'AwsSolutions-IAM5', reason: 'Wildcard policies for AWS Load Balancer Controller' },
+        // { id: 'AwsSolutions-EKS1', reason: 'Public access for demo purposes' },
+        // { id: 'AwsSolutions-AS3', reason: 'Notifications disabled' },
+        // { id: 'AwsSolutions-VPC7', reason: 'Sample code for demo purposes, flow logs disabled' },
       ],
       true,
     );
