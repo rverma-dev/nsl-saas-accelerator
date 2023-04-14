@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-cloudformation": "3.31.0",
-    "@aws-sdk/client-codepipeline": "3.31.0",
+    "@aws-sdk/client-codepipeline": "3.312.0",
     "@aws-sdk/client-dynamodb": "3.31.0",
     "@aws-sdk/client-ec2": "3.31.0",
     "aws-cdk-lib": "2.72.0",
