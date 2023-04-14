@@ -1,0 +1,33 @@
+Config
+
+# Use of opensource-codeofconduct email for amazon is expected
+CODE_OF_CONDUCT.md:4
+
+^cdk.out/
+^dist/
+node_modules/
+
+.html
+.js
+.d.ts
+.snap
+
+yarn.lock
+
+# Ignore typescript documentation
+docs
+
+# Ignore test reports
+source/test-reports
+
+# Ignore runtime logs
+combined.log
+error.log
+
+# Ignore reference custom rules lambda zip files
+.*/attach-ec2-instance-profile.zip
+.*/ec2-instance-profile-permissions.zip
+.*/targetDocumentLambda.zip
+.*/custom-config-rules/sqs-queue-public-policy.zip
+source/packages/@saas-accelerator
+

@@ -1,0 +1,304 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GitopsSecret Construct(GitopsStack):  Snapshot Test 1`] = `
+{
+  "Resources": {
+    "codeCommitSecretCreateGitopsSecretLambdaD568B560": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Description": "AWS Accelerator assets access role in workload accounts to bootstrap gitops credentials",
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+        "RoleName": "AWSLambdaBasicExecutionRole-codeCommitSecret",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "codeCommitSecretCreateGitopsSecretLambdaDefaultPolicyE6BF4509": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "logs:CreateLogGroup",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "secretsmanager:*",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":secretsmanager:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":secret:demo",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "iam:CreateServiceSpecificCredential",
+                "iam:DeleteServiceSpecificCredential",
+                "iam:ListServiceSpecificCredentials",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":iam::",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":user/demo",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "codeCommitSecretCreateGitopsSecretLambdaDefaultPolicyE6BF4509",
+        "Roles": [
+          {
+            "Ref": "codeCommitSecretCreateGitopsSecretLambdaD568B560",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "codeCommitSecretCustomGitopsSecretsframeworkonEventC5B2CBCC": {
+      "DependsOn": [
+        "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleDefaultPolicy4C82C9C8",
+        "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleEE534113",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "REPLACED-GENERATED-NAME.zip",
+        },
+        "Description": "AWS CDK resource provider framework - onEvent (Default/codeCommitSecret/Custom::GitopsSecrets)",
+        "Environment": {
+          "Variables": {
+            "USER_ON_EVENT_FUNCTION_ARN": {
+              "Fn::GetAtt": [
+                "codeCommitSecretFunction749A4ACD",
+                "Arn",
+              ],
+            },
+          },
+        },
+        "Handler": "framework.onEvent",
+        "Role": {
+          "Fn::GetAtt": [
+            "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleEE534113",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleDefaultPolicy4C82C9C8": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "lambda:InvokeFunction",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "codeCommitSecretFunction749A4ACD",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "codeCommitSecretFunction749A4ACD",
+                          "Arn",
+                        ],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleDefaultPolicy4C82C9C8",
+        "Roles": [
+          {
+            "Ref": "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleEE534113",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "codeCommitSecretCustomGitopsSecretsframeworkonEventServiceRoleEE534113": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "codeCommitSecretF2AEED65": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "codeCommitSecretCustomGitopsSecretsframeworkonEventC5B2CBCC",
+            "Arn",
+          ],
+        },
+        "secretName": "demo",
+        "username": "demo",
+      },
+      "Type": "Custom::CodeCommitCredentials",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "codeCommitSecretFunction749A4ACD": {
+      "DependsOn": [
+        "codeCommitSecretCreateGitopsSecretLambdaDefaultPolicyE6BF4509",
+        "codeCommitSecretCreateGitopsSecretLambdaD568B560",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "REPLACED-GENERATED-NAME.zip",
+        },
+        "Description": "Create Gitops Secret",
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "codeCommitSecretCreateGitopsSecretLambdaD568B560",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs16.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "codeCommitSecretFunctionLogGroup8699C01D": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "/aws/lambda/",
+              {
+                "Ref": "codeCommitSecretFunction749A4ACD",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+}
+`;
