@@ -31,13 +31,8 @@ jobs:
     - run: yarn install
     - run: yarn build
     - run: yarn lerna run precommit --stream
-    - run: yarn run test 
-    - name: Jest Coverage Comment
-      uses: MishaKav/jest-coverage-comment@main
+    - uses: mattallty/jest-github-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        title: Jest Coverage
-        badge-title: Coverage
-        hide-comment: false
-        create-new-comment: false
-        hide-summary: false
-        junitxml-path: ./test-reports/junit.xml
+        test-command: "yarn run test"
