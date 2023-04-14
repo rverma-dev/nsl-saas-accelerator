@@ -31,3 +31,4 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn build
     - run: yarn lerna run precommit --stream
+    - run: yarn run test

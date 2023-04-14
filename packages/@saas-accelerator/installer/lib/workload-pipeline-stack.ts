@@ -32,15 +32,8 @@ export class WorkloadPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, props);
 
-    const synthCdkParams =
-      ' -c deployment_type=' +
-      props.deploymentType +
-      ' -c deployment_id=' +
-      props.deploymentId +
-      ' -c component_account=' +
-      props.componentEnv.account +
-      ' -c component_region=' +
-      props.componentEnv.region;
+    const synthCdkParams = ` -c deployment_type=${props.deploymentType} -c deployment_id=${props.deploymentId}
+     -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region}`;
 
     const codecommitInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
       trigger: GitHubTrigger.NONE,
@@ -53,7 +46,8 @@ export class WorkloadPipelineStack extends Stack {
       input: codecommitInput,
       commands: [
         'yarn install --frozen-lockfile',
-        'yarn workspace @saas-accelerator/saas cdk synth -q --verbose' + synthCdkParams,
+        'yarn workspace @saas-accelerator/installer build',
+        'yarn workspace @saas-accelerator/installer cdk synth -q --verbose' + synthCdkParams,
       ],
     });
 
