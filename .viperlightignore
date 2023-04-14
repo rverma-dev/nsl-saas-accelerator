@@ -18,16 +18,8 @@ yarn.lock
 docs
 
 # Ignore test reports
-source/test-reports
+test-reports
 
 # Ignore runtime logs
 combined.log
 error.log
-
-# Ignore reference custom rules lambda zip files
-.*/attach-ec2-instance-profile.zip
-.*/ec2-instance-profile-permissions.zip
-.*/targetDocumentLambda.zip
-.*/custom-config-rules/sqs-queue-public-policy.zip
-source/packages/@saas-accelerator
-

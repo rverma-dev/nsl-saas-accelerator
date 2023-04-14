@@ -8,7 +8,7 @@ import { CodeCommitRepositoryStack } from '../lib/repository-stack';
 import { environmentInputs, stackName } from '../lib/constants';
 
 const app = new cdk.App();
-const env = { region: 'ap-south-1', account: '755502957828' };
+const env = { region: 'ap-south-1', account: 'demo' };
 
 Aspects.of(app).add(new AwsSolutionsChecks());
 

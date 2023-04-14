@@ -4,27 +4,39 @@
 name: Build
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   build:
-
+    name: Build Report
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x]
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'yarn'
     - run: yarn install
     - run: yarn lerna run precommit --stream
     - run: yarn run test 
+    - name: Jest Coverage Comment
+      uses: MishaKav/jest-coverage-comment@main
+      with:
+        title: Jest Coverage
+        badge-title: Coverage
+        hide-comment: false
+        create-new-comment: false
+        hide-summary: false
+        junitxml-path: ./test-reports/junit.xml

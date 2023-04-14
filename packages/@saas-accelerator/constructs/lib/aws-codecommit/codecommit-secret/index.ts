@@ -41,7 +41,6 @@ export async function handler(event: AWSLambda.CloudFormationCustomResourceEvent
           gitUser = codeCommitCreds.ServiceSpecificCredential!.ServiceUserName!;
           gitPassword = codeCommitCreds.ServiceSpecificCredential!.ServicePassword!;
           gitCredId = codeCommitCreds.ServiceSpecificCredential!.ServiceSpecificCredentialId!;
-          console.log(`${gitUser},${gitPassword}, ${gitCredId}`);
 
           const listSecret = await secretsManager
             .listSecrets({
