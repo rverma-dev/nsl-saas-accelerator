@@ -23,7 +23,7 @@
     "@types/node": "18.14.0",
     "esbuild": "0.17.16",
     "eslint": "8.34.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint-config-prettier": "8.8.0",
     "eslint-config-standard": "17.0.0",
     "eslint-import-resolver-node": "0.3.7",
     "eslint-import-resolver-typescript": "3.5.3",
