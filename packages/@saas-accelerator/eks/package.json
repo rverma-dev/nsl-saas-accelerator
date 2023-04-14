@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@saas-accelerator/constructs": "^0.0.1",
-    "aws-cdk-lib": "2.72.0",
+    "aws-cdk-lib": "2.74.0",
     "cdk-nag": "2.25.11",
     "constructs": "10.1.310",
     "source-map-support": "^0.5.16"
@@ -26,7 +26,7 @@
     "@jest/globals": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
-    "aws-cdk": "2.72.0",
+    "aws-cdk": "2.74.0",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-prettier": "4.2.1",
