@@ -77,7 +77,7 @@
     "standard-version": "^9.5.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.23.19",
+    "typedoc": "^0.24.0",
     "typescript": "~5.0.4",
     "@nrwl/nx-cloud": "latest"
   },
