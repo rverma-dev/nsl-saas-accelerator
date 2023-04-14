@@ -16,10 +16,10 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudformation": "3.31.0",
+    "@aws-sdk/client-cloudformation": "3.312.0",
     "@aws-sdk/client-codepipeline": "3.312.0",
-    "@aws-sdk/client-dynamodb": "3.31.0",
-    "@aws-sdk/client-ec2": "3.31.0",
+    "@aws-sdk/client-dynamodb": "3.312.0",
+    "@aws-sdk/client-ec2": "3.312.0",
     "aws-cdk-lib": "2.72.0",
     "cdk-nag": "2.25.11",
     "constructs": "10.0.12",
