@@ -26,3 +26,4 @@ combined.log
 error.log
 
 packages/@saas-accelerator/installer/cdk.out/
+packages/@saas-accelerator/eks/cdk.out/
