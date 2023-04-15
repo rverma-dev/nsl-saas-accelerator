@@ -21,8 +21,8 @@ jobs:
       - name: "Create and Push Image"
         uses: tedivm/action-ecr-publish@v1
         with:
-          aws_account_id: ${{env.AWS_REGION}}
+          aws_account_id: ${{vars.AWS_REGION}}
           aws_region: ap-south-1
-          aws_role_to_assume: arn:aws:iam::${{env.AWS_REGION}}:role/gitHubSaasDeployRole
+          aws_role_to_assume: arn:aws:iam::${{vars.AWS_REGION}}:role/gitHubSaasDeployRole
           dockerfile: packages/@saas-accelerator/eks/Dockerfile
           ecr_repo_name: nsl-saas-accelerator
