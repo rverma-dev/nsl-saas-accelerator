@@ -1,8 +1,10 @@
 import * as AWS from 'aws-sdk';
+import { CloudFormationCustomResourceEvent } from 'aws-lambda';
+
 import * as console from 'console';
 AWS.config.logger = console;
 
-export async function handler(event: AWSLambda.CloudFormationCustomResourceEvent) {
+export async function handler(event: CloudFormationCustomResourceEvent) {
   //print out the event in case manual intervention is needed
   console.log(event);
   const username = event.ResourceProperties['username'];

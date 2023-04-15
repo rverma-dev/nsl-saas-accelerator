@@ -41,8 +41,7 @@
     "prettier": "lerna run prettier --stream",
     "test": "lerna run test --stream",
     "test:clean": "rm -f ./test-reports/*.xml",
-    "viper-scan": "aws s3 cp s3://viperlight-scanner/latest/viperlight.zip . && unzip -qo viperlight.zip -d ../viperlight && rm -r ./viperlight.zip && ../viperlight/bin/viperlight scan",
-    "lerna-dockerize": "lerna-dockerize"
+    "viper-scan": "aws s3 cp s3://viperlight-scanner/latest/viperlight.zip . && unzip -qo viperlight.zip -d ../viperlight && rm -r ./viperlight.zip && ../viperlight/bin/viperlight scan"
   },
   "devDependencies": {
     "@nrwl/nx-cloud": "latest",
@@ -71,7 +70,6 @@
     "jest-sonar-reporter": "2.0.0",
     "json-schema-to-typescript": "^12.0.0",
     "lerna": "^6.6.1",
-    "lerna-dockerize": "^1.0.7",
     "nx": "15.9.2",
     "patch-package": "^6.5.1",
     "prettier": "2.8.7",

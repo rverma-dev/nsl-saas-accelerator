@@ -27,6 +27,7 @@
     "vm2": "^3.9.16"
   },
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "@aws-cdk/assert": "2.68.0",
     "@types/node": "18.15.11",
     "aws-cdk": "2.72.0",

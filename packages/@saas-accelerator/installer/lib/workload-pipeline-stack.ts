@@ -19,7 +19,6 @@
 import { Stack, StackProps, Environment, pipelines, SecretValue } from 'aws-cdk-lib';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs';
-import { ComponentStage } from './component-resources-stack';
 import { REPOSITORY_NAME, CDK_VERSION, REPOSITORY_OWNER, REPOSITORY_SECRET } from './configuration';
 
 interface WorkloadPipelineProps extends StackProps {
@@ -32,10 +31,7 @@ export class WorkloadPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, props);
 
-    const synthCdkParams = ` -c deployment_type=${props.deploymentType} -c deployment_id=${props.deploymentId}
-     -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region} `;
-
-    const codecommitInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
+    const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
       trigger: GitHubTrigger.NONE,
       authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
         jsonField: 'github_token',
@@ -43,29 +39,29 @@ export class WorkloadPipelineStack extends Stack {
     });
 
     const synthStep = new pipelines.CodeBuildStep('synth', {
-      input: codecommitInput,
+      input: sourceInput,
       commands: [
         'yarn install --frozen-lockfile',
         'yarn workspace @saas-accelerator/installer build',
-        'yarn workspace @saas-accelerator/installer cdk synth -q --verbose' + synthCdkParams,
+        `yarn workspace @saas-accelerator/installer cdk synth -q --verbose -c deployment_type=${props.deploymentType} 
+          -c deployment_id=${props.deploymentId} -c component_account=${props.componentEnv.account} -c component_region=$\{props.componentEnv.region} `,
       ],
     });
 
     const pipelineName = props.deploymentType + '-' + props.deploymentId + '-pipeline';
-    const pipeline = new pipelines.CodePipeline(this, pipelineName, {
+    new pipelines.CodePipeline(this, pipelineName, {
       pipelineName: pipelineName,
       selfMutation: true,
       synth: synthStep,
       crossAccountKeys: true,
       cliVersion: CDK_VERSION,
     });
-
-    pipeline.addStage(
-      new ComponentStage(this, props.deploymentId, {
-        deploymentId: props.deploymentId,
-        deploymentType: props.deploymentType,
-        env: props.componentEnv, // defines where the resources will be provisioned
-      }),
-    );
+    // pipeline.addStage(
+    //   new ComponentStage(this, props.deploymentId, {
+    //     deploymentId: props.deploymentId,
+    //     deploymentType: props.deploymentType,
+    //     env: props.componentEnv, // defines where the resources will be provisioned
+    //   }),
+    // );
   }
 }

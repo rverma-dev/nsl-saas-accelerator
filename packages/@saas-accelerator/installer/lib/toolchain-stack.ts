@@ -16,7 +16,8 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Stack, StackProps, RemovalPolicy, DefaultStackSynthesizer, SecretValue } from 'aws-cdk-lib';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Stack, StackProps, RemovalPolicy, DefaultStackSynthesizer, SecretValue, Duration } from 'aws-cdk-lib';
 import { CodeBuildStep, CodePipelineSource, CodePipeline } from 'aws-cdk-lib/pipelines';
 import { LinuxBuildImage, Project, Source, BuildSpec } from 'aws-cdk-lib/aws-codebuild';
 import { Role, ServicePrincipal, PolicyDocument, PolicyStatement, Effect, Policy } from 'aws-cdk-lib/aws-iam';
@@ -31,8 +32,10 @@ import {
   CDK_VERSION,
   REPOSITORY_OWNER,
   REPOSITORY_SECRET,
+  GITHUB_DOMAIN,
 } from './configuration';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { Repository } from 'aws-cdk-lib/aws-ecr';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -201,5 +204,26 @@ export class ToolchainStack extends Stack {
         startingPosition: StartingPosition.LATEST,
       }),
     );
+
+    new Repository(this, 'nsl-saas-accelerator');
+    const ghProvider = new iam.OpenIdConnectProvider(this, 'githubProvider', {
+      url: `https://${GITHUB_DOMAIN}`,
+      clientIds: ['sts.amazonaws.com'],
+    });
+
+    const conditions: iam.Conditions = {
+      StringLike: {
+        [`${GITHUB_DOMAIN}:sub`]: `repo:${REPOSITORY_OWNER}/${REPOSITORY_NAME}:main'}`,
+      },
+    };
+
+    new iam.Role(this, 'gitHubSaasDeployRole', {
+      assumedBy: new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions),
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')],
+      roleName: 'gitHubSaasDeployRole',
+      description: 'This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account',
+      maxSessionDuration: Duration.hours(1),
+    });
+    new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
   }
 }

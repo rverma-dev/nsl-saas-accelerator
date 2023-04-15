@@ -12,4 +12,4 @@
  */
 
 export * from './lib/aws-codecommit/gitops-user';
-export * from './lib/eks/eks-stack';
+export * from './lib/aws-eks/eks-stack';

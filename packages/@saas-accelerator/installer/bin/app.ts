@@ -67,7 +67,6 @@ if (!deploymentType) {
   console.log('component_region: ' + componentRegion);
 
   new WorkloadPipelineStack(app, stackName, {
-    stackName,
     deploymentId,
     deploymentType,
     env: TOOLCHAIN_ENV,
