@@ -85,9 +85,11 @@ export class AssumeRoleProviderSource implements CredentialProviderSource {
     if (this.props.credentials) {
       sts = new AWS.STS({
         region: this.props.region,
-        accessKeyId: this.props.credentials.AccessKeyId,
-        secretAccessKey: this.props.credentials.SecretAccessKey,
-        sessionToken: this.props.credentials.SessionToken,
+        credentials: {
+          accessKeyId: this.props.credentials.AccessKeyId,
+          secretAccessKey: this.props.credentials.SecretAccessKey,
+          sessionToken: this.props.credentials.SessionToken,
+        },
         httpOptions,
       });
     } else {

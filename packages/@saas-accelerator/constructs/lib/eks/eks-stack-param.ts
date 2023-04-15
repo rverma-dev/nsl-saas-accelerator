@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
+
 export interface ClusterConstructProps extends cdk.StackProps {
   stackName: string;
   vpcID?: string;
