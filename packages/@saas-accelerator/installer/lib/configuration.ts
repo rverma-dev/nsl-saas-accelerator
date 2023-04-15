@@ -18,7 +18,7 @@
 
 export const DEPLOYMENT_TABLE_NAME = 'saas-deployments'; // DynamoDB table name that will be created for deployment management
 export const REPOSITORY_OWNER = 'rverma-nsl'; // CodeCommit repository name that holds the code
-export const REPOSITORY_NAME = 'landing-zone-accelerator-on-aws'; // CodeCommit repository name that holds the code
+export const REPOSITORY_NAME = 'nsl-saas-accelerator'; // CodeCommit repository name that holds the code
 export const REPOSITORY_SECRET = 'saas-provisoner'; // CodeCommit repository name that holds the code
 
 export const GITHUB_DOMAIN = 'token.actions.githubusercontent.com';
