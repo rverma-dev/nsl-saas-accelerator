@@ -17,7 +17,7 @@
   "dependencies": {
     "@saas-accelerator/constructs": "^0.0.1",
     "aws-cdk-lib": "2.72.0",
-    "cdk-nag": "2.25.11",
+    "cdk-nag": "2.25.12",
     "constructs": "10.1.310",
     "source-map-support": "^0.5.16"
   },

@@ -22,7 +22,7 @@
     "@jest/globals": "^29.5.0",
     "@aws-quickstart/eks-blueprints": "^1.6.1",
     "aws-cdk-lib": "2.72.0",
-    "cdk-nag": "2.25.11",
+    "cdk-nag": "2.25.12",
     "js-yaml": "^4.1.0",
     "sync-request": "^6.1.0"
   },
