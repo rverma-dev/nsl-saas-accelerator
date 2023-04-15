@@ -23,6 +23,6 @@ jobs:
         with:
           aws_account_id: ${{vars.AWS_REGION}}
           aws_region: ap-south-1
-          aws_role_to_assume: arn:aws:iam::${{vars.AWS_REGION}}:role/gitHubSaasDeployRole
+          aws_role_to_assume: gitHubSaasDeployRole
           dockerfile: packages/@saas-accelerator/eks/Dockerfile
           ecr_repo_name: nsl-saas-accelerator
