@@ -1,0 +1,28 @@
+name: Push to ECR
+
+on:
+  push:
+    branches: [ 'main' ]
+  release:
+    types: [ 'published' ]
+
+jobs:
+  push-container:
+    runs-on: ubuntu-latest
+
+    # These permissions are needed to interact with GitHub's OIDC Token endpoint.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: "Create and Push Image"
+        uses: explosion/action-ecr-publish@v1
+        with:
+          aws_account_id: ${{env.AWS_REGION}}
+          aws_region: ap-south-1
+          aws_role_to_assume: arn:aws:iam::${{env.AWS_REGION}}:role/gitHubSaasDeployRole
+          dockerfile: packages/@saas-accelerator/eks/Dockerfile
+          ecr_repo_name: nsl-saas-accelerator

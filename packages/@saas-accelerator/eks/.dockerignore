@@ -1,2 +1,13 @@
+*.log
+**/dist/
+**/cdk.out/**
+**/node_modules/**
+**/.prettierrc
+.husky
+.vscode
+**/test**
+**/LICENSE**
+**/README**
+**/jest.config.js
 cdk.context.json
 proton-inputs.env

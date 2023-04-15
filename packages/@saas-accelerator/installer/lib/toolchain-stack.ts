@@ -205,7 +205,7 @@ export class ToolchainStack extends Stack {
       }),
     );
 
-    new Repository(this, 'nsl-saas-accelerator');
+    new Repository(this, 'nsl-saas-accelerator', { repositoryName: 'nsl-saas-accelerator' });
     const ghProvider = new iam.OpenIdConnectProvider(this, 'githubProvider', {
       url: `https://${GITHUB_DOMAIN}`,
       clientIds: ['sts.amazonaws.com'],
@@ -213,7 +213,7 @@ export class ToolchainStack extends Stack {
 
     const conditions: iam.Conditions = {
       StringLike: {
-        [`${GITHUB_DOMAIN}:sub`]: `repo:${REPOSITORY_OWNER}/${REPOSITORY_NAME}:main'}`,
+        [`${GITHUB_DOMAIN}:sub`]: `repo:${REPOSITORY_OWNER}/${REPOSITORY_NAME}:main`,
       },
     };
 

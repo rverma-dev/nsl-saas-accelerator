@@ -6,6 +6,7 @@ CODE_OF_CONDUCT.md:4
 ^cdk.out/
 ^dist/
 node_modules/
+^.cache/
 
 .html
 .js
@@ -23,3 +24,5 @@ test-reports
 # Ignore runtime logs
 combined.log
 error.log
+
+packages/@saas-accelerator/installer/cdk.out/
