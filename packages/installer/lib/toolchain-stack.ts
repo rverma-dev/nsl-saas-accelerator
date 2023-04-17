@@ -206,12 +206,32 @@ export class ToolchainStack extends Stack {
       },
     };
 
+    const githubActionPolicy = new PolicyDocument({
+      statements: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          resources: ['*'],
+          actions: [
+            'ecr:BatchGetImage',
+            'ecr:BatchCheckLayerAvailability',
+            'ecr:CompleteLayerUpload',
+            'ecr:GetDownloadUrlForLayer',
+            'ecr:InitiateLayerUpload',
+            'ecr:PutImage',
+            'ecr:UploadLayerPart',
+          ],
+        }),
+      ],
+    });
+
     new iam.Role(this, 'gitHubSaasDeployRole', {
       assumedBy: new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions),
-      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')],
       roleName: 'gitHubSaasDeployRole',
       description: 'This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account',
       maxSessionDuration: Duration.hours(1),
+      inlinePolicies: {
+        githubAction: githubActionPolicy,
+      },
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
   }
