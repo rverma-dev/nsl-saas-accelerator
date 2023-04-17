@@ -18,11 +18,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-region: ap-south-1
-          role-to-assume: arn:aws:iam::${{vars.AWS_REGION}}:role/gitHubSaasDeployRole
       - name: "Create and Push Image"
         uses: tedivm/action-ecr-publish@v1
         with:

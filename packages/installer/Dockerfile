@@ -19,5 +19,6 @@ RUN yarn build
 FROM node:18-slim
 COPY --from=base /app/packages/installer /app
 COPY --from=base /app/tsconfig.json /app/tsconfig.json
+COPY --from=base /app/node_modules /app/node_modules
 WORKDIR /app
 CMD ["/bin/bash"]
