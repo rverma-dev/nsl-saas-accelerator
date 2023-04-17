@@ -202,7 +202,7 @@ export class ToolchainStack extends Stack {
 
     const conditions: iam.Conditions = {
       StringLike: {
-        [`${GITHUB_DOMAIN}:sub`]: `repo:${REPOSITORY_OWNER}/${REPOSITORY_NAME}:main`,
+        [`${GITHUB_DOMAIN}:sub`]: `repo:${REPOSITORY_OWNER}/${REPOSITORY_NAME}:*`,
       },
     };
 
