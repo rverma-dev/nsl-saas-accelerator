@@ -3,8 +3,8 @@
 package-lock.json
 !jest.config.js
 !setEnvVars.js
-*.d.ts
-*.tsbuildinfo
+**/*.d.ts
+**/*.tsbuildinfo
 node_modules
 dist
 !/.typescript/lambda/**/*.js
@@ -14,8 +14,8 @@ dist
 *.log
 
 ### CDK asset staging directory
-.cdk.staging
-cdk.out
+**/.cdk.staging
+**/cdk.out
 
 !**/cdk-solution-helper/index.js
 !**/update-pipeline-github-token/index.js
@@ -31,7 +31,7 @@ source/.yarn
 !source/.yarn/plugins/@yarnpkg/plugin-workspace-tools.cjs
 
 ### jest coverage folder
-coverage/
+**/coverage/
 
 ### VisualStudioCode ###
 .vscode/*
@@ -53,11 +53,11 @@ source/lerna-debug.log
 **/test-report.xml
 
 ### Logger files
-*.log
+**/*.log
 
 ### Debugging 
 development
-
+**/node_modules
 
 ### Viperlight
 viperlight*.zip
@@ -69,3 +69,4 @@ viperlight*.zip
 *.js.map
 # nx/tasks-runners/default
 # @nrwl/nx-cloud
+**/.envrc

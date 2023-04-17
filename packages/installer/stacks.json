@@ -1,0 +1,26 @@
+[
+  {
+    "name": "demo",
+    "dockerImage": "latest"
+  },
+  {
+    "name": "eks",
+    "dockerImage": "latest"
+  },
+  {
+    "name": "dataplane",
+    "dockerImage": "latest"
+  },
+  {
+    "name": "migration-services",
+    "dockerImage": "latest"
+  },
+  {
+    "name": "ai-services",
+    "dockerImage": "latest"
+  },
+  {
+    "name": "chatbot",
+    "dockerImage": "latest"
+  }
+]

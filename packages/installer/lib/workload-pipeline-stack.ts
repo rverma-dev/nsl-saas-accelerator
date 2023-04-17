@@ -1,0 +1,72 @@
+/*
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: MIT-0
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the Software
+ * without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import { aws_codebuild, aws_ecr, Environment, pipelines, SecretValue, Stack, StackProps } from 'aws-cdk-lib';
+import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { Construct } from 'constructs';
+import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_OWNER, REPOSITORY_SECRET } from './configuration';
+import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
+
+interface WorkloadPipelineProps extends StackProps {
+  deploymentId: string;
+  componentEnv: Environment;
+  deploymentType: string;
+}
+
+export class WorkloadPipelineStack extends Stack {
+  constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
+    super(scope, id, props);
+    const [stackName, stackVersion] = props.deploymentId.split(':');
+
+    const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
+      trigger: GitHubTrigger.NONE,
+      authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
+        jsonField: 'github_token',
+      }),
+    });
+
+    const ecrRepo = new aws_ecr.Repository(this, `nsa-${stackName}`, { repositoryName: `nsa-${stackName}` });
+    const synthStep = new pipelines.CodeBuildStep('synth', {
+      input: sourceInput,
+      buildEnvironment: {
+        buildImage: aws_codebuild.LinuxBuildImage.fromEcrRepository(ecrRepo, stackVersion),
+        computeType: ComputeType.SMALL,
+      },
+      commands: [
+        `yarn cdk synth -q --verbose -c deployment_type=${props.deploymentType} -c deployment_id=${props.deploymentId}
+         -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region} `,
+      ],
+    });
+
+    const pipelineName = props.deploymentType + '-' + props.deploymentId + '-pipeline';
+    new pipelines.CodePipeline(this, pipelineName, {
+      pipelineName: pipelineName,
+      selfMutation: true,
+      synth: synthStep,
+      crossAccountKeys: true,
+      cliVersion: CDK_VERSION,
+    });
+    // pipeline.addStage(
+    //   new ComponentStage(this, props.deploymentId, {
+    //     deploymentId: props.deploymentId,
+    //     deploymentType: props.deploymentType,
+    //     env: props.componentEnv, // defines where the resources will be provisioned
+    //   }),
+    // );
+  }
+}

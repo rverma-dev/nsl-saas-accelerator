@@ -5,8 +5,4 @@
   "version": "2.0.0",
   "useNx": true,
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "lerna-dockerize": {
-    "templateDockerfileName": "Dockerfile.template",
-    "baseDockerfileName": "Dockerfile.base"
-  }
 }
