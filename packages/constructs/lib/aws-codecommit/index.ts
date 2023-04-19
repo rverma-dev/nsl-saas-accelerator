@@ -80,7 +80,7 @@ export class CreateGitopsSecretResource extends Construct {
     //
     const providerLambda = new cdk.aws_lambda.Function(this, 'Function', {
       runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
-      code: cdk.aws_lambda.Code.fromAsset(path.join(__dirname, 'codecommit-secret/dist')),
+      code: cdk.aws_lambda.Code.fromAsset(path.join(__dirname, 'lambda-codecommit-secret/dist')),
       handler: 'index.handler',
       timeout: cdk.Duration.minutes(15),
       description: 'Create Gitops Secret',

@@ -1,0 +1,31 @@
+{
+  "name": "@nsa/dynamo-stream",
+  "version": "0.0.0",
+  "description": "Custom resource Lambda",
+  "author": {
+    "name": "Amazon Web Services",
+    "url": "https://aws.amazon.com/solutions"
+  },
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "cleanup": "tsc --build ./ --clean && rm -rf node_modules && rm -rf yarn.lock && rm -rf dist && rm -rf cdk.out",
+    "cleanup:tsc": "tsc --build ./ --clean",
+    "build": "esbuild --minify --bundle --outfile=./dist/index.js --platform=node --target=node14 --external:aws-sdk index.ts",
+    "test": "",
+    "lint": "eslint --fix  --max-warnings 0 -c ../../../../.eslintrc.json '**/*.{ts,tsx}' --ignore-pattern \"*.d.ts\" ",
+    "precommit": "eslint --max-warnings 0 -c ../../../../.eslintrc.json '**/*.{ts,tsx}' --ignore-pattern \"*.d.ts\" "
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.114",
+    "@types/node": "18.15.11",
+    "aws-lambda": "^1.0.7",
+    "esbuild": "0.17.17",
+    "eslint": "^8.38.0",
+    "typescript": "~5.0.4"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1360.0"
+  }
+}

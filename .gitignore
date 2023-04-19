@@ -26,9 +26,13 @@ temp/
 
 ### yarn files
 yarn-error.log
-source/.yarn
-!source/.yarn/releases/yarn-3.5.0.cjs
-!source/.yarn/plugins/@yarnpkg/plugin-workspace-tools.cjs
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 ### jest coverage folder
 **/coverage/

@@ -170,7 +170,7 @@ export class ToolchainStack extends Stack {
     const streamLambda = new Function(this, 'stream-lambda', {
       runtime: Runtime.NODEJS_18_X,
       handler: 'index.handler',
-      code: Code.fromAsset(path.join(__dirname, 'lambdas/stream-lambda')),
+      code: Code.fromAsset(path.join(__dirname, 'lambda-stream/dist')),
       environment: {
         PROJECT_NAME: 'provisioning-project',
       },
