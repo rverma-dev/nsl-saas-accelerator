@@ -17,7 +17,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { Deployment, DeploymentRecord, isValidStack } from './types';
+import { Deployment, DeploymentRecord, isValidTier } from './types';
 import * as path from 'path';
 
 // Read deployment configuration data from disk
@@ -52,10 +52,16 @@ export function saveConfig(data: Array<Deployment>, jsonFile: string): void {
 // Validate deployment records read from DynamoDB database.
 export function isValidDeploymentRecord(record: DeploymentRecord | Deployment, regions: Array<string>): boolean {
   // Check that attribute id exists and doesn't contain whitespaces
-  if (!record.tenantID) {
+  if (!record.id) {
     throw new Error('Missing required attribute ID');
-  } else if (RegExp('\\s').test(record.tenantID)) {
+  } else if (RegExp('\\s').test(record.id)) {
     throw new Error('Attribute ID contains whitespace characters');
+  }
+
+  if (!record.tenantId) {
+    throw new Error('Missing required attribute Tenant ID');
+  } else if (RegExp('\\s').test(record.tenantId)) {
+    throw new Error('Attribute Tenant ID contains whitespace characters');
   }
 
   // Check that attribute type exists and is either of silo or pool
@@ -80,10 +86,10 @@ export function isValidDeploymentRecord(record: DeploymentRecord | Deployment, r
   }
 
   // Check that attribute region exists and is one of correct regions
-  if (!record.stackName) {
-    throw new Error('Missing required attribute stackName');
-  } else if (isValidStack(record.stackName)) {
-    throw new Error('Attribute region has invalid AWS region');
+  if (!record.tier) {
+    throw new Error('Missing required attribute deployment size');
+  } else if (isValidTier(record.tier)) {
+    throw new Error('Attribute deployment size has invalid Value');
   }
   return true;
 }

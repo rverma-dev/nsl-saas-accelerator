@@ -40,7 +40,7 @@ export class ToolchainStack extends Stack {
         type: AttributeType.STRING,
       },
       sortKey: {
-        name: 'stackName',
+        name: 'id',
         type: AttributeType.STRING,
       },
       stream: StreamViewType.NEW_AND_OLD_IMAGES,
@@ -67,6 +67,7 @@ export class ToolchainStack extends Stack {
           computeType: ComputeType.SMALL,
         },
         commands: ['cd /app', 'yarn cdk synth -q --verbose'],
+        primaryOutputDirectory: '/app/cdk.out',
       }),
     });
 

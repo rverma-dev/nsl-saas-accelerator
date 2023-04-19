@@ -1,32 +1,16 @@
 {
-  "name": "nsl-saas-accelerator-on-aws",
+  "name": "@nsa/aws",
   "private": true,
+  "version": "0.0.0",
   "description": "Nsl SAAS Accelerator on AWS",
-  "license": "Apache-2.0",
   "author": {
     "name": "Amazon Web Services",
     "url": "https://aws.amazon.com/solutions"
   },
   "workspaces": {
     "packages": [
-      "packages/cdk-extensions",
-      "packages/cdk-plugin-assume-role",
-      "packages/constructs",
-      "packages/constructs/lib/aws-*/*",
-      "packages/eks",
-      "packages/installer"
-    ],
-    "nohoist": [
-      "**/deepmerge",
-      "**/deepmerge/**",
-      "**/npmlog",
-      "**/npmlog/**",
-      "**/@types/npmlog",
-      "**/@types/npmlog/**",
-      "**/deep-diff",
-      "**/deep-diff/**",
-      "**/@types/deep-diff",
-      "**/@types/deep-diff/**"
+      "packages/constructs/lib/aws-codecommit/codecommit-secret",
+      "packages/*"
     ]
   },
   "scripts": {
@@ -43,28 +27,28 @@
     "viper-scan": "aws s3 cp s3://viperlight-scanner/latest/viperlight.zip . && unzip -qo viperlight.zip -d ../viperlight && rm -r ./viperlight.zip && ../viperlight/bin/viperlight scan"
   },
   "devDependencies": {
-    "@nrwl/nx-cloud": "latest",
-    "@types/jest": "^29.2.1",
+    "@nrwl/nx-cloud": "^15.3.5",
+    "@types/jest": "^29.5.0",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "18.15.11",
     "@types/prettier": "2.7.2",
     "@types/semver": "^7.3.13",
     "@types/uuid": "^9.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
     "conventional-changelog-cli": "^2.2.2",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.26.0",
+    "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-promise": "^6.1.1",
     "fs-extra": "^11.1.1",
-    "graceful-fs": "^4.2.10",
-    "jest": "^29.2.2",
+    "graceful-fs": "^4.2.11",
+    "jest": "^29.5.0",
     "jest-junit": "^16.0.0",
     "jest-sonar-reporter": "2.0.0",
     "json-schema-to-typescript": "^12.0.0",
@@ -72,12 +56,16 @@
     "nx": "15.9.2",
     "patch-package": "^6.5.1",
     "prettier": "2.8.7",
-    "semver": "^7.4.0",
+    "semver": "^7.5.0",
     "standard-version": "^9.5.0",
-    "ts-jest": "^29.0.3",
+    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.23.19",
+    "typedoc": "^0.24.4",
     "typescript": "~5.0.4"
   },
-  "packageManager": "yarn@1.22.19"
+  "resolutions": {
+    "aws-cdk": "2.72.0",
+    "aws-cdk-lib": "2.72.0"
+  },
+  "packageManager": "yarn@3.5.0"
 }

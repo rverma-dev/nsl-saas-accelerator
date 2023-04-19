@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DemoApprunnerStack Stack(DemoApprunnerStack):  Snapshot Test 1`] = `
+{
+  "Resources": {
+    "apprunner": {
+      "Properties": {
+        "ServiceName": "string-string-solution",
+        "SourceConfiguration": {
+          "ImageRepository": {
+            "ImageIdentifier": "public.ecr.aws/aws-containers/hello-app-runner:latest",
+            "ImageRepositoryType": "ECR_PUBLIC",
+          },
+        },
+      },
+      "Type": "AWS::AppRunner::Service",
+    },
+  },
+}
+`;

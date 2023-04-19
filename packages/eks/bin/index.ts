@@ -22,10 +22,12 @@ const appInputs = clusterPropsBuilder()
   .withGitopsRepoBranch(app.node.tryGetContext('GITOPS_REPO_BRANCH')!)
   .withPlatformTeamRole(app.node.tryGetContext('PLATFORM_TEAM_ROLE')!)
   .withGitopsRepoUrl(
-  app.node.tryGetContext('GITOPS_REPO_URL') ? app.node.tryGetContext('GITOPS_REPO_URL') : cdk.Fn.importValue('CodeCommitRepoUrlExport'),
+    app.node.tryGetContext('GITOPS_REPO_URL')
+      ? app.node.tryGetContext('GITOPS_REPO_URL')
+      : cdk.Fn.importValue('CodeCommitRepoUrlExport'),
   )
   .withGitopsRepoSecret(
-  app.node.tryGetContext('GITOPS_REPO_SECRET')
+    app.node.tryGetContext('GITOPS_REPO_SECRET')
       ? app.node.tryGetContext('GITOPS_REPO_SECRET')
       : cdk.Fn.importValue('CodeCommitSecretNameExport'),
   )

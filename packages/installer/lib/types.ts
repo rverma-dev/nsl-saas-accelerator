@@ -15,21 +15,24 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import STACKS from '../stacks.json';
+import TIER from '../stacks.json';
 
 export interface DeploymentRecord {
-  tenantID: string;
+  tenantId: string; // callhealth
+  id: string; // dev1, dev2, prod1, prod2
   type: string; // can be pool or silo
-  stackName: string;
+  tier: string; // small
   account: string;
   region: string;
-  input?: Record<string, string>;
 }
 
 export interface Deployment extends DeploymentRecord {
   provisioned?: boolean;
-  output?: Record<string, string>;
 }
-export function isValidStack(stackName: string): boolean {
-  return STACKS.some(stack => stack.name === stackName);
+export function isValidTier(tierName: string): boolean {
+  return TIER.some(tier => tier.name === tierName);
+}
+
+export function getPipeline(record: DeploymentRecord): string {
+  return `${record.tenantId}-${record.id}-${record.type}-pipeline`;
 }

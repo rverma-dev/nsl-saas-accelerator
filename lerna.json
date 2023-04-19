@@ -2,7 +2,12 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "rejectCycles": true,
-  "version": "2.0.0",
+  "version": "0.0.1",
   "useNx": true,
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "command": {
+    "version": {
+      "syncWorkspaceLock": true
+    }
+  }
 }

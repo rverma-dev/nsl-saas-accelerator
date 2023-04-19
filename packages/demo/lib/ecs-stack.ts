@@ -20,10 +20,14 @@ import { Stack, StackProps, Stage, StageProps } from 'aws-cdk-lib';
 import { CfnService } from 'aws-cdk-lib/aws-apprunner';
 import { Construct } from 'constructs';
 
-interface DemoApprunnerStackProps extends StackProps {
+interface Deployment {
+  tenantID: string;
   deploymentId: string;
   deploymentType: string;
+  deploymentTier: string;
 }
+
+interface DemoApprunnerStackProps extends Deployment, StackProps {}
 
 export class DemoApprunnerStack extends Stack {
   constructor(scope: Construct, id: string, props: DemoApprunnerStackProps) {
@@ -41,23 +45,18 @@ export class DemoApprunnerStack extends Stack {
   }
 }
 
-interface ComponentStageProps extends StageProps {
-  deploymentId: string;
-  deploymentType: string;
-}
+interface ComponentStageProps extends Deployment, StageProps {}
 
 export class ComponentStage extends Stage {
   constructor(scope: Construct, id: string, props: ComponentStageProps) {
     super(scope, id, props);
 
-    // The starting point of your component resource stack(s)
-    // props.deploymentId contains the deployment id
-    // props.deploymentType contains the deployment type (silo or pool)
-
     new DemoApprunnerStack(this, props.deploymentId, {
-      stackName: props.deploymentType + '-' + props.deploymentId + '-resources',
+      tenantID: props.tenantID,
       deploymentId: props.deploymentId,
       deploymentType: props.deploymentType,
+      deploymentTier: props.deploymentTier,
+      stackName: props.deploymentType + '-' + props.deploymentId + '-resources',
     });
 
     // Additional stacks can be defined here, in case your

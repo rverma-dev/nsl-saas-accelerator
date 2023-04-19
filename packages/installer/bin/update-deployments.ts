@@ -20,7 +20,7 @@
 
 import { startPipelineExecution, waitPipelineExecution } from '../lib/apitools';
 import { readConfig } from '../lib/configtools';
-import { Deployment } from '../lib/types';
+import { Deployment, getPipeline } from '../lib/types';
 
 /*
  * update-deployments implements the control flow and logic of how updates are
@@ -59,12 +59,12 @@ function incrementErrors() {
 async function processDeployments(deployments: Array<Deployment>) {
   for (const deployment of deployments) {
     if (!deployment.provisioned) {
-      console.log('Ignoring unprovisioned deployment ' + deployment.tenantID);
+      console.log('Ignoring unprovisioned deployment ' + deployment.tenantId);
       continue;
     }
 
-    console.log(`Starting execution of ${deployment.type} deployment pipeline ${deployment.tenantID}`);
-    const pipelineName = `${deployment.type}-${deployment.tenantID}-pipeline`;
+    const pipelineName = getPipeline(deployment);
+    console.log(`Starting execution of ${deployment.account}/${deployment.region} deployment pipeline ${pipelineName}`);
 
     let startResult;
     try {

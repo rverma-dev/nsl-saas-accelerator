@@ -1,24 +1,23 @@
 FROM node:18 as base
 WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED 1
 
 # Dependencies
-COPY ./package.json ./
-COPY ./yarn.lock ./
-COPY ./lerna.json ./
-COPY ./tsconfig.json ./
-RUN yarn install --frozen-lockfile
-
-WORKDIR /app/packages/installer
-COPY  packages/installer/package.json package.json
+COPY .yarn ./.yarn
+COPY .yarnrc.yml package.json lerna.json tsconfig.json yarn.lock* nx.json ./
+COPY packages/installer/package.json packages/installer/yarn.lock* ./packages/installer/
+COPY packages/demo/package.json packages/demo/yarn.lock* ./packages/demo/
 RUN yarn install
 
-WORKDIR /app/packages/installer
-COPY  packages/installer ./
+# Build app
+FROM base as build
+COPY packages/installer ./packages/installer/
+COPY packages/demo ./packages/demo/
 RUN yarn build
 
 FROM node:18-slim
-COPY --from=base /app/packages/installer /app
-COPY --from=base /app/tsconfig.json /app/tsconfig.json
-COPY --from=base /app/node_modules /app/node_modules
+COPY --from=build /app/packages/installer /app
+COPY --from=build /app/packages/demo /demo
+COPY --from=build /app/node_modules /app/node_modules
 WORKDIR /app
 CMD ["/bin/bash"]

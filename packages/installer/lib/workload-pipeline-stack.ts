@@ -16,57 +16,59 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { aws_codebuild, aws_ecr, Environment, pipelines, SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { aws_codebuild, aws_ecr, pipelines, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_OWNER, REPOSITORY_SECRET } from './configuration';
+import { CDK_VERSION } from './configuration';
 import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
+import { DeploymentRecord, getPipeline } from './types';
+import { CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import { ComponentStage } from '@nsa/demo';
 
-interface WorkloadPipelineProps extends StackProps {
-  deploymentId: string;
-  componentEnv: Environment;
-  deploymentType: string;
-}
+export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, props);
-    const [stackName, stackVersion] = props.deploymentId.split(':');
 
-    const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
-      trigger: GitHubTrigger.NONE,
-      authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
-        jsonField: 'github_token',
-      }),
-    });
-
-    const ecrRepo = new aws_ecr.Repository(this, `nsa-${stackName}`, { repositoryName: `nsa-${stackName}` });
+    const ecrRepo = aws_ecr.Repository.fromRepositoryName(this, 'get-installer-repo', 'nsa-installer');
+    const ecrInput = CodePipelineSource.ecr(ecrRepo, { imageTag: 'latest' });
+    // const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
+    //   trigger: GitHubTrigger.NONE,
+    //   authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
+    //     jsonField: 'github_token',
+    //   }),
+    // });
     const synthStep = new pipelines.CodeBuildStep('synth', {
-      input: sourceInput,
+      input: ecrInput,
       buildEnvironment: {
-        buildImage: aws_codebuild.LinuxBuildImage.fromEcrRepository(ecrRepo, stackVersion),
+        buildImage: aws_codebuild.LinuxBuildImage.fromEcrRepository(ecrRepo),
         computeType: ComputeType.SMALL,
       },
       commands: [
-        `yarn cdk synth -q --verbose -c deployment_type=${props.deploymentType} -c deployment_id=${props.deploymentId}
-         -c component_account=${props.componentEnv.account} -c component_region=${props.componentEnv.region} `,
+        `cd /app`,
+        `yarn cdk synth -q --verbose \
+        -c tenant_id=${props.tenantId} -c deployment_type=${props.type} -c deployment_id=${props.id} \
+        -c component_account=${props.account} -c deployment_tier=${props.tier} -c component_region=${props.region} `,
       ],
+      primaryOutputDirectory: '/app/cdk.out',
     });
 
-    const pipelineName = props.deploymentType + '-' + props.deploymentId + '-pipeline';
-    new pipelines.CodePipeline(this, pipelineName, {
+    const pipelineName = getPipeline(props);
+    const pipeline = new pipelines.CodePipeline(this, pipelineName, {
       pipelineName: pipelineName,
       selfMutation: true,
       synth: synthStep,
       crossAccountKeys: true,
       cliVersion: CDK_VERSION,
     });
-    // pipeline.addStage(
-    //   new ComponentStage(this, props.deploymentId, {
-    //     deploymentId: props.deploymentId,
-    //     deploymentType: props.deploymentType,
-    //     env: props.componentEnv, // defines where the resources will be provisioned
-    //   }),
-    // );
+    pipeline.addStage(
+      new ComponentStage(this, props.id, {
+        tenantID: props.tenantId,
+        deploymentId: props.id,
+        deploymentType: props.type,
+        deploymentTier: props.tier,
+        env: { account: props.account, region: props.region }, // defines where the resources will be provisioned
+      }),
+    );
   }
 }

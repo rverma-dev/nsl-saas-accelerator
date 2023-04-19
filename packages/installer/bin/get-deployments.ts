@@ -18,7 +18,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { DeploymentRecord, Deployment } from '../lib/types';
+import { DeploymentRecord, Deployment, getPipeline } from "../lib/types";
 import { getCloudFormationStacks, getRegions, scanDynamoDB } from '../lib/apitools';
 import { saveConfig, isValidDeploymentRecord } from '../lib/configtools';
 
@@ -58,11 +58,11 @@ function verifyAndSaveData(records: Array<DeploymentRecord>, regions: Array<stri
     try {
       if (isValidDeploymentRecord(record, regions)) {
         const deployment = record as Deployment;
-        deployment.provisioned = stacks.includes(record.type + '-' + record.tenantID + '-pipeline');
+        deployment.provisioned = stacks.includes(getPipeline(record));
         deployments.push(deployment);
       }
     } catch (error) {
-      console.error('Deployment record ' + record.tenantID + ' failed validation: ' + error + '. Ignoring record.');
+      console.error(`Deployment record ${record.tenantId} failed validation: ${error}. Ignoring record.`);
     }
   });
 

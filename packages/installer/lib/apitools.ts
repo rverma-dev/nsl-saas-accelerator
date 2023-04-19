@@ -53,12 +53,12 @@ export async function scanDynamoDB(): Promise<Array<DeploymentRecord>> {
   for await (const page of paginator) {
     page.Items?.forEach(item => {
       const record: DeploymentRecord = {
-        tenantID: item['id'].S as string,
+        id: item['id'].S as string,
+        tenantId: item['tenantId'].S as string,
         type: item['type'].S as string,
         account: item['account'].S as string,
         region: item['region'].S as string,
-        stackName: item['stackName'].S as string,
-        input: item['input'].$unknown as never,
+        tier: item['tier'].S as string,
       };
       records.push(record);
     });
