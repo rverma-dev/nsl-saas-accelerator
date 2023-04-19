@@ -1,0 +1,83 @@
+name: 'Quick ECR Push'
+description: 'Push containers to ECR easily.'
+
+branding:
+  icon: 'arrow-up-right'
+  color: 'yellow'
+
+
+inputs:
+  aws_account_id:
+    description: 'The account ID of the container registry.'
+    required: true
+  aws_role_to_assume:
+    description: 'Name of the role to assume.'
+    required: true
+    default: 'github-actions-${{ github.event.repository.name }}'
+  aws_region:
+    description: 'The region the container registry is hosted in.'
+    required: true
+  platforms:
+    description: 'The platforms to build images for, comma-separated. Valid options are linux/amd64 and linux/arm64.'
+    required: true
+    default: 'linux/amd64,linux/arm64'
+  dockerfile:
+    description: 'The path to the dockerfile, if not in the root of the repository.'
+    required: true
+    default: 'Dockerfile'
+  context:
+    description: 'The path to the docker context, if not the root of the repository.'
+    required: true
+    default: .
+  secrets:
+    description: 'A list of secrets to be passed through to the docker build, if needed (eg `key=string`).'
+    required: false
+  ecr_repo_name:
+    description: 'An ECR repository name. Defaults to the name of the Github repository.'
+    required: false
+    default: ${{ github.event.repository.name }}
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/${{ inputs.aws_role_to_assume }}
+        aws-region: ${{ inputs.aws_region }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ inputs.aws_account_id }}.dkr.ecr.${{ inputs.aws_region }}.amazonaws.com/${{ inputs.ecr_repo_name }}
+        tags: |
+          type=schedule,pattern=latest
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=ref,event=branch
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v3
+      with:
+        context: ${{ inputs.context }}
+        file: ${{ inputs.dockerfile }}
+        push: true
+        platforms: ${{ inputs.platforms }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        secrets: ${{ inputs.secrets }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

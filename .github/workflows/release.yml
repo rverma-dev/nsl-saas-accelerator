@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: "Create and Push Image"
-        uses: tedivm/action-ecr-publish@v1
+        uses: ./.github/actions/ecr-push
         with:
           aws_account_id: ${{vars.AWS_REGION}}
           aws_region: ap-south-1
