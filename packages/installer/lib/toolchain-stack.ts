@@ -220,6 +220,7 @@ export class ToolchainStack extends Stack {
             'ecr:InitiateLayerUpload',
             'ecr:PutImage',
             'ecr:UploadLayerPart',
+            'ecr:GetAuthorizationToken',
           ],
         }),
       ],
