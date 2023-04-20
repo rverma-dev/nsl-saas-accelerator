@@ -1,8 +1,13 @@
 {
   "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist"
-  },
+  "compilerOptions": {},
   "include": ["lib/**/*", "bin/**/*", "index.ts"],
-  "exclude": ["cdk.out/**/*", "test/**/*"]
+  "exclude": [
+    "cdk.out",
+    "dist",
+    "node_modules",
+    "test",
+    ".git*",
+    "cdk.context.json"
+  ]
 }

@@ -392,44 +392,6 @@ exports[`CodeCommitRepositoryStack Stack(CodeCommitRepositoryStack):  Snapshot T
 exports[`Stack(Blueprint):  Stack(Blueprint):  Snapshot Test 1`] = `
 {
   "Description": "Blueprints tracking (qs-1s1r465hk)",
-  "Metadata": {
-    "cdk_nag": {
-      "rules_to_suppress": [
-        {
-          "id": "AwsSolutions-L1",
-          "reason": "Internal EKS Construct",
-        },
-        {
-          "id": "AwsSolutions-IAM4",
-          "reason": "Managed IAM Policies",
-        },
-        {
-          "id": "AwsSolutions-IAM5",
-          "reason": "Wildcard policies for AWS Load Balancer Controller",
-        },
-        {
-          "id": "AwsSolutions-EKS1",
-          "reason": "Public access for demo purposes",
-        },
-        {
-          "id": "AwsSolutions-EKS2",
-          "reason": "Public access for demo purposes",
-        },
-        {
-          "id": "AwsSolutions-AS3",
-          "reason": "Notifications disabled",
-        },
-        {
-          "id": "AwsSolutions-VPC7",
-          "reason": "Sample code for demo purposes, flow logs disabled",
-        },
-        {
-          "id": "AwsSolutions-KMS5",
-          "reason": "Sample code for demo purposes, flow logs disabled",
-        },
-      ],
-    },
-  },
   "Outputs": {
     "KarpenterInstanceNodeRole": {
       "Description": "Karpenter add-on Node Role name",
@@ -2694,7 +2656,7 @@ exports[`Stack(Blueprint):  Stack(Blueprint):  Snapshot Test 1`] = `
             ],
           ],
         },
-        "Version": "1.4.8",
+        "Version": "1.5.1",
       },
       "Type": "Custom::AWSCDK-EKS-HelmChart",
       "UpdateReplacePolicy": "Delete",
@@ -2750,7 +2712,7 @@ exports[`Stack(Blueprint):  Stack(Blueprint):  Snapshot Test 1`] = `
           ],
         },
         "Values": "{"installCRDs":true}",
-        "Version": "1.11.0",
+        "Version": "1.11.1",
       },
       "Type": "Custom::AWSCDK-EKS-HelmChart",
       "UpdateReplacePolicy": "Delete",
@@ -2830,7 +2792,7 @@ exports[`Stack(Blueprint):  Stack(Blueprint):  Snapshot Test 1`] = `
             ],
           ],
         },
-        "Version": "v0.25.0",
+        "Version": "v0.27.3",
         "Wait": true,
       },
       "Type": "Custom::AWSCDK-EKS-HelmChart",
@@ -2886,7 +2848,7 @@ exports[`Stack(Blueprint):  Stack(Blueprint):  Snapshot Test 1`] = `
           ],
         },
         "Values": "{}",
-        "Version": "3.9.0",
+        "Version": "3.10.0",
       },
       "Type": "Custom::AWSCDK-EKS-HelmChart",
       "UpdateReplacePolicy": "Delete",

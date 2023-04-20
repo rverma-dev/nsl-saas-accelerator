@@ -11,7 +11,6 @@
  *  and limitations under the License.
  */
 import * as cdk from 'aws-cdk-lib';
-import { SynthUtils } from '@aws-cdk/assert';
 import { expect, test } from '@jest/globals';
 
 export function snapShotTest(testNamePrefix: string, stack: cdk.Stack) {
@@ -59,6 +58,6 @@ export function snapShotTest(testNamePrefix: string, stack: cdk.Stack) {
       print: () => 'KarpenterNodeInstanceProfile-af1b4d33eeef7b22739df2faa2679bfb',
     });
 
-    expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+    expect(stack).toMatchSnapshot();
   });
 }

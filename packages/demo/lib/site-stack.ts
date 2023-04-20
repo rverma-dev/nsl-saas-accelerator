@@ -17,8 +17,8 @@
  */
 
 import { Stack, StackProps, Stage, StageProps } from 'aws-cdk-lib';
-import { CfnService } from 'aws-cdk-lib/aws-apprunner';
 import { Construct } from 'constructs';
+import { StaticSite } from '@nsa/constructs';
 
 interface Deployment {
   tenantID: string;
@@ -32,15 +32,9 @@ interface DemoApprunnerStackProps extends Deployment, StackProps {}
 export class DemoApprunnerStack extends Stack {
   constructor(scope: Construct, id: string, props: DemoApprunnerStackProps) {
     super(scope, id, props);
-
-    new CfnService(this, 'app-runner', {
-      sourceConfiguration: {
-        imageRepository: {
-          imageIdentifier: 'public.ecr.aws/aws-containers/hello-app-runner:latest',
-          imageRepositoryType: 'ECR_PUBLIC',
-        },
-      },
-      serviceName: props.deploymentType + '-' + props.deploymentId + '-solution',
+    new StaticSite(this, 'StaticSite', {
+      domainName: this.node.tryGetContext(props.tenantID),
+      siteSubDomain: this.node.tryGetContext('nslhub.com`'),
     });
   }
 }

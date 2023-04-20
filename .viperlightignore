@@ -27,3 +27,5 @@ error.log
 
 packages/installer/cdk.out/
 packages/eks/cdk.out/
+packages/eks-blueprints/test/stacks.test.ts
+packages/eks-blueprints/NOTICE

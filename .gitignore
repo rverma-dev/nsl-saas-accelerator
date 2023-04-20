@@ -74,3 +74,5 @@ viperlight*.zip
 # nx/tasks-runners/default
 # @nrwl/nx-cloud
 **/.envrc
+
+build_output

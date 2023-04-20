@@ -43,10 +43,9 @@ module.exports = {
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: ['/node_modules/'],
-
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.(t|j)sx?$': 'ts-jest',
+    '^.+\\.(t)sx?$': 'ts-jest',
   },
 
   // Indicates whether each individual test should be reported during the run

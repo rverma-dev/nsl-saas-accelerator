@@ -88,8 +88,8 @@ export function isValidDeploymentRecord(record: DeploymentRecord | Deployment, r
   // Check that attribute region exists and is one of correct regions
   if (!record.tier) {
     throw new Error('Missing required attribute deployment size');
-  } else if (isValidTier(record.tier)) {
-    throw new Error('Attribute deployment size has invalid Value');
+  } else if (!isValidTier(record.tier)) {
+    throw new Error('Attribute deployment tier has invalid Value');
   }
   return true;
 }

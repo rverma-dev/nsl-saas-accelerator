@@ -44,7 +44,7 @@
       "size": "db.small"
     },
     "dynamodb": {
-      "size": "14-2"
+      "size": "100-80"
     }
   },
   {

@@ -1,65 +1,54 @@
-import { CodeBuild, DynamoDB } from 'aws-sdk';
+import { CodeBuild } from '@aws-sdk/client-codebuild';
 import { DynamoDBRecord, DynamoDBStreamHandler } from 'aws-lambda';
-
-// Configure AWS SDK
-const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env['AWS_REGION'] });
 
 const codebuild = new CodeBuild({ apiVersion: 'latest' });
 
 const projectName = process.env['PROJECT_NAME'];
 
 interface DeploymentDynamoRecord {
-  id: DynamoDB.AttributeValue;
-  tenantID?: DynamoDB.AttributeValue;
-  type?: DynamoDB.AttributeValue;
-  region?: DynamoDB.AttributeValue;
-  account?: DynamoDB.AttributeValue;
+  id: string;
+  tenantID: string;
+  type: string;
+  tier: string;
+  region: string;
+  account: string;
 }
 
 async function startBuildCommand(record: DeploymentDynamoRecord): Promise<void> {
   const env = [
-    { name: 'DEPLOYMENT_ID', value: record.id.S },
-    { name: 'DEPLOYMENT_TENANT_ID', value: record.tenantID?.S },
-    { name: 'DEPLOYMENT_TYPE', value: record.type?.S },
-    { name: 'COMPONENT_ACCOUNT', value: record.account?.S },
-    { name: 'COMPONENT_REGION', value: record.region?.S },
-  ].reduce<CodeBuild.EnvironmentVariable[]>((acc, variable) => {
-    if (variable.value !== undefined) {
-      acc.push({ name: variable.name, value: variable.value });
-    }
-    return acc;
-  }, []);
+    { name: 'DEPLOYMENT_ID', value: record.id },
+    { name: 'DEPLOYMENT_TENANT_ID', value: record.tenantID },
+    { name: 'DEPLOYMENT_TYPE', value: record.type },
+    { name: 'DEPLOYMENT_TIER', value: record.tier },
+    { name: 'COMPONENT_ACCOUNT', value: record.account },
+    { name: 'COMPONENT_REGION', value: record.region },
+  ];
 
-  console.log(`Calling startBuild() on CodeBuild project ${projectName}`);
+  console.log(`Calling startBuild() on CodeBuild project ${projectName}, env ${env}`);
 
   try {
-    const result = await codebuild
-      .startBuild({
-        projectName: projectName!,
-        environmentVariablesOverride: env,
-      })
-      .promise();
+    const result = await codebuild.startBuild({
+      projectName: projectName!,
+      environmentVariablesOverride: env,
+    });
     console.log('Build started successfully:', result);
   } catch (error) {
     console.error('Error starting the build:', error);
   }
 }
 
-function convertToRecord(record: { [key: string]: DynamoDB.AttributeValue }) {
-  return {
-    id: record['id'],
-    tenantID: record['tenantID'],
-    type: record['type'],
-    account: record['account'],
-    region: record['region'],
-  };
-}
-
 const processInsertRecord = async (record: DynamoDBRecord): Promise<void> => {
   if (record.dynamodb?.NewImage) {
     console.log('New item added to deployment database');
-    const newRecord = convertToRecord(record.dynamodb.NewImage);
+    const input = record.dynamodb?.NewImage;
+    const newRecord = {
+      id: input['id'].S!,
+      tenantID: input['tenantID'].S!,
+      type: input['type'].S!,
+      tier: input['tier'].S!,
+      account: input['account'].S!,
+      region: input['region'].S!,
+    };
     console.log('Processing record:', newRecord);
     await startBuildCommand(newRecord);
   }
@@ -72,6 +61,4 @@ export const handler: DynamoDBStreamHandler = async event => {
   // This sample code does not process MODIFY or REMOVE records
   // Implementation of business logic related to these events is
   // left for the reader.
-
-  // TODO
 };

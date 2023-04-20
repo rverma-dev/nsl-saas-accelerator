@@ -13,3 +13,4 @@
 
 export * from './lib/aws-codecommit';
 export * from './lib/aws-eks';
+export * from './lib/static-site';

@@ -1,8 +1,8 @@
-import * as AWS from 'aws-sdk';
+import { IAM } from '@aws-sdk/client-iam';
+import { SecretsManager } from '@aws-sdk/client-secrets-manager';
 import { CloudFormationCustomResourceEvent } from 'aws-lambda';
 
 import * as console from 'console';
-AWS.config.logger = console;
 
 export async function handler(event: CloudFormationCustomResourceEvent) {
   //print out the event in case manual intervention is needed
@@ -11,8 +11,8 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
   const secretName = event.ResourceProperties['secretName'];
   const solutionId: string = process.env['SOLUTION_ID'] ?? '';
 
-  const iam = new AWS.IAM({ customUserAgent: solutionId });
-  const secretsManager = new AWS.SecretsManager({ customUserAgent: solutionId });
+  const iam = new IAM({ customUserAgent: solutionId });
+  const secretsManager = new SecretsManager({ customUserAgent: solutionId });
 
   switch (event.RequestType) {
     case 'Create':
@@ -20,12 +20,10 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
       try {
         let gitUser, gitCredId;
         let gitPassword = '';
-        const listCred = await iam
-          .listServiceSpecificCredentials({
-            UserName: username,
-            ServiceName: 'codecommit.amazonaws.com',
-          })
-          .promise();
+        const listCred = await iam.listServiceSpecificCredentials({
+          UserName: username,
+          ServiceName: 'codecommit.amazonaws.com',
+        });
         if (listCred.ServiceSpecificCredentials && listCred.ServiceSpecificCredentials?.length > 0) {
           const codeCommitCredsMeta = listCred.ServiceSpecificCredentials.pop();
           if (codeCommitCredsMeta) {
@@ -33,37 +31,29 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
             gitCredId = codeCommitCredsMeta.ServiceSpecificCredentialId;
           }
         } else {
-          const codeCommitCreds = await iam
-            .createServiceSpecificCredential({
-              UserName: username,
-              ServiceName: 'codecommit.amazonaws.com',
-            })
-            .promise();
+          const codeCommitCreds = await iam.createServiceSpecificCredential({
+            UserName: username,
+            ServiceName: 'codecommit.amazonaws.com',
+          });
 
           gitUser = codeCommitCreds.ServiceSpecificCredential!.ServiceUserName!;
           gitPassword = codeCommitCreds.ServiceSpecificCredential!.ServicePassword!;
           gitCredId = codeCommitCreds.ServiceSpecificCredential!.ServiceSpecificCredentialId!;
 
-          const listSecret = await secretsManager
-            .listSecrets({
-              Filters: [{ Key: 'name', Values: [secretName] }],
-            })
-            .promise();
+          const listSecret = await secretsManager.listSecrets({
+            Filters: [{ Key: 'name', Values: [secretName] }],
+          });
           // Try to Create the secret in Secrets Manager if secret doesn't exists
           if (listSecret.SecretList && listSecret.SecretList.length === 0) {
-            await secretsManager
-              .createSecret({
-                Name: secretName,
-                SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
-              })
-              .promise();
+            await secretsManager.createSecret({
+              Name: secretName,
+              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
+            });
           } else {
-            await secretsManager
-              .putSecretValue({
-                SecretId: secretName,
-                SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
-              })
-              .promise();
+            await secretsManager.putSecretValue({
+              SecretId: secretName,
+              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
+            });
           }
         }
         return {
@@ -79,14 +69,12 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
       }
     case 'Delete':
       try {
-        const secretValue = await secretsManager.getSecretValue({ SecretId: secretName }).promise();
+        const secretValue = await secretsManager.getSecretValue({ SecretId: secretName });
         const gitCredId = JSON.parse(secretValue.SecretString!)['credId'];
-        await iam
-          .deleteServiceSpecificCredential({
-            UserName: username,
-            ServiceSpecificCredentialId: gitCredId,
-          })
-          .promise();
+        await iam.deleteServiceSpecificCredential({
+          UserName: username,
+          ServiceSpecificCredentialId: gitCredId,
+        });
         await secretsManager.deleteSecret({
           SecretId: secretName,
           RecoveryWindowInDays: 7,

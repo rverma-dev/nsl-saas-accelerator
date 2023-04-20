@@ -18,7 +18,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { DeploymentRecord, Deployment, getPipeline } from "../lib/types";
+import { DeploymentRecord, Deployment, getPipelineName } from '../lib/types';
 import { getCloudFormationStacks, getRegions, scanDynamoDB } from '../lib/apitools';
 import { saveConfig, isValidDeploymentRecord } from '../lib/configtools';
 
@@ -41,9 +41,7 @@ processDeployments().catch(error => {
 async function processDeployments(): Promise<void> {
   const stacks = await getCloudFormationStacks();
   const regions = await getRegions();
-
   const records = await scanDynamoDB();
-
   verifyAndSaveData(records, regions, stacks);
 }
 
@@ -57,8 +55,9 @@ function verifyAndSaveData(records: Array<DeploymentRecord>, regions: Array<stri
     // Verify records are properly formatted
     try {
       if (isValidDeploymentRecord(record, regions)) {
+        console.log(record);
         const deployment = record as Deployment;
-        deployment.provisioned = stacks.includes(getPipeline(record));
+        deployment.provisioned = stacks.includes(getPipelineName(record));
         deployments.push(deployment);
       }
     } catch (error) {

@@ -20,7 +20,7 @@
 
 import { startPipelineExecution, waitPipelineExecution } from '../lib/apitools';
 import { readConfig } from '../lib/configtools';
-import { Deployment, getPipeline } from '../lib/types';
+import { Deployment, getPipelineName } from '../lib/types';
 
 /*
  * update-deployments implements the control flow and logic of how updates are
@@ -63,7 +63,7 @@ async function processDeployments(deployments: Array<Deployment>) {
       continue;
     }
 
-    const pipelineName = getPipeline(deployment);
+    const pipelineName = getPipelineName(deployment);
     console.log(`Starting execution of ${deployment.account}/${deployment.region} deployment pipeline ${pipelineName}`);
 
     let startResult;

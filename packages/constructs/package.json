@@ -7,30 +7,36 @@
     "name": "Amazon Web Services",
     "url": "https://aws.amazon.com/solutions"
   },
-  "types": "./index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "cleanup": "tsc --build ./ --clean && rm -rf node_modules && rm -rf yarn.lock && rm -rf dist && rm -rf cdk.out",
-    "cleanup:tsc": "tsc --build ./ --clean",
+    "cleanup": "tsc --clean && rm -rf node_modules && rm -rf yarn.lock && rm -rf dist && rm -rf cdk.out",
+    "cleanup:tsc": "tsc --clean",
     "lint": "eslint --fix  --max-warnings 0 -c ../../.eslintrc.json 'lib/**/*.{ts,tsx}' 'test/**/*.{ts,tsx}' --ignore-pattern \"*.d.ts\" ",
     "precommit": "eslint --max-warnings 0 -c ../../.eslintrc.json 'lib/**/*.{ts,tsx}' 'test/**/*.{ts,tsx}' --ignore-pattern \"*.d.ts\" ",
     "test": "jest --coverage --ci",
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@aws-quickstart/eks-blueprints": "^1.6.1",
+    "@aws-quickstart/eks-blueprints": "workspace:^",
     "@jest/globals": "^29.5.0",
-    "aws-cdk-lib": "2.72.0",
-    "cdk-nag": "2.25.11",
-    "constructs": "10.0.12",
+    "aws-cdk-lib": "2.76.0",
+    "cdk-nag": "2.25.16",
+    "constructs": "10.2.1",
     "js-yaml": "^4.1.0",
     "sync-request": "^6.1.0"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "2.68.0",
-    "@types/jest": "^29.5.0",
+    "@types/jest": "^29.5.1",
     "@types/js-yaml": "^4.0.5",
-    "@types/node": "18.15.11",
-    "jest": "29.5.0"
+    "@types/node": "18.15.12",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "aws-cdk": "^2.76.0",
+    "eslint": "^8.38.0",
+    "jest": "29.5.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.24.4",
+    "typescript": "^5.0.4"
   }
 }

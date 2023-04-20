@@ -23,7 +23,7 @@ import { App } from 'aws-cdk-lib';
 import { ToolchainStack } from '../lib/toolchain-stack';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from '../lib/workload-pipeline-stack';
 import { TOOLCHAIN_ENV } from '../lib/configuration';
-import { getPipeline } from '../lib/types';
+import { getPipelineName } from '../lib/types';
 
 const app = new App();
 
@@ -65,14 +65,14 @@ if (!deploymentType) {
 } else {
   // Mode B: synthetize the workload pipeline stack
   const workloadProps: WorkloadPipelineProps = {
-    tenantId: tenantID,
     id: deploymentId,
+    tenantId: tenantID,
     type: deploymentType,
     tier: deploymentTier,
     region: componentRegion,
     account: componentAccount,
   };
-  const stackName = getPipeline(workloadProps);
+  const stackName = getPipelineName(workloadProps);
   console.log(`Synthesizing stack for ${stackName}in ${componentAccount}/${componentRegion}`);
   new WorkloadPipelineStack(app, stackName, { ...workloadProps, env: TOOLCHAIN_ENV });
 }

@@ -16,4 +16,4 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export * from './lib/ecs-stack';
+export * from './lib/site-stack';

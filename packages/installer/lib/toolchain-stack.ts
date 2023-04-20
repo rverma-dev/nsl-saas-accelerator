@@ -20,7 +20,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
-import { BuildSpec, ComputeType, LinuxArmBuildImage, Project, Source } from 'aws-cdk-lib/aws-codebuild';
+import { BuildSpec, ComputeType, LinuxArmBuildImage, Project } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Code, Function, Runtime, StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
@@ -66,7 +66,7 @@ export class ToolchainStack extends Stack {
           buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
           computeType: ComputeType.SMALL,
         },
-        commands: ['cd /app', 'yarn cdk synth -q --verbose'],
+        commands: ['cd /app', 'yarn cdk synth --toolkit-stack-name nsl-CDKToolkit -q --verbose'],
         primaryOutputDirectory: '/app/cdk.out',
       }),
     });
@@ -83,8 +83,8 @@ export class ToolchainStack extends Stack {
                 'codepipeline:GetPipelineState',
               ],
               resources: [
-                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':silo-*-pipeline',
-                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':pool-*-pipeline',
+                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-silo-pipeline',
+                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-pool-pipeline',
               ],
               effect: Effect.ALLOW,
             }),
@@ -124,11 +124,11 @@ export class ToolchainStack extends Stack {
     // CodeBuild Project for Provisioning Build Job
     const project = new Project(this, 'provisioning-project', {
       projectName: 'provisioning-project',
-      source: Source.gitHub({
-        owner: REPOSITORY_OWNER,
-        repo: REPOSITORY_NAME,
-        branchOrRef: 'refs/heads/main',
-      }),
+      // source: Source.gitHub({
+      //   owner: REPOSITORY_OWNER,
+      //   repo: REPOSITORY_NAME,
+      //   branchOrRef: 'refs/heads/main',
+      // }),
       environment: {
         buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
         computeType: ComputeType.SMALL,

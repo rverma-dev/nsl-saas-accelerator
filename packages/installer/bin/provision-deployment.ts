@@ -20,7 +20,7 @@
 
 import { execSync } from 'child_process';
 import { getRegions } from '../lib/apitools';
-import { DeploymentRecord, getPipeline } from '../lib/types';
+import { DeploymentRecord, getPipelineName } from '../lib/types';
 import { isValidDeploymentRecord } from '../lib/configtools';
 import * as process from 'process';
 import * as console from 'console';
@@ -51,7 +51,7 @@ if (process.env['DEPLOYMENT_TYPE'] === undefined) {
   throw new Error('missing required env variable DEPLOYMENT_TYPE');
 }
 if (process.env['DEPLOYMENT_TIER'] === undefined) {
-  throw new Error('Missing workspace env variable COMPONENT_INPUT');
+  throw new Error('Missing workspace env variable DEPLOYMENT_TIER');
 }
 if (process.env['COMPONENT_ACCOUNT'] === undefined) {
   throw new Error('Missing required env variable COMPONENT_ACCOUNT');
@@ -88,10 +88,11 @@ async function processRecord(record: DeploymentRecord): Promise<void> {
 
 // Provision new silo or pool deployment. We will call CDK deploy with specific runtime context values.
 async function provisionPipelineStack(record: DeploymentRecord): Promise<void> {
-  const stackName = getPipeline(record);
+  const stackName = getPipelineName(record);
   const command =
-    `yarn cdk deploy ${stackName} --require-approval never` +
-    ` -c deployment_id=${record.tenantId}` +
+    `yarn cdk deploy ${stackName} --toolkit-stack-name nsl-CDKToolkit --require-approval never` +
+    ` -c deployment_id=${record.id}` +
+    ` -c tenant_id=${record.tenantId}` +
     ` -c deployment_type=${record.type}` +
     ` -c deployment_tier=${record.tier}` +
     ` -c component_account=${record.account}` +
