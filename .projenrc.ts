@@ -10,7 +10,7 @@ const root = new nx_monorepo.NxMonorepoProject({
   projenrcTs: true,
   description: "Nsl SAAS Accelerator on AWS",
   packageName: "@nsa/aws",
-  packageManager: NodePackageManager.PNPM,
+  packageManager: NodePackageManager.YARN,
   workspaceConfig: {
     additionalPackages: ["packages/eks-blueprints"],
   },
@@ -23,6 +23,7 @@ const root = new nx_monorepo.NxMonorepoProject({
       arrowParens: ArrowParens.AVOID,
     },
   },
+  gitignore: [".idea", ".vscode"],
 });
 
 const nslConstructs = new TypeScriptProject({
@@ -42,7 +43,7 @@ const nslConstructs = new TypeScriptProject({
   devDeps: ["@types/aws-lambda", "@types/js-yaml"],
   defaultReleaseBranch: "main",
   name: "@nsa/construct",
-  packageManager: NodePackageManager.PNPM,
+  packageManager: NodePackageManager.YARN,
 });
 root.addImplicitDependency(nslConstructs, "@aws-quickstart/eks-blueprints");
 
@@ -52,7 +53,7 @@ const demo = new TypeScriptProject({
   deps: ["aws-cdk-lib", "constructs", "cdk-nag"],
   defaultReleaseBranch: "main",
   name: "@nsa/demo",
-  packageManager: NodePackageManager.PNPM,
+  packageManager: NodePackageManager.YARN,
 });
 root.addImplicitDependency(demo, nslConstructs);
 
@@ -66,10 +67,11 @@ const silo = new TypeScriptProject({
     "@aws-sdk/client-iam",
     "@aws-sdk/client-secrets-manager",
     "aws-lambda",
+    "@jest/globals",
   ],
   defaultReleaseBranch: "main",
   name: "@nsa/silo",
-  packageManager: NodePackageManager.PNPM,
+  packageManager: NodePackageManager.YARN,
 });
 root.addImplicitDependency(silo, nslConstructs);
 
@@ -79,7 +81,7 @@ const pool = new TypeScriptProject({
   deps: ["aws-cdk-lib", "constructs", "cdk-nag"],
   defaultReleaseBranch: "main",
   name: "@nsa/pool",
-  packageManager: NodePackageManager.PNPM,
+  packageManager: NodePackageManager.YARN,
 });
 root.addImplicitDependency(pool, nslConstructs);
 

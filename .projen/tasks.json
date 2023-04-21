@@ -230,7 +230,7 @@
           "exec": "yarn upgrade"
         },
         {
-          "exec": "npx projen"
+          "exec": "yarn run projen"
         },
         {
           "spawn": "post-upgrade"
