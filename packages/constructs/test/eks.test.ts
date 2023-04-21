@@ -1,4 +1,4 @@
-import * as blueprints from '@aws-quickstart/eks-blueprints';
+import { EksBlueprint, SecretsStoreAddOn } from '@aws-quickstart/eks-blueprints';
 import * as cdk from 'aws-cdk-lib';
 import { FluxV2Addon } from '../src/aws-eks/addon';
 
@@ -10,10 +10,10 @@ const flux = new FluxV2Addon({
 });
 describe('FluxAddon', () => {
   const app = new cdk.App();
-  const stack = blueprints.EksBlueprint.builder()
+  const stack = EksBlueprint.builder()
     .account('123456789012')
     .region('us-east-1')
-    .addOns(new blueprints.addons.SecretsStoreAddOn(), flux)
+    .addOns(new SecretsStoreAddOn(), flux)
     .build(app, 'east-test-1');
   test('FluxEksClusterStack Snapshot Test', () => {
     expect(stack).toBeDefined();

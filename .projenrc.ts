@@ -1,4 +1,5 @@
 import { nx_monorepo } from 'aws-prototyping-sdk';
+import { awscdk } from 'projen';
 import { ArrowParens, TrailingComma } from 'projen/lib/javascript';
 import { NodePackageManager } from 'projen/lib/javascript/node-package';
 import { TypeScriptProject } from 'projen/lib/typescript';
@@ -48,13 +49,14 @@ const nslConstructs = new TypeScriptProject({
 });
 root.addImplicitDependency(nslConstructs, '@aws-quickstart/eks-blueprints');
 
-const demo = new TypeScriptProject({
+const demo = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/demo',
-  deps: ['aws-cdk-lib', 'constructs', 'cdk-nag'],
+  deps: ['@aws-prototyping-sdk/pdk-nag@0.17.0', '@aws-prototyping-sdk/static-website@0.17.0'],
   defaultReleaseBranch: 'main',
   name: '@nsa/demo',
   packageManager: NodePackageManager.PNPM,
+  cdkVersion: '2.76.0',
 });
 root.addImplicitDependency(demo, nslConstructs);
 

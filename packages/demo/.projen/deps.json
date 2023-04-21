@@ -20,6 +20,15 @@
       "type": "build"
     },
     {
+      "name": "aws-cdk",
+      "version": "^2.76.0",
+      "type": "build"
+    },
+    {
+      "name": "esbuild",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-node",
       "type": "build"
     },
@@ -59,19 +68,31 @@
       "type": "build"
     },
     {
+      "name": "ts-node",
+      "type": "build"
+    },
+    {
       "name": "typescript",
       "type": "build"
     },
     {
-      "name": "aws-cdk-lib",
+      "name": "@aws-prototyping-sdk/pdk-nag",
+      "version": "0.17.0",
       "type": "runtime"
     },
     {
-      "name": "cdk-nag",
+      "name": "@aws-prototyping-sdk/static-website",
+      "version": "0.17.0",
+      "type": "runtime"
+    },
+    {
+      "name": "aws-cdk-lib",
+      "version": "^2.76.0",
       "type": "runtime"
     },
     {
       "name": "constructs",
+      "version": "^10.0.5",
       "type": "runtime"
     }
   ],
