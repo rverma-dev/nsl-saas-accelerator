@@ -1,5 +1,4 @@
 import * as blueprints from '@aws-quickstart/eks-blueprints';
-import { describe } from '@jest/globals';
 import * as cdk from 'aws-cdk-lib';
 import { FluxV2Addon } from '../src/aws-eks/addon';
 

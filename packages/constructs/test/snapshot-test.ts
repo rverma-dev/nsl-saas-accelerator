@@ -10,7 +10,6 @@
  *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
  *  and limitations under the License.
  */
-import { expect, test } from '@jest/globals';
 import * as cdk from 'aws-cdk-lib';
 
 export function snapShotTest(testNamePrefix: string, stack: cdk.Stack) {

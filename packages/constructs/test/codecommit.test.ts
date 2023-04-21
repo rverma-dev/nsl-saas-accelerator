@@ -11,7 +11,6 @@
  *  and limitations under the License.
  */
 
-import { describe } from '@jest/globals';
 import * as cdk from 'aws-cdk-lib';
 import { snapShotTest } from './snapshot-test';
 import { CreateGitopsSecretResource } from '../src';

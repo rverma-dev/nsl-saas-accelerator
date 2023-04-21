@@ -8,7 +8,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=build --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=build --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -53,7 +53,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=compile --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=compile --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -87,7 +87,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=eslint --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=eslint --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -97,7 +97,7 @@
       "description": "Generate dependency graph for monorepo",
       "steps": [
         {
-          "exec": "yarn run nx graph",
+          "exec": "pnpm exec nx graph",
           "receiveArgs": true
         }
       ]
@@ -107,7 +107,7 @@
       "description": "Install project dependencies and update lockfile (non-frozen)",
       "steps": [
         {
-          "exec": "yarn install --check-files"
+          "exec": "pnpm i --no-frozen-lockfile"
         }
       ]
     },
@@ -116,7 +116,7 @@
       "description": "Install project dependencies using frozen lockfile",
       "steps": [
         {
-          "exec": "yarn install --check-files --frozen-lockfile"
+          "exec": "pnpm i --frozen-lockfile"
         }
       ]
     },
@@ -128,7 +128,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=package --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=package --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -141,7 +141,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=post-compile --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=post-compile --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -158,7 +158,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=pre-compile --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=pre-compile --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -171,7 +171,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many",
+          "exec": "pnpm exec nx run-many",
           "receiveArgs": true
         }
       ]
@@ -181,7 +181,7 @@
       "description": "Synthesize workspace",
       "steps": [
         {
-          "exec": "yarn run projen"
+          "exec": "pnpm exec projen"
         }
       ]
     },
@@ -193,7 +193,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=test --output-style=stream --nx-bail",
+          "exec": "pnpm exec nx run-many --target=test --output-style=stream --nx-bail",
           "receiveArgs": true
         }
       ]
@@ -206,7 +206,7 @@
       },
       "steps": [
         {
-          "exec": "yarn upgrade npm-check-updates"
+          "exec": "pnpm update npm-check-updates"
         },
         {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor"
@@ -224,13 +224,13 @@
           "exec": "npm-check-updates --dep bundle --upgrade --target=minor"
         },
         {
-          "exec": "yarn install --check-files"
+          "exec": "pnpm i --no-frozen-lockfile"
         },
         {
-          "exec": "yarn upgrade"
+          "exec": "pnpm update"
         },
         {
-          "exec": "yarn run projen"
+          "exec": "pnpm exec projen"
         },
         {
           "spawn": "post-upgrade"
@@ -241,16 +241,16 @@
       "name": "upgrade-deps",
       "steps": [
         {
-          "exec": "yarn run npm-check-updates --deep --rejectVersion 0.0.0 -u"
+          "exec": "pnpm exec npm-check-updates --deep --rejectVersion 0.0.0 -u"
         },
         {
-          "exec": "yarn run syncpack fix-mismatches"
+          "exec": "pnpm exec syncpack fix-mismatches"
         },
         {
-          "exec": "yarn install"
+          "exec": "pnpm install"
         },
         {
-          "exec": "yarn run projen"
+          "exec": "pnpm exec projen"
         }
       ]
     },
@@ -262,7 +262,7 @@
       },
       "steps": [
         {
-          "exec": "yarn run nx run-many --target=watch --output-style=stream --skip-nx-cache --nx-ignore-cycles --nx-bail",
+          "exec": "pnpm exec nx run-many --target=watch --output-style=stream --skip-nx-cache --nx-ignore-cycles --nx-bail",
           "receiveArgs": true
         }
       ]

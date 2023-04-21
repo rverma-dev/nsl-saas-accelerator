@@ -2,24 +2,24 @@
   "name": "@nsa/aws",
   "description": "Nsl SAAS Accelerator on AWS",
   "scripts": {
-    "build": "yarn run projen build",
-    "clobber": "yarn run projen clobber",
-    "compile": "yarn run projen compile",
-    "default": "yarn run projen default",
-    "eject": "yarn run projen eject",
-    "eslint": "yarn run projen eslint",
-    "graph": "yarn run projen graph",
-    "package": "yarn run projen package",
-    "post-compile": "yarn run projen post-compile",
-    "post-upgrade": "yarn run projen post-upgrade",
-    "pre-compile": "yarn run projen pre-compile",
-    "run-many": "yarn run projen run-many",
-    "synth-workspace": "yarn run projen synth-workspace",
-    "test": "yarn run projen test",
-    "upgrade": "yarn run projen upgrade",
-    "upgrade-deps": "yarn run projen upgrade-deps",
-    "watch": "yarn run projen watch",
-    "projen": "yarn run projen"
+    "build": "pnpm exec projen build",
+    "clobber": "pnpm exec projen clobber",
+    "compile": "pnpm exec projen compile",
+    "default": "pnpm exec projen default",
+    "eject": "pnpm exec projen eject",
+    "eslint": "pnpm exec projen eslint",
+    "graph": "pnpm exec projen graph",
+    "package": "pnpm exec projen package",
+    "post-compile": "pnpm exec projen post-compile",
+    "post-upgrade": "pnpm exec projen post-upgrade",
+    "pre-compile": "pnpm exec projen pre-compile",
+    "run-many": "pnpm exec projen run-many",
+    "synth-workspace": "pnpm exec projen synth-workspace",
+    "test": "pnpm exec projen test",
+    "upgrade": "pnpm exec projen upgrade",
+    "upgrade-deps": "pnpm exec projen upgrade-deps",
+    "watch": "pnpm exec projen watch",
+    "projen": "pnpm exec projen"
   },
   "devDependencies": {
     "@nrwl/cli": "^15.9.2",
@@ -47,12 +47,14 @@
     "cdk-nag": "^2.26.1",
     "constructs": "^10.2.2"
   },
-  "resolutions": {
-    "@types/babel__traverse": "7.18.2"
+  "pnpm": {
+    "overrides": {
+      "@types/babel__traverse": "7.18.2"
+    }
   },
   "engines": {
     "node": ">=16",
-    "yarn": ">=1 <2"
+    "pnpm": ">=8"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",

@@ -36,6 +36,7 @@
     "cdk-nag": "^2.26.1",
     "constructs": "^10.2.2"
   },
+  "pnpm": {},
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "version": "0.0.0",
