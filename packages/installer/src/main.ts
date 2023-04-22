@@ -1,10 +1,10 @@
-import { App } from 'aws-cdk-lib';
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { TOOLCHAIN_ENV } from './lib/configuration';
 import { ToolchainStack } from './lib/toolchain-stack';
 import { getPipelineName } from './lib/types';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from './lib/workload-pipeline-stack';
 
-const app = new App();
+const app = PDKNag.app();
 
 /*
  * This is the main CDK application for the sample solution.

@@ -9,6 +9,6 @@ export const CDK_VERSION = '2.72.0'; // Used to set CodePipeline CLI version
 
 // For production use, specifying exact account and region here is recommended
 export const TOOLCHAIN_ENV = {
-  region: process.env['CDK_DEFAULT_REGION'],
-  account: process.env['CDK_DEFAULT_ACCOUNT'],
+  region: process.env.CDK_DEFAULT_REGION,
+  account: process.env.CDK_DEFAULT_ACCOUNT,
 };

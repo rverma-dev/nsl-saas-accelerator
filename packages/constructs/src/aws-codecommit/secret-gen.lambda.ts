@@ -1,6 +1,7 @@
 import * as console from 'console';
 import { IAM } from '@aws-sdk/client-iam';
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { CloudFormationCustomResourceEvent } from 'aws-lambda';
 
 export async function handler(event: CloudFormationCustomResourceEvent) {

@@ -10,7 +10,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -88,10 +88,6 @@
       "type": "build"
     },
     {
-      "name": "@aws-quickstart/eks-blueprints",
-      "type": "runtime"
-    },
-    {
       "name": "@aws-sdk/client-iam",
       "version": "^3.316.0",
       "type": "runtime"
@@ -99,6 +95,16 @@
     {
       "name": "@aws-sdk/client-secrets-manager",
       "version": "^3.316.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@nslhb/eks-blueprints",
+      "version": "1.6.2",
+      "type": "runtime"
+    },
+    {
+      "name": "@types/js-yaml",
+      "version": "4.0.5",
       "type": "runtime"
     },
     {
@@ -112,7 +118,12 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.1",
+      "version": "^10.2.3",
+      "type": "runtime"
+    },
+    {
+      "name": "js-yaml",
+      "version": "4.1.0",
       "type": "runtime"
     },
     {

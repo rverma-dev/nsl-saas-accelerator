@@ -133,7 +133,7 @@
       "description": "Run tests",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "exec": "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot",
           "receiveArgs": true
         },
         {
@@ -161,19 +161,19 @@
           "exec": "pnpm update npm-check-updates"
         },
         {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag'"
+          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag,vm2'"
         },
         {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag'"
+          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag,vm2'"
         },
         {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag'"
+          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag,vm2'"
         },
         {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag'"
+          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag,vm2'"
         },
         {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag'"
+          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='@aws-prototyping-sdk/pdk-nag,vm2'"
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"

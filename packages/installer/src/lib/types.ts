@@ -1,4 +1,4 @@
-import TIER from '../stacks.json';
+import TIER from './stacks.json';
 
 export interface DeploymentRecord {
   tenantId?: string; // callhealth

@@ -22,7 +22,7 @@
   "devDependencies": {
     "@nrwl/cli": "^15.9.2",
     "@nrwl/workspace": "^15.9.2",
-    "@types/node": "^16",
+    "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
     "aws-prototyping-sdk": "^0.17.1",
@@ -61,7 +61,6 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/eks-blueprints",
       "packages/constructs",
       "packages/demo",
       "packages/silo",

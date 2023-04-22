@@ -6,7 +6,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -114,6 +114,14 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/pool",
+      "type": "runtime"
+    },
+    {
+      "name": "@nsa/silo",
+      "type": "runtime"
+    },
+    {
       "name": "@types/aws-lambda",
       "type": "runtime"
     },
@@ -133,6 +141,7 @@
     },
     {
       "name": "vm2",
+      "version": "3.9.17",
       "type": "runtime"
     }
   ],

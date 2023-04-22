@@ -1,4 +1,4 @@
-import { ClusterAddOn, ClusterInfo, SecretProviderClass, utils } from '@aws-quickstart/eks-blueprints';
+import { ClusterAddOn, ClusterInfo, SecretProviderClass, utils } from '@nslhb/eks-blueprints';
 import { aws_eks as eks } from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';

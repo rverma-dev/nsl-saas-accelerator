@@ -1,4 +1,5 @@
 import { nx_monorepo } from 'aws-prototyping-sdk';
+import { PDKPipelineTsProject } from 'aws-prototyping-sdk/pipeline';
 import { awscdk } from 'projen';
 import { ArrowParens, TrailingComma } from 'projen/lib/javascript';
 import { NodePackageManager } from 'projen/lib/javascript/node-package';
@@ -13,9 +14,6 @@ const root = new nx_monorepo.NxMonorepoProject({
   description: 'Nsl SAAS Accelerator on AWS',
   packageName: '@nsa/aws',
   packageManager: NodePackageManager.PNPM,
-  workspaceConfig: {
-    additionalPackages: ['packages/eks-blueprints'],
-  },
   prettierOptions: {
     settings: {
       singleQuote: true,
@@ -29,30 +27,48 @@ const root = new nx_monorepo.NxMonorepoProject({
   stale: true,
   autoApproveUpgrades: true,
   autoApproveOptions: {
-    allowedUsernames: ['rverma-nsl']
+    allowedUsernames: ['rverma-nsl'],
   },
   autoMerge: true,
   buildWorkflow: true,
   dependabot: true,
   github: true,
+  minNodeVersion: '18.0.0',
+  typescriptVersion: '^5.0.4',
+  jestOptions: {
+    jestVersion: '^29.1.0',
+  },
 });
 
 new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/constructs',
   deps: [
-    '@aws-quickstart/eks-blueprints',
+    '@nslhb/eks-blueprints@1.6.2',
     `@aws-sdk/client-iam@${awsSdkVersion}`,
     `@aws-sdk/client-secrets-manager@${awsSdkVersion}`,
     'cdk-nag',
     'sync-request',
+    'js-yaml@4.1.0',
+    '@types/js-yaml@4.0.5',
   ],
-  devDeps: ['aws-prototyping-sdk', '@types/aws-lambda', 'aws-lambda', 'jest@^29.1.0'],
+  devDeps: ['aws-prototyping-sdk', '@types/aws-lambda', 'aws-lambda'],
   defaultReleaseBranch: 'main',
   name: '@nsa/construct',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: '2.76.0',
-  constructsVersion: '10.2.1',
+  constructsVersion: '10.2.3',
+  minNodeVersion: root.minNodeVersion,
+  jestOptions: {
+    jestVersion: root.jest?.jestVersion,
+  },
+  lambdaOptions: {
+    runtime: awscdk.LambdaRuntime.NODEJS_18_X,
+    bundlingOptions: {
+      externals: ['aws-sdk'],
+      sourcemap: true,
+    },
+  },
 });
 
 new awscdk.AwsCdkTypeScriptApp({
@@ -63,9 +79,13 @@ new awscdk.AwsCdkTypeScriptApp({
   name: '@nsa/demo',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: '2.76.0',
+  minNodeVersion: root.minNodeVersion,
+  jestOptions: {
+    jestVersion: root.jest?.jestVersion,
+  },
 });
 
-new awscdk.AwsCdkTypeScriptApp({
+new PDKPipelineTsProject({
   parent: root,
   outdir: 'packages/silo',
   deps: [
@@ -80,9 +100,14 @@ new awscdk.AwsCdkTypeScriptApp({
   name: '@nsa/silo',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: '2.76.0',
+  minNodeVersion: root.minNodeVersion,
+  jestOptions: {
+    jestVersion: root.jest?.jestVersion,
+  },
+  prettier: false,
 });
 
-new awscdk.AwsCdkTypeScriptApp({
+new PDKPipelineTsProject({
   parent: root,
   outdir: 'packages/pool',
   deps: [
@@ -97,6 +122,11 @@ new awscdk.AwsCdkTypeScriptApp({
   name: '@nsa/pool',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: '2.76.0',
+  minNodeVersion: root.minNodeVersion,
+  jestOptions: {
+    jestVersion: root.jest?.jestVersion,
+  },
+  prettier: false,
 });
 
 new awscdk.AwsCdkTypeScriptApp({
@@ -111,14 +141,20 @@ new awscdk.AwsCdkTypeScriptApp({
     `@aws-sdk/client-ec2@${awsSdkVersion}`,
     '@types/aws-lambda',
     '@nsa/demo',
+    '@nsa/silo',
+    '@nsa/pool',
     'source-map-support',
-    'vm2',
+    'vm2@3.9.17',
   ],
   devDeps: ['aws-lambda'],
   defaultReleaseBranch: 'main',
   name: '@nsa/installer',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: '2.76.0',
+  minNodeVersion: root.minNodeVersion,
+  jestOptions: {
+    jestVersion: root.jest?.jestVersion,
+  },
 });
 
 root.synth();
