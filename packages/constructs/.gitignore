@@ -40,3 +40,9 @@ junit.xml
 /lib
 /dist/
 !/.eslintrc.json
+/assets/
+!/cdk.json
+/cdk.out/
+.cdk.staging/
+.parcel-cache/
+!/src/aws-codecommit/secret-gen-function.ts

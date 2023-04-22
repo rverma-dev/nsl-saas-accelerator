@@ -1,17 +1,16 @@
 import path from 'path';
-import * as process from 'process';
-import { PDKNagApp } from '@aws-prototyping-sdk/pdk-nag';
 import { StaticWebsite } from '@aws-prototyping-sdk/static-website';
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, Stage, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
-interface DemoSiteStageProps extends StackProps {
+interface DemoSiteStageProps extends StageProps {
   tenantID: string;
   deploymentId: string;
   deploymentType: string;
+  deploymentTier: string;
 }
 
-export class DemoSiteStage extends Stack {
+export class DemoSiteStage extends Stage {
   constructor(scope: Construct, id: string, props: DemoSiteStageProps) {
     super(scope, id, props);
     new StaticWebsite(this, `${props.deploymentType}-${props.deploymentId}-StaticWebsite`, {
@@ -24,19 +23,3 @@ export class DemoSiteStage extends Stack {
     });
   }
 }
-
-const devEnv = {
-  account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION,
-};
-
-const app = new PDKNagApp();
-
-new DemoSiteStage(app, 'demo-stack-dev', {
-  tenantID: 'demo',
-  deploymentId: 'dev-001',
-  deploymentType: 'silo',
-  env: devEnv,
-});
-
-app.synth();

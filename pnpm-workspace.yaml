@@ -6,3 +6,4 @@ packages:
   - packages/demo
   - packages/silo
   - packages/pool
+  - packages/installer

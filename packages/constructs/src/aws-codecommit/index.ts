@@ -1,19 +1,7 @@
-/**
- *  Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
- *  with the License. A copy of the License is located at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
- *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
- *  and limitations under the License.
- */
-import * as path from 'path';
 import * as cdk from 'aws-cdk-lib';
 import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { SecretGenFunction } from './secret-gen-function';
 
 export interface CreateGitopsSecretProps {
   /**
@@ -78,14 +66,7 @@ export class CreateGitopsSecretResource extends Construct {
     //
     // Function definition for the custom resource
     //
-    const providerLambda = new cdk.aws_lambda.Function(this, 'Function', {
-      runtime: cdk.aws_lambda.Runtime.NODEJS_18_X,
-      code: cdk.aws_lambda.Code.fromAsset(path.join(__dirname, '../../lib/aws-codecommit/lambda-codecommit-secret')),
-      handler: 'index.handler',
-      timeout: cdk.Duration.minutes(15),
-      description: 'Create Gitops Secret',
-      role: assetsAccessRole,
-    });
+    const providerLambda = new SecretGenFunction(this, this.node.id);
 
     // Custom resource lambda log group
     new cdk.aws_logs.LogGroup(this, `${providerLambda.node.id}LogGroup`, {

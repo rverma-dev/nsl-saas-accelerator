@@ -9,10 +9,6 @@
       "type": "build"
     },
     {
-      "name": "@types/js-yaml",
-      "type": "build"
-    },
-    {
       "name": "@types/node",
       "version": "^16",
       "type": "build"
@@ -25,6 +21,23 @@
     {
       "name": "@typescript-eslint/parser",
       "version": "^5",
+      "type": "build"
+    },
+    {
+      "name": "aws-cdk",
+      "version": "^2.76.0",
+      "type": "build"
+    },
+    {
+      "name": "aws-lambda",
+      "type": "build"
+    },
+    {
+      "name": "aws-prototyping-sdk",
+      "type": "build"
+    },
+    {
+      "name": "esbuild",
       "type": "build"
     },
     {
@@ -67,6 +80,10 @@
       "type": "build"
     },
     {
+      "name": "ts-node",
+      "type": "build"
+    },
+    {
       "name": "typescript",
       "type": "build"
     },
@@ -76,22 +93,17 @@
     },
     {
       "name": "@aws-sdk/client-iam",
+      "version": "^3.316.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-secrets-manager",
-      "type": "runtime"
-    },
-    {
-      "name": "@jest/globals",
+      "version": "^3.316.0",
       "type": "runtime"
     },
     {
       "name": "aws-cdk-lib",
-      "type": "runtime"
-    },
-    {
-      "name": "aws-lambda",
+      "version": "^2.76.0",
       "type": "runtime"
     },
     {
@@ -100,10 +112,7 @@
     },
     {
       "name": "constructs",
-      "type": "runtime"
-    },
-    {
-      "name": "js-yaml",
+      "version": "^10.2.1",
       "type": "runtime"
     },
     {

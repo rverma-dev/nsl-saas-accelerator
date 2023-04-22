@@ -1,0 +1,66 @@
+[
+  {
+    "name": "small",
+    "eks": {
+      "version": "1.25"
+    },
+    "msk": {
+      "version": "2.8"
+    },
+    "rds": {
+      "version": "10.x",
+      "size": "db.small"
+    },
+    "dynamodb": {
+      "size": "14-2"
+    }
+  },
+  {
+    "name": "small-beta",
+    "eks": {
+      "version": "1.25"
+    },
+    "msk": {
+      "version": "2.8"
+    },
+    "rds": {
+      "version": "10.x",
+      "size": "db.small"
+    },
+    "dynamodb": {
+      "size": "14-2"
+    }
+  },
+  {
+    "name": "large",
+    "eks": {
+      "version": "1.25"
+    },
+    "msk": {
+      "version": "2.8"
+    },
+    "rds": {
+      "version": "10.x",
+      "size": "db.small"
+    },
+    "dynamodb": {
+      "size": "100-80"
+    }
+  },
+  {
+    "name": "serverless",
+    "eks": {
+      "version": "1.25"
+    },
+    "msk": {
+      "version": "2.8"
+    },
+    "rds": {
+      "version": "10.x",
+      "maxSize": "2"
+    },
+    "dynamodb": {
+      "maxSize": "14"
+    }
+  }
+]

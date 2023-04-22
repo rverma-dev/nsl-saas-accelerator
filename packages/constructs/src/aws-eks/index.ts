@@ -10,9 +10,10 @@ import { EKSClusterProps } from './eks-stack-param';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.large')];
 
-export class EksCluster {
+export class EksCluster extends Construct {
   testStack!: cdk.Stack;
   constructor(scope: Construct, props: EKSClusterProps) {
+    super(scope, 'eks');
     const stackName = props.stackName;
     const teams = [
       new blueprints.PlatformTeam({

@@ -146,10 +146,6 @@
         }
       ]
     },
-    "post-upgrade": {
-      "name": "post-upgrade",
-      "description": "Runs after upgrading dependencies"
-    },
     "pre-compile": {
       "name": "pre-compile",
       "description": "Prepare the project for compilation for all affected projects",
@@ -195,45 +191,6 @@
         {
           "exec": "pnpm exec nx run-many --target=test --output-style=stream --nx-bail",
           "receiveArgs": true
-        }
-      ]
-    },
-    "upgrade": {
-      "name": "upgrade",
-      "description": "upgrade dependencies",
-      "env": {
-        "CI": "0"
-      },
-      "steps": [
-        {
-          "exec": "pnpm update npm-check-updates"
-        },
-        {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor"
-        },
-        {
-          "exec": "pnpm i --no-frozen-lockfile"
-        },
-        {
-          "exec": "pnpm update"
-        },
-        {
-          "exec": "pnpm exec projen"
-        },
-        {
-          "spawn": "post-upgrade"
         }
       ]
     },
