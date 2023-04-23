@@ -71,7 +71,7 @@ export async function startPipelineExecution(pipeline: string): Promise<StartPip
   const client = new CodePipelineClient({ region: process.env.AWS_REGION });
   const input: StartPipelineExecutionCommandInput = { name: pipeline };
   const command = new StartPipelineExecutionCommand(input);
-  return await client.send(command);
+  return client.send(command);
 }
 
 export async function waitPipelineExecution(

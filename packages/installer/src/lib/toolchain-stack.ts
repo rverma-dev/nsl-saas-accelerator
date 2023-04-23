@@ -1,15 +1,15 @@
-import * as path from 'path';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { BuildSpec, ComputeType, LinuxArmBuildImage, Project } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { Code, Function, Runtime, StartingPosition } from 'aws-cdk-lib/aws-lambda';
+import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, GITHUB_DOMAIN, REPOSITORY_NAME, REPOSITORY_OWNER } from './configuration';
+import { AddTenantFunction } from '../ddb-stream/add-tenant-function';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -149,16 +149,13 @@ export class ToolchainStack extends Stack {
     );
 
     // Lambda Function for DynamoDB Streams
-    const streamLambda = new Function(this, 'stream-lambda', {
-      runtime: Runtime.NODEJS_18_X,
-      handler: 'index.handler',
-      code: Code.fromAsset(path.join(__dirname, 'lambda-stream/dist')),
+    const streamTenant = new AddTenantFunction(this, 'add-tenant', {
       environment: {
         PROJECT_NAME: 'provisioning-project',
       },
     });
 
-    streamLambda.role?.attachInlinePolicy(
+    streamTenant.role?.attachInlinePolicy(
       new Policy(this, 'start-pipeline-policy', {
         document: new PolicyDocument({
           statements: [
@@ -172,7 +169,7 @@ export class ToolchainStack extends Stack {
       }),
     );
 
-    streamLambda.addEventSource(
+    streamTenant.addEventSource(
       new DynamoEventSource(deploymentTable, {
         startingPosition: StartingPosition.LATEST,
       }),

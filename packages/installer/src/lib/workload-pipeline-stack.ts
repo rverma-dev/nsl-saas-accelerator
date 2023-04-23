@@ -1,10 +1,10 @@
+import { DemoSite } from 'packages/demo/src/demo-site';
 import { aws_codebuild, aws_ecr, pipelines, SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs';
 import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_SECRET, REPOSITORY_OWNER } from './configuration';
 import { DeploymentRecord, getPipelineName } from './types';
-import { DemoSiteStage } from '@nsa/demo/src/main';
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {
@@ -33,22 +33,23 @@ export class WorkloadPipelineStack extends Stack {
       primaryOutputDirectory: '/app/cdk.out',
     });
 
-    const pipelineName = getPipelineName(props);
-    const pipeline = new pipelines.CodePipeline(this, pipelineName, {
-      pipelineName: pipelineName,
-      selfMutation: true,
-      synth: synthStep,
-      crossAccountKeys: true,
-      cliVersion: CDK_VERSION,
-    });
-    pipeline.addStage(
-      new DemoSiteStage(this, props.id, {
-        tenantID: props.tenantId!,
-        deploymentId: props.id,
-        deploymentType: props.type!,
-        deploymentTier: props.tier!,
-        env: { account: props.account, region: props.region }, // defines where the resources will be provisioned
-      }),
-    );
+    // const pipelineName = getPipelineName(props);
+    //
+    // const pipeline = new pipelines.CodePipeline(this, pipelineName, {
+    //   pipelineName: pipelineName,
+    //   selfMutation: true,
+    //   synth: synthStep,
+    //   crossAccountKeys: true,
+    //   cliVersion: CDK_VERSION,
+    // });
+    // pipeline.addStage(
+    //   new DemoSite(this, props.id, {
+    //     tenantID: props.tenantId!,
+    //     deploymentId: props.id,
+    //     deploymentType: props.type!,
+    //     deploymentTier: props.tier!,
+    //     env: { account: props.account, region: props.region }, // defines where the resources will be provisioned
+    //   }),
+    // );
   }
 }

@@ -1,7 +1,8 @@
-import { CodeBuildClient } from '@aws-sdk/client-codebuild';
+import { CodeBuild } from '@aws-sdk/client-codebuild';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { DynamoDBRecord, DynamoDBStreamHandler } from 'aws-lambda';
 
-const codebuild = new CodeBuildClient({ apiVersion: 'latest' });
+const codebuild = new CodeBuild({ apiVersion: 'latest' });
 
 const projectName = process.env.PROJECT_NAME;
 
