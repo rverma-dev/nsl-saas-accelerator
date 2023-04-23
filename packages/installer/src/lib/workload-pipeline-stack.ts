@@ -1,10 +1,9 @@
-import { DemoSite } from 'packages/demo/src/demo-site';
 import { aws_codebuild, aws_ecr, pipelines, SecretValue, Stack, StackProps } from 'aws-cdk-lib';
 import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Construct } from 'constructs';
-import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_SECRET, REPOSITORY_OWNER } from './configuration';
-import { DeploymentRecord, getPipelineName } from './types';
+import { REPOSITORY_NAME, REPOSITORY_SECRET, REPOSITORY_OWNER } from './configuration';
+import { DeploymentRecord } from './types';
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {
@@ -18,7 +17,7 @@ export class WorkloadPipelineStack extends Stack {
         jsonField: 'github_token',
       }),
     });
-    const synthStep = new pipelines.CodeBuildStep('synth', {
+    new pipelines.CodeBuildStep('synth', {
       input: sourceInput,
       buildEnvironment: {
         buildImage: aws_codebuild.LinuxArmBuildImage.fromEcrRepository(ecrRepo),
