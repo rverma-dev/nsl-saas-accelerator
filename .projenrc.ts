@@ -5,10 +5,11 @@ import { ArrowParens, TrailingComma } from 'projen/lib/javascript';
 import { NodePackageManager } from 'projen/lib/javascript/node-package';
 
 const awsSdkVersion = '^3.316.0';
+const awsPDKVersion = '^0.17.0';
 
 const root = new nx_monorepo.NxMonorepoProject({
   defaultReleaseBranch: 'main',
-  devDeps: ['aws-prototyping-sdk'],
+  devDeps: [`aws-prototyping-sdk@${awsPDKVersion}`],
   name: 'nsa',
   projenrcTs: true,
   description: 'Nsl SAAS Accelerator on AWS',
@@ -52,7 +53,7 @@ new awscdk.AwsCdkTypeScriptApp({
     'js-yaml@4.1.0',
     '@types/js-yaml@4.0.5',
   ],
-  devDeps: ['aws-prototyping-sdk', '@types/aws-lambda', 'aws-lambda'],
+  devDeps: ['@types/aws-lambda', 'aws-lambda'],
   defaultReleaseBranch: 'main',
   name: '@nsa/construct',
   packageManager: NodePackageManager.PNPM,
@@ -74,7 +75,7 @@ new awscdk.AwsCdkTypeScriptApp({
 new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/demo',
-  deps: ['@aws-prototyping-sdk/pdk-nag@0.17.0', '@aws-prototyping-sdk/static-website@0.17.0'],
+  deps: [`@aws-prototyping-sdk/pdk-nag@${awsPDKVersion}`, `@aws-prototyping-sdk/static-website@${awsPDKVersion}`],
   defaultReleaseBranch: 'main',
   name: '@nsa/demo',
   packageManager: NodePackageManager.PNPM,
@@ -89,7 +90,7 @@ new PDKPipelineTsProject({
   parent: root,
   outdir: 'packages/silo',
   deps: [
-    '@aws-prototyping-sdk/pdk-nag@0.17.0',
+    `@aws-prototyping-sdk/pdk-nag@${awsPDKVersion}`,
     `@aws-sdk/client-iam@${awsSdkVersion}`,
     `@aws-sdk/client-secrets-manager@${awsSdkVersion}`,
     '@jest/globals',
@@ -111,7 +112,7 @@ new PDKPipelineTsProject({
   parent: root,
   outdir: 'packages/pool',
   deps: [
-    '@aws-prototyping-sdk/pdk-nag@0.17.0',
+    `@aws-prototyping-sdk/pdk-nag@${awsPDKVersion}`,
     `@aws-sdk/client-iam@${awsSdkVersion}`,
     `@aws-sdk/client-secrets-manager@${awsSdkVersion}`,
     '@jest/globals',
@@ -133,7 +134,7 @@ new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/installer',
   deps: [
-    '@aws-prototyping-sdk/pdk-nag@0.17.0',
+    `@aws-prototyping-sdk/pdk-nag@${awsPDKVersion}`,
     `@aws-sdk/client-cloudformation@${awsSdkVersion}`,
     `@aws-sdk/client-codepipeline@${awsSdkVersion}`,
     `@aws-sdk/client-codebuild@${awsSdkVersion}`,

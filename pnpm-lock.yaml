@@ -33,8 +33,8 @@ importers:
         specifier: ^5
         version: 5.59.0(eslint@8.38.0)(typescript@5.0.4)
       aws-prototyping-sdk:
-        specifier: ^0.17.1
-        version: 0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.21)
+        specifier: ^0.17.0
+        version: 0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)(nx@15.9.2)(projen@0.71.19)
       eslint:
         specifier: ^8
         version: 8.38.0
@@ -126,9 +126,6 @@ importers:
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
-      aws-prototyping-sdk:
-        specifier: ^0.17.0
-        version: 0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.1)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.19)
       esbuild:
         specifier: ^0.0.0
         version: 0.0.0
@@ -169,10 +166,10 @@ importers:
   packages/demo:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
-        specifier: 0.17.0
+        specifier: ^0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)
       '@aws-prototyping-sdk/static-website':
-        specifier: 0.17.0
+        specifier: ^0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)(projen@0.71.19)
       aws-cdk-lib:
         specifier: ^2.76.0
@@ -236,7 +233,7 @@ importers:
   packages/installer:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
-        specifier: 0.17.0
+        specifier: ^0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)
       '@aws-sdk/client-cloudformation':
         specifier: ^3.316.0
@@ -336,7 +333,7 @@ importers:
   packages/pool:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
-        specifier: 0.17.0
+        specifier: ^0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)
       '@aws-sdk/client-iam':
         specifier: ^3.316.0
@@ -421,7 +418,7 @@ importers:
   packages/silo:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
-        specifier: 0.17.0
+        specifier: ^0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)
       '@aws-sdk/client-iam':
         specifier: ^3.316.0
@@ -3350,7 +3347,6 @@ packages:
       semver: 7.5.0
       table: 6.8.1
       yaml: 1.10.2
-    dev: false
     bundledDependencies:
       - '@balena/dockerignore'
       - case
@@ -3383,6 +3379,7 @@ packages:
       semver: 7.5.0
       table: 6.8.1
       yaml: 1.10.2
+    dev: false
     bundledDependencies:
       - '@balena/dockerignore'
       - case
@@ -3413,32 +3410,6 @@ packages:
       watchpack: 2.4.0
     dev: true
 
-  /aws-prototyping-sdk@0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.1)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.19):
-    resolution: {integrity: sha512-Pt/lWXAo/J/PshZVdGuHdVwvrVEjPK1cLhm8l9ub1MD5OhTgOZhvbiJ5hUKMeXAXiaUk7nlHGvC/thTN+jYtSQ==}
-    peerDependencies:
-      aws-cdk-lib: ^2.60.0
-      cdk-nag: ^2.21.65
-      constructs: ^10.1.222
-      projen: ^0.71.3
-    dependencies:
-      '@nrwl/devkit': 15.9.2(nx@15.9.2)
-      '@pnpm/reviewing.dependencies-hierarchy': 2.0.3(@pnpm/logger@5.0.0)
-      aws-cdk-lib: 2.76.0(constructs@10.2.3)
-      cdk-nag: 2.26.1(aws-cdk-lib@2.76.0)(constructs@10.2.3)
-      constructs: 10.2.3
-      fs-extra: 10.1.0
-      projen: 0.71.19
-      semver: 4.3.6
-    transitivePeerDependencies:
-      - '@pnpm/logger'
-      - nx
-    dev: true
-    bundledDependencies:
-      - '@nrwl/devkit'
-      - '@pnpm/reviewing.dependencies-hierarchy'
-      - fs-extra
-      - semver
-
   /aws-prototyping-sdk@0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.2)(nx@15.9.2)(projen@0.71.19):
     resolution: {integrity: sha512-KTQJLaXSE3WpfaDLqBaQmFhvjBXtma3ULE6/cFglW4y1VpHBxrL0uUXpEgeR50gUGg5XxeX2K8eLLqxULMGcAw==}
     peerDependencies:
@@ -3458,33 +3429,6 @@ packages:
     transitivePeerDependencies:
       - '@pnpm/logger'
       - nx
-    dev: false
-    bundledDependencies:
-      - '@nrwl/devkit'
-      - '@pnpm/reviewing.dependencies-hierarchy'
-      - fs-extra
-      - semver
-
-  /aws-prototyping-sdk@0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.21):
-    resolution: {integrity: sha512-KTQJLaXSE3WpfaDLqBaQmFhvjBXtma3ULE6/cFglW4y1VpHBxrL0uUXpEgeR50gUGg5XxeX2K8eLLqxULMGcAw==}
-    peerDependencies:
-      aws-cdk-lib: ^2.60.0
-      cdk-nag: ^2.21.65
-      constructs: ^10.1.222
-      projen: ^0.71.3
-    dependencies:
-      '@nrwl/devkit': 15.9.2(nx@15.9.2)
-      '@pnpm/reviewing.dependencies-hierarchy': 2.0.3(@pnpm/logger@5.0.0)
-      aws-cdk-lib: 2.76.0(constructs@10.2.3)
-      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
-      constructs: 10.2.3
-      fs-extra: 10.1.0
-      projen: 0.71.21
-      semver: 4.3.6
-    transitivePeerDependencies:
-      - '@pnpm/logger'
-      - nx
-    dev: true
     bundledDependencies:
       - '@nrwl/devkit'
       - '@pnpm/reviewing.dependencies-hierarchy'
@@ -3811,6 +3755,7 @@ packages:
     dependencies:
       aws-cdk-lib: 2.76.0(constructs@10.2.3)
       constructs: 10.2.3
+    dev: false
 
   /cdk-nag@2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.2):
     resolution: {integrity: sha512-bSwEr46GMqaA0x4bIXCnEzpbKCvDs6qZ690jhbbHKfw9jO02MQS2o5Bpe8qlue7Z0Y7qpRVOanUYEIJcKcJB1A==}
@@ -3820,7 +3765,6 @@ packages:
     dependencies:
       aws-cdk-lib: 2.76.0(constructs@10.2.2)
       constructs: 10.2.2
-    dev: false
 
   /cdk-nag@2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3):
     resolution: {integrity: sha512-bSwEr46GMqaA0x4bIXCnEzpbKCvDs6qZ690jhbbHKfw9jO02MQS2o5Bpe8qlue7Z0Y7qpRVOanUYEIJcKcJB1A==}
@@ -3830,6 +3774,7 @@ packages:
     dependencies:
       aws-cdk-lib: 2.76.0(constructs@10.2.3)
       constructs: 10.2.3
+    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -4033,11 +3978,11 @@ packages:
   /constructs@10.2.2:
     resolution: {integrity: sha512-1mSuh0pwJUaGEYuxJH+oxtD5n6JlxX5yD3zmaiyZ7Olv0t1hlZCYZ/AAW0wNUbxpp04BakTTMOISo7Rvmdsw4g==}
     engines: {node: '>= 14.17.0'}
-    dev: false
 
   /constructs@10.2.3:
     resolution: {integrity: sha512-9mmO/2ISq9IiQyGOs46mNf0WMDRJ+ok4qC1hzXUtVY8rQVRfxAtQaH1M0b8TX9MKE52DBGk8vOX9icavGl7Bbg==}
     engines: {node: '>= 14.17.0'}
+    dev: false
 
   /conventional-changelog-config-spec@2.1.0:
     resolution: {integrity: sha512-IpVePh16EbbB02V+UA+HQnnPIohgXvJRxHcS5+Uwk4AT5LjzCZJm5sp/yqs5C6KZJ1jMsV4paEV13BN1pvDuxQ==}

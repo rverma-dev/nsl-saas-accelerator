@@ -33,10 +33,6 @@
       "type": "build"
     },
     {
-      "name": "aws-prototyping-sdk",
-      "type": "build"
-    },
-    {
       "name": "esbuild",
       "type": "build"
     },

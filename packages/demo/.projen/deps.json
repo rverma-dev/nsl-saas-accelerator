@@ -77,12 +77,12 @@
     },
     {
       "name": "@aws-prototyping-sdk/pdk-nag",
-      "version": "0.17.0",
+      "version": "^0.17.0",
       "type": "runtime"
     },
     {
       "name": "@aws-prototyping-sdk/static-website",
-      "version": "0.17.0",
+      "version": "^0.17.0",
       "type": "runtime"
     },
     {
