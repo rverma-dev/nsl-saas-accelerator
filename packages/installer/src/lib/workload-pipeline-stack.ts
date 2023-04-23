@@ -1,38 +1,43 @@
-import { aws_codebuild, aws_ecr, pipelines, SecretValue, Stack, StackProps } from 'aws-cdk-lib';
-import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
-import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { DemoPipeline } from '@nsa/demo/lib/pipeline-stack';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { REPOSITORY_NAME, REPOSITORY_SECRET, REPOSITORY_OWNER } from './configuration';
-import { DeploymentRecord } from './types';
+import { DeploymentRecord, getPipelineName } from './types';
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, props);
 
-    const ecrRepo = aws_ecr.Repository.fromRepositoryName(this, 'get-installer-repo', 'nsa-installer');
-    const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
-      trigger: GitHubTrigger.NONE,
-      authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
-        jsonField: 'github_token',
-      }),
+    // const ecrRepo = aws_ecr.Repository.fromRepositoryName(this, 'get-installer-repo', 'nsa-installer');
+    // const sourceInput = pipelines.CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
+    //   trigger: GitHubTrigger.NONE,
+    //   authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
+    //     jsonField: 'github_token',
+    //   }),
+    // });
+    const pipelineName = getPipelineName(props);
+    new DemoPipeline(this, pipelineName, {
+      tenantID: props.tenantId!,
+      deploymentId: props.id,
+      deploymentType: props.type!,
+      deploymentTier: props.tier!,
+      env: { account: props.account, region: props.region }, // defines where the resources will be provisioned
     });
-    new pipelines.CodeBuildStep('synth', {
-      input: sourceInput,
-      buildEnvironment: {
-        buildImage: aws_codebuild.LinuxArmBuildImage.fromEcrRepository(ecrRepo),
-        computeType: ComputeType.SMALL,
-      },
-      commands: [
-        'cd /app',
-        `yarn cdk synth --toolkit-stack-name nsl-CDKToolkit -q --verbose \
-        -c tenant_id=${props.tenantId} -c deployment_type=${props.type} -c deployment_id=${props.id} \
-        -c component_account=${props.account} -c deployment_tier=${props.tier} -c component_region=${props.region} `,
-      ],
-      primaryOutputDirectory: '/app/cdk.out',
-    });
-
-    // const pipelineName = getPipelineName(props);
+    // new pipelines.CodeBuildStep('synth', {
+    //   input: sourceInput,
+    //   buildEnvironment: {
+    //     buildImage: aws_codebuild.LinuxArmBuildImage.fromEcrRepository(ecrRepo),
+    //     computeType: ComputeType.SMALL,
+    //   },
+    //   commands: [
+    //     'cd /app',
+    //     `yarn cdk synth --toolkit-stack-name nsl-CDKToolkit -q --verbose \
+    //     -c tenant_id=${props.tenantId} -c deployment_type=${props.type} -c deployment_id=${props.id} \
+    //     -c component_account=${props.account} -c deployment_tier=${props.tier} -c component_region=${props.region} `,
+    //   ],
+    //   primaryOutputDirectory: '/app/cdk.out',
+    // });
+    //
     //
     // const pipeline = new pipelines.CodePipeline(this, pipelineName, {
     //   pipelineName: pipelineName,

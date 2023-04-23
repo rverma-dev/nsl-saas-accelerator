@@ -18,5 +18,4 @@ describe('FluxAddon', () => {
   test('FluxEksClusterStack Snapshot Test', () => {
     expect(stack).toBeDefined();
   });
-  // snapShotTest('FluxEksClusterStack', stack.);
 });

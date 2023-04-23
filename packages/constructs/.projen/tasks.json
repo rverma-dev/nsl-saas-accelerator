@@ -48,40 +48,34 @@
         }
       ]
     },
+    "compat": {
+      "name": "compat",
+      "description": "Perform API compatibility check against latest version",
+      "steps": [
+        {
+          "exec": "jsii-diff npm:$(node -p \"require('./package.json').name\") -k --ignore-file .compatignore || (echo \"\nUNEXPECTED BREAKING CHANGES: add keys such as 'removed:constructs.Node.of' to .compatignore to skip.\n\" && exit 1)"
+        }
+      ]
+    },
     "compile": {
       "name": "compile",
-      "description": "Only compile"
+      "description": "Only compile",
+      "steps": [
+        {
+          "exec": "jsii --silence-warnings=reserved-word"
+        }
+      ]
     },
     "default": {
       "name": "default",
       "description": "Synthesize project files"
     },
-    "deploy": {
-      "name": "deploy",
-      "description": "Deploys your CDK app to the AWS cloud",
+    "docgen": {
+      "name": "docgen",
+      "description": "Generate API.md from .jsii manifest",
       "steps": [
         {
-          "exec": "cdk deploy",
-          "receiveArgs": true
-        }
-      ]
-    },
-    "destroy": {
-      "name": "destroy",
-      "description": "Destroys your cdk app in the AWS cloud",
-      "steps": [
-        {
-          "exec": "cdk destroy",
-          "receiveArgs": true
-        }
-      ]
-    },
-    "diff": {
-      "name": "diff",
-      "description": "Diffs the currently deployed app against your code",
-      "steps": [
-        {
-          "exec": "cdk diff"
+          "exec": "jsii-docgen -o API.md"
         }
       ]
     },
@@ -114,14 +108,40 @@
     },
     "package": {
       "name": "package",
-      "description": "Creates the distribution package"
+      "description": "Creates the distribution package",
+      "steps": [
+        {
+          "exec": "pdk@pnpm-link-bundled-transitive-deps packages/constructs"
+        },
+        {
+          "exec": "if [ ! -z ${CI} ]; then rsync -a . .repo --exclude .git --exclude node_modules && rm -rf dist && mv .repo dist; else npx projen package-all; fi"
+        }
+      ]
+    },
+    "package-all": {
+      "name": "package-all",
+      "description": "Packages artifacts for all target languages",
+      "steps": [
+        {
+          "spawn": "package:js"
+        }
+      ]
+    },
+    "package:js": {
+      "name": "package:js",
+      "description": "Create js language bindings",
+      "steps": [
+        {
+          "exec": "jsii-pacmak -v --target js"
+        }
+      ]
     },
     "post-compile": {
       "name": "post-compile",
       "description": "Runs after successful compilation",
       "steps": [
         {
-          "spawn": "synth:silent"
+          "spawn": "docgen"
         }
       ]
     },
@@ -131,23 +151,10 @@
     },
     "pre-compile": {
       "name": "pre-compile",
-      "description": "Prepare the project for compilation"
-    },
-    "synth": {
-      "name": "synth",
-      "description": "Synthesizes your cdk app into cdk.out",
+      "description": "Prepare the project for compilation",
       "steps": [
         {
-          "exec": "cdk synth"
-        }
-      ]
-    },
-    "synth:silent": {
-      "name": "synth:silent",
-      "description": "Synthesizes your cdk app into cdk.out and suppresses the template in stdout (part of \"yarn build\")",
-      "steps": [
-        {
-          "exec": "cdk synth -q"
+          "spawn": "bundle"
         }
       ]
     },
@@ -184,19 +191,19 @@
           "exec": "pnpm update npm-check-updates"
         },
         {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
+          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
         },
         {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
+          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
         },
         {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
+          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
         },
         {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
+          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
         },
         {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
+          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/js-yaml,js-yaml'"
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"
@@ -214,13 +221,10 @@
     },
     "watch": {
       "name": "watch",
-      "description": "Watches changes in your source code and rebuilds and deploys to the current account",
+      "description": "Watch & compile in the background",
       "steps": [
         {
-          "exec": "cdk deploy --hotswap"
-        },
-        {
-          "exec": "cdk watch"
+          "exec": "jsii -w --silence-warnings=reserved-word"
         }
       ]
     }

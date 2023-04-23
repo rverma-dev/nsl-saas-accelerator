@@ -7,11 +7,11 @@ export interface CreateGitopsSecretProps {
   /**
    * Gitops IAM username
    */
-  username: string;
+  readonly username: string;
   /**
    * Secret name
    */
-  secretName: string;
+  readonly secretName: string;
 }
 
 /**

@@ -5,6 +5,11 @@
       "type": "build"
     },
     {
+      "name": "@nrwl/devkit",
+      "version": "^15.9.2",
+      "type": "build"
+    },
+    {
       "name": "@nrwl/workspace",
       "type": "build"
     },
@@ -25,7 +30,7 @@
     },
     {
       "name": "aws-prototyping-sdk",
-      "version": "^0.17.0",
+      "version": "0.17.0",
       "type": "build"
     },
     {
@@ -54,6 +59,11 @@
       "type": "build"
     },
     {
+      "name": "lerna",
+      "version": "^6.6.1",
+      "type": "build"
+    },
+    {
       "name": "npm-check-updates",
       "type": "build"
     },
@@ -79,7 +89,7 @@
     },
     {
       "name": "typescript",
-      "version": "^5.0.4",
+      "version": "~5.0.4",
       "type": "build"
     },
     {

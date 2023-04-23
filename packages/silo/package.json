@@ -36,21 +36,22 @@
     "jest": "^29.1.0",
     "jest-junit": "^15",
     "npm-check-updates": "^16",
-    "projen": "^0.71.19",
+    "projen": "^0.71.21",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@aws-prototyping-sdk/pdk-nag": "^0.17.0",
+    "@aws-prototyping-sdk/pdk-nag": "0.17.0",
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
     "@jest/globals": "^29.5.0",
+    "@nsa/construct": "^0.0.0",
     "@types/aws-lambda": "^8.10.114",
     "aws-cdk-lib": "^2.76.0",
-    "aws-prototyping-sdk": "^0.17.1",
+    "aws-prototyping-sdk": "^0.17.0",
     "cdk-nag": "^2.26.2",
-    "constructs": "^10.0.5"
+    "constructs": "^10.2.2"
   },
   "pnpm": {},
   "engines": {

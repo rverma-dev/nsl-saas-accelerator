@@ -41,10 +41,12 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@aws-prototyping-sdk/pdk-nag": "^0.17.0",
-    "@aws-prototyping-sdk/static-website": "^0.17.0",
+    "@aws-prototyping-sdk/pdk-nag": "0.17.0",
+    "@aws-prototyping-sdk/static-website": "0.17.0",
     "aws-cdk-lib": "^2.76.0",
-    "constructs": "^10.0.5"
+    "aws-prototyping-sdk": "^0.17.0",
+    "cdk-nag": "^2.26.2",
+    "constructs": "^10.2.2"
   },
   "pnpm": {},
   "engines": {

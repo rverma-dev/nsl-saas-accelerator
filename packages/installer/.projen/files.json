@@ -9,6 +9,7 @@
     ".projen/tasks.json",
     "cdk.json",
     "LICENSE",
+    "src/ddb-stream/add-tenant-function.ts",
     "tsconfig.dev.json",
     "tsconfig.json"
   ],

@@ -1,26 +1,23 @@
-import { PDKNag } from 'aws-prototyping-sdk/pdk-nag';
-import { ApplicationStage } from './application-stage';
-import { PipelineStack } from './pipeline-stack';
+import { App, Stack, StackProps } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
-const app = PDKNag.app();
+export class MyStack extends Stack {
+  constructor(scope: Construct, id: string, props: StackProps = {}) {
+    super(scope, id, props);
 
-const pipelineStack = new PipelineStack(app, 'PipelineStack', {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT!,
-    region: process.env.CDK_DEFAULT_REGION!,
-  },
-});
+    // define resources here...
+  }
+}
 
-const devStage = new ApplicationStage(app, 'Dev', {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT!, // Replace with Dev account
-    region: process.env.CDK_DEFAULT_REGION!, // Replace with Dev region
-  },
-});
+// for development, use account/region from cdk cli
+const devEnv = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
 
-pipelineStack.pipeline.addStage(devStage);
+const app = new App();
 
-// Add additional stages here i.e. Prod
+new MyStack(app, '@nsa/pool-dev', { env: devEnv });
+// new MyStack(app, '@nsa/pool-prod', { env: prodEnv });
 
-pipelineStack.pipeline.buildPipeline(); // Needed for CDK Nag
 app.synth();

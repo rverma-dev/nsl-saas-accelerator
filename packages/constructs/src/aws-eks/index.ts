@@ -1,19 +1,28 @@
 import * as blueprints from '@nslhb/eks-blueprints';
 import * as cdk from 'aws-cdk-lib';
+import { NestedStack, StackProps } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as eks from 'aws-cdk-lib/aws-eks';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import * as addons from './addon';
-import { EKSClusterProps } from './eks-stack-param';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.large')];
 
-export class EksCluster extends Construct {
-  testStack!: cdk.Stack;
-  constructor(scope: Construct, props: EKSClusterProps) {
-    super(scope, 'eks');
+export interface EKSClusterProps extends StackProps{
+  readonly stackName: string;
+  readonly vpcID?: string;
+  readonly platformTeamRole: string;
+  readonly gitopsRepoBranch: string;
+  readonly gitopsRepoSecret: string;
+  readonly gitopsRepoUrl: string;
+}
+
+export class EksCluster extends NestedStack {
+  testStack?: cdk.Stack;
+  constructor(scope: Construct, id: string, props: EKSClusterProps) {
+    super(scope, id);
     const stackName = props.stackName;
     const teams = [
       new blueprints.PlatformTeam({
