@@ -1,17 +1,18 @@
-import { App } from 'aws-cdk-lib';
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { Template } from 'aws-cdk-lib/assertions';
 import { PipelineStack } from '../src/pipeline-stack';
 
-test('Snapshot', () => {
-  const app = new App();
-  const stack = new PipelineStack(app, 'test', {
-    id: 'dev-001',
-    tenantId: 'CH',
-    tier: 'small',
-    type: 'pool',
-    env: { account: '1234567890', region: 'us-east-1' },
+describe('Static Website Unit Tests', () => {
+  it('Defaults', () => {
+    const app = PDKNag.app();
+    const stack = new PipelineStack(app, 'PipelineStack', {
+      id: 'dev-001',
+      tenantId: 'CH',
+      tier: 'small',
+      type: 'pool',
+      account: '1111111',
+      region: 'us-west-2',
+    });
+    expect(Template.fromStack(stack).toJSON()).toMatchSnapshot();
   });
-
-  const template = Template.fromStack(stack);
-  expect(template.toJSON()).toMatchSnapshot();
 });
