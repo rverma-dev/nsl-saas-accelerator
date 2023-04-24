@@ -8,11 +8,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Fn::Join": [
           "",
           [
-            "codecommit::",
-            {
-              "Ref": "AWS::Region",
-            },
-            "://",
+            "codecommit::us-west-2://",
             {
               "Fn::GetAtt": [
                 "ApplicationPipelineCodeRepositoryA734F3FA",
@@ -267,9 +263,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   },
                 },
                 "StringEquals": {
-                  "aws:SourceAccount": {
-                    "Ref": "AWS::AccountId",
-                  },
+                  "aws:SourceAccount": "1111111",
                 },
               },
               "Effect": "Allow",
@@ -345,11 +339,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
+                      ":iam::1111111:root",
                     ],
                   ],
                 },
@@ -371,18 +361,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-us-west-2",
                     ],
                   ],
                 },
@@ -647,18 +626,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-us-west-2",
                     ],
                   ],
                 },
@@ -810,11 +778,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
+                      ":iam::1111111:root",
                     ],
                   ],
                 },
@@ -875,15 +839,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":logs:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":log-group:/aws/codebuild/*",
+                    ":logs:us-west-2:1111111:log-group:/aws/codebuild/*",
                   ],
                 ],
               },
@@ -905,15 +861,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/*",
+                    ":codebuild:us-west-2:1111111:report-group/*",
                   ],
                 ],
               },
@@ -931,7 +879,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Resource": {
-                "Fn::Sub": "arn:\${AWS::Partition}:iam::\${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-\${AWS::AccountId}-\${AWS::Region}",
+                "Fn::Sub": "arn:\${AWS::Partition}:iam::1111111:role/cdk-hnb659fds-file-publishing-role-1111111-us-west-2",
               },
             },
             {
@@ -1040,11 +988,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
+                      ":iam::1111111:root",
                     ],
                   ],
                 },
@@ -1254,7 +1198,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"fe6f272b03bc1025c2ad93d9dffa66a475cee45f8892e7670a44a196135a741c"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"c59f9dec7003e11ccf04ff47c286b7da18c2ced9b1c7a1ecde793ed3d1cfb714"}]",
                   "ProjectName": {
                     "Ref": "ApplicationPipelineCodePipelineBuildSynthCdkBuildProjectEE7ED66A",
                   },
@@ -1368,18 +1312,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                         {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::",
-                        {
-                          "Ref": "AWS::AccountId",
-                        },
-                        ":role/cdk-hnb659fds-cfn-exec-role-",
-                        {
-                          "Ref": "AWS::AccountId",
-                        },
-                        "-",
-                        {
-                          "Ref": "AWS::Region",
-                        },
+                        ":iam::1111111:role/cdk-hnb659fds-cfn-exec-role-1111111-us-west-2",
                       ],
                     ],
                   },
@@ -1400,18 +1333,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-us-west-2",
                     ],
                   ],
                 },
@@ -1438,18 +1360,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-us-west-2",
                     ],
                   ],
                 },
@@ -1539,7 +1450,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
   "artifacts": {
     "secondary-artifacts": {
       "Synth_Output": {
-        "base-directory": "packages/infra/cdk.out",
+        "base-directory": "packages/demo/cdk.out",
         "files": "**/*"
       },
       "Synth__": {
@@ -1651,15 +1562,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
+                      ":logs:us-west-2:1111111:log-group:/aws/codebuild/",
                       {
                         "Ref": "ApplicationPipelineCodePipelineBuildSynthCdkBuildProjectEE7ED66A",
                       },
@@ -1674,15 +1577,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
+                      ":logs:us-west-2:1111111:log-group:/aws/codebuild/",
                       {
                         "Ref": "ApplicationPipelineCodePipelineBuildSynthCdkBuildProjectEE7ED66A",
                       },
@@ -1709,15 +1604,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
+                    ":codebuild:us-west-2:1111111:report-group/",
                     {
                       "Ref": "ApplicationPipelineCodePipelineBuildSynthCdkBuildProjectEE7ED66A",
                     },
@@ -1898,15 +1785,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":codepipeline:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":",
+                    ":codepipeline:us-west-2:1111111:",
                     {
                       "Ref": "ApplicationPipelineCodePipeline92ED701F",
                     },
@@ -2091,18 +1970,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":iam::",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":role/cdk-hnb659fds-deploy-role-",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    "-",
-                    {
-                      "Ref": "AWS::Region",
-                    },
+                    ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-us-west-2",
                   ],
                 ],
               },
@@ -2165,11 +2033,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
+                      ":iam::1111111:root",
                     ],
                   ],
                 },
@@ -2402,15 +2266,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   {
                     "Ref": "AWS::Partition",
                   },
-                  ":codepipeline:",
-                  {
-                    "Ref": "AWS::Region",
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId",
-                  },
-                  ":",
+                  ":codepipeline:us-west-2:1111111:",
                   {
                     "Ref": "ApplicationPipelineCodePipeline92ED701F",
                   },
@@ -2605,15 +2461,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
+                      ":logs:us-west-2:1111111:log-group:/aws/codebuild/",
                       {
                         "Ref": "ApplicationPipelineUpdatePipelineSelfMutation66D95DA8",
                       },
@@ -2628,15 +2476,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
+                      ":logs:us-west-2:1111111:log-group:/aws/codebuild/",
                       {
                         "Ref": "ApplicationPipelineUpdatePipelineSelfMutation66D95DA8",
                       },
@@ -2663,15 +2503,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
+                    ":codebuild:us-west-2:1111111:report-group/",
                     {
                       "Ref": "ApplicationPipelineUpdatePipelineSelfMutation66D95DA8",
                     },
@@ -2692,18 +2524,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
               },
               "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:*:iam::",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":role/*",
-                  ],
-                ],
-              },
+              "Resource": "arn:*:iam::1111111:role/*",
             },
             {
               "Action": "cloudformation:DescribeStacks",
@@ -2791,9 +2612,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       ],
       "Properties": {
         "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
+          "S3Bucket": "cdk-hnb659fds-assets-1111111-us-west-2",
           "S3Key": "40aa87cdf43c4095cec18bc443965f22ab2f8c1ace47e482a0ba4e35d83b0cc9.zip",
         },
         "Description": {

@@ -229,7 +229,7 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(projen@0.71.19)
       '@nsa/common':
-        specifier: '*'
+        specifier: ^0.0.0
         version: link:../common
       aws-cdk-lib:
         specifier: ^2.76.0
@@ -320,7 +320,7 @@ importers:
         specifier: ^3.316.0
         version: 3.316.0
       '@nsa/common':
-        specifier: '*'
+        specifier: ^0.0.0
         version: link:../common
       '@nsa/demo':
         specifier: ^0.0.0
@@ -411,7 +411,7 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@nsa/common':
-        specifier: '*'
+        specifier: ^0.0.0
         version: link:../common
       '@nsa/construct':
         specifier: ^0.0.0
@@ -502,7 +502,7 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@nsa/common':
-        specifier: '*'
+        specifier: ^0.0.0
         version: link:../common
       '@nsa/construct':
         specifier: ^0.0.0
