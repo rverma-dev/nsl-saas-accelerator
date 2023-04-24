@@ -23,7 +23,30 @@
     },
     "bundle": {
       "name": "bundle",
-      "description": "Prepare assets"
+      "description": "Prepare assets",
+      "steps": [
+        {
+          "spawn": "bundle:lib/find-eks-custer.lambda"
+        }
+      ]
+    },
+    "bundle:lib/find-eks-custer.lambda": {
+      "name": "bundle:lib/find-eks-custer.lambda",
+      "description": "Create a JavaScript bundle from src/lib/find-eks-custer.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
+        }
+      ]
+    },
+    "bundle:lib/find-eks-custer.lambda:watch": {
+      "name": "bundle:lib/find-eks-custer.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/lib/find-eks-custer.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
+        }
+      ]
     },
     "compile": {
       "name": "compile",

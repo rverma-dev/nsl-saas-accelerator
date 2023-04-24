@@ -89,6 +89,10 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/common",
+      "type": "runtime"
+    },
+    {
       "name": "aws-cdk-lib",
       "version": "^2.76.0",
       "type": "runtime"
@@ -103,7 +107,7 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.2",
+      "version": "^10.2.4",
       "type": "runtime"
     }
   ],

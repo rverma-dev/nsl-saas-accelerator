@@ -83,6 +83,11 @@
       "type": "build"
     },
     {
+      "name": "@aws-prototyping-sdk/cdk-graph",
+      "version": "0.17.0",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-prototyping-sdk/pdk-nag",
       "version": "0.17.0",
       "type": "runtime"
@@ -113,15 +118,11 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/common",
+      "type": "runtime"
+    },
+    {
       "name": "@nsa/demo",
-      "type": "runtime"
-    },
-    {
-      "name": "@nsa/pool",
-      "type": "runtime"
-    },
-    {
-      "name": "@nsa/silo",
       "type": "runtime"
     },
     {
@@ -135,7 +136,7 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.2",
+      "version": "^10.2.4",
       "type": "runtime"
     },
     {

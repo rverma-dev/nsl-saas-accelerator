@@ -102,6 +102,10 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/common",
+      "type": "runtime"
+    },
+    {
       "name": "@nsa/construct",
       "type": "runtime"
     },
@@ -124,7 +128,7 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.2",
+      "version": "^10.2.4",
       "type": "runtime"
     }
   ],

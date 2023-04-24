@@ -5,8 +5,14 @@ import { DemoPipeline } from '../src/pipeline-stack';
 describe('Static Website Unit Tests', () => {
   it('Defaults', () => {
     const app = PDKNag.app();
-    const env = { account: '1111111', region: 'us-west-2' };
-    const pipelineStack = new DemoPipeline(app, 'PipelineStack', { tenantID: 'demo', deploymentId: 'dev-001', deploymentType: 'silo', deploymentTier: 'small', ...{ env: env } });
+    const pipelineStack = new DemoPipeline(app, 'PipelineStack', {
+      tenantId: 'demo',
+      id: 'dev-001',
+      type: 'silo',
+      tier: 'small',
+      account: '1111111',
+      region: 'us-west-2',
+    });
     expect(Template.fromStack(pipelineStack)).toMatchSnapshot();
   });
 });

@@ -3,6 +3,8 @@
   "scripts": {
     "build": "npx projen build",
     "bundle": "npx projen bundle",
+    "bundle:lib/find-eks-custer.lambda": "npx projen bundle:lib/find-eks-custer.lambda",
+    "bundle:lib/find-eks-custer.lambda:watch": "npx projen bundle:lib/find-eks-custer.lambda:watch",
     "compile": "npx projen compile",
     "default": "npx projen default",
     "deploy": "npx projen deploy",
@@ -46,12 +48,13 @@
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
     "@jest/globals": "^29.5.0",
+    "@nsa/common": "^0.0.0",
     "@nsa/construct": "^0.0.0",
     "@types/aws-lambda": "^8.10.114",
     "aws-cdk-lib": "^2.76.0",
     "aws-prototyping-sdk": "^0.17.0",
     "cdk-nag": "^2.26.2",
-    "constructs": "^10.2.2"
+    "constructs": "^10.2.4"
   },
   "pnpm": {},
   "engines": {

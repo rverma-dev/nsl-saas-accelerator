@@ -1,14 +1,11 @@
+import { Deployment } from '@nsa/common';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { PDKPipeline } from 'aws-prototyping-sdk/pipeline';
 import { Construct } from 'constructs';
 import { ApplicationStage } from './application-stage';
 
-interface PipelineProps extends StackProps {
-  tenantID: string;
-  deploymentId: string;
-  deploymentType: string;
-  deploymentTier: string;
-}
+interface PipelineProps extends StackProps, Deployment {}
+
 export class DemoPipeline extends Stack {
   readonly pipeline: PDKPipeline;
 
@@ -26,5 +23,6 @@ export class DemoPipeline extends Stack {
     });
     const devStage = new ApplicationStage(this, 'Dev', { env: props.env });
     this.pipeline.addStage(devStage);
+    this.pipeline.buildPipeline(); // Needed for CDK Nag
   }
 }

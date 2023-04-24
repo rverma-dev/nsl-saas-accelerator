@@ -1,11 +1,14 @@
+import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { TOOLCHAIN_ENV } from './lib/configuration';
-import { ToolchainStack } from './lib/toolchain-stack';
 import { getPipelineName } from './lib/types';
-import { WorkloadPipelineProps, WorkloadPipelineStack } from './lib/workload-pipeline-stack';
+import { ToolchainStack } from './toolchain-stack';
+import { WorkloadPipelineProps, WorkloadPipelineStack } from './workload-pipeline-stack';
 
-const app = PDKNag.app();
-
+const app = PDKNag.app({
+  failOnError: false,
+});
+new CdkGraph(app);
 /*
  * This is the main CDK application for the sample solution.
  *

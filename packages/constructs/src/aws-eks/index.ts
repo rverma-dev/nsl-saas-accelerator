@@ -1,6 +1,5 @@
 import * as blueprints from '@nslhb/eks-blueprints';
-import * as cdk from 'aws-cdk-lib';
-import { NestedStack, StackProps } from 'aws-cdk-lib';
+import { Stack } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as eks from 'aws-cdk-lib/aws-eks';
 import * as kms from 'aws-cdk-lib/aws-kms';
@@ -10,36 +9,36 @@ import * as addons from './addon';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.large')];
 
-export interface EKSClusterProps extends StackProps{
-  readonly stackName: string;
+export interface EKSClusterProps {
   readonly vpcID?: string;
   readonly platformTeamRole: string;
-  readonly gitopsRepoBranch: string;
-  readonly gitopsRepoSecret: string;
-  readonly gitopsRepoUrl: string;
+  readonly gitopsRepoBranch?: string;
+  readonly gitopsRepoSecret?: string;
+  readonly gitopsRepoUrl?: string;
 }
 
-export class EksCluster extends NestedStack {
-  testStack?: cdk.Stack;
-  constructor(scope: Construct, id: string, props: EKSClusterProps) {
-    super(scope, id);
-    const stackName = props.stackName;
+export class EksCluster extends Construct {
+  constructor(scope: Construct, props: EKSClusterProps) {
+    super(scope, `blueprint-${scope.node.id}`);
+    const st = Stack.of(this);
+    const account = st.account;
+    const region = st.region;
     const teams = [
       new blueprints.PlatformTeam({
         name: 'platform',
-        userRoleArn: `arn:aws:iam::${process.env.CDK_DEFAULT_ACCOUNT}:role/${props.platformTeamRole}`,
+        userRoleArn: `arn:aws:iam::${account}:role/${props.platformTeamRole}`,
       }),
     ];
 
     // AddOns for the cluster.
-    const addOns: Array<blueprints.ClusterAddOn> = [
+    let addOns: Array<blueprints.ClusterAddOn> = [
       new blueprints.addons.MetricsServerAddOn(),
       new blueprints.addons.EbsCsiDriverAddOn({
         kmsKeys: [
           blueprints.getResource(
             context =>
-              new kms.Key(context.scope, `${stackName}-ebs-csi-driver`, {
-                alias: `${stackName}/csi-driver`,
+              new kms.Key(context.scope, `blueprint-${scope.node.id}-ebs-csi-driver`, {
+                alias: `blueprint-${scope.node.id}/csi-driver`,
                 enableKeyRotation: true,
               }),
           ),
@@ -51,7 +50,7 @@ export class EksCluster extends NestedStack {
           ['kubernetes.io/role/internal-elb']: '1',
         },
         securityGroupTags: {
-          [`kubernetes.io/cluster/blueprint-${stackName}`]: 'owned',
+          [`kubernetes.io/cluster/blueprint-${scope.node.id}`]: 'owned',
         },
       }),
       new blueprints.addons.AwsLoadBalancerControllerAddOn(),
@@ -62,13 +61,17 @@ export class EksCluster extends NestedStack {
       new blueprints.addons.KubeProxyAddOn(),
       new blueprints.addons.CertManagerAddOn(),
       new blueprints.addons.SecretsStoreAddOn(),
-      new addons.FluxV2Addon({
+    ];
+
+    if (props.gitopsRepoBranch && props.gitopsRepoUrl && props.gitopsRepoSecret) {
+      const flux = new addons.FluxV2Addon({
         credentialsType: 'USERNAME',
         repoBranch: props.gitopsRepoBranch,
         repoUrl: props.gitopsRepoUrl,
         secretName: props.gitopsRepoSecret,
-      }),
-    ];
+      });
+      addOns.push(flux);
+    }
 
     const clusterProvider = new blueprints.GenericClusterProvider({
       version: eks.KubernetesVersion.V1_25,
@@ -90,8 +93,10 @@ export class EksCluster extends NestedStack {
       .resourceProvider(blueprints.GlobalResources.Vpc, new blueprints.VpcProvider(props.vpcID))
       .clusterProvider(clusterProvider)
       .teams(...teams)
+      .account(account)
+      .region(region)
       .enableControlPlaneLogTypes(blueprints.ControlPlaneLogType.API)
-      .build(scope, stackName);
+      .build(this, `blueprint-${scope.node.id}`);
 
     NagSuppressions.addStackSuppressions(
       cluster,
@@ -107,6 +112,5 @@ export class EksCluster extends NestedStack {
       ],
       true,
     );
-    this.testStack = cluster;
   }
 }

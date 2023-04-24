@@ -1,7 +1,7 @@
 import { DemoPipeline } from '@nsa/demo/lib/pipeline-stack';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { DeploymentRecord, getPipelineName } from './types';
+import { DeploymentRecord, getPipelineName } from './lib/types';
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {

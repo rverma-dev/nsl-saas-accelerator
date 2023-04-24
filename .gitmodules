@@ -1,3 +1,0 @@
-[submodule "packages/eks-blueprints"]
-	path = packages/eks-blueprints
-	url = https://github.com/nslhb/cdk-eks-blueprints.git

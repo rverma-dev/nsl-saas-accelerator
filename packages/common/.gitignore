@@ -30,9 +30,6 @@ jspm_packages/
 .yarn-integrity
 .cache
 !/.projenrc.js
-/test-reports/
-junit.xml
-/coverage/
 !/test/
 !/tsconfig.json
 !/tsconfig.dev.json
@@ -40,9 +37,3 @@ junit.xml
 /lib
 /dist/
 !/.eslintrc.json
-/assets/
-!/cdk.json
-/cdk.out/
-.cdk.staging/
-.parcel-cache/
-!/src/lib/find-eks-custer-function.ts

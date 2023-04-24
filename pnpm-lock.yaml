@@ -23,6 +23,9 @@ importers:
       '@nrwl/devkit':
         specifier: ^15.9.2
         version: 15.9.2(nx@15.9.2)
+      '@nrwl/nx-cloud':
+        specifier: ^16.0.1
+        version: 16.0.1
       '@nrwl/workspace':
         specifier: ^15.9.2
         version: 15.9.2
@@ -81,6 +84,39 @@ importers:
         specifier: ~5.0.4
         version: 5.0.4
 
+  packages/common:
+    devDependencies:
+      '@types/node':
+        specifier: ^18
+        version: 18.15.12
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5
+        version: 5.59.0(@typescript-eslint/parser@5.59.0)(eslint@8.38.0)(typescript@5.0.4)
+      '@typescript-eslint/parser':
+        specifier: ^5
+        version: 5.59.0(eslint@8.38.0)(typescript@5.0.4)
+      eslint:
+        specifier: ^8
+        version: 8.38.0
+      eslint-import-resolver-node:
+        specifier: ^0.3.7
+        version: 0.3.7
+      eslint-import-resolver-typescript:
+        specifier: ^3.5.5
+        version: 3.5.5(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-node@0.3.7)(eslint-plugin-import@2.27.5)(eslint@8.38.0)
+      eslint-plugin-import:
+        specifier: ^2.27.5
+        version: 2.27.5(@typescript-eslint/parser@5.59.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.38.0)
+      npm-check-updates:
+        specifier: ^16
+        version: 16.10.9
+      projen:
+        specifier: ^0.71.21
+        version: 0.71.21
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
   packages/constructs:
     dependencies:
       '@aws-sdk/client-iam':
@@ -90,11 +126,20 @@ importers:
         specifier: ^3.316.0
         version: 3.317.0
       '@nslhb/eks-blueprints':
-        specifier: 1.6.20
-        version: 1.6.20
+        specifier: 1.6.21
+        version: 1.6.21
+      '@pnpm/reviewing.dependencies-hierarchy':
+        specifier: '*'
+        version: 2.0.3(@pnpm/logger@5.0.0)
+      '@types/fs-extra':
+        specifier: 11.0.1
+        version: 11.0.1
       '@types/js-yaml':
         specifier: 4.0.5
         version: 4.0.5
+      '@types/semver':
+        specifier: 7.3.13
+        version: 7.3.13
       js-yaml:
         specifier: 4.1.0
         version: 4.1.0
@@ -119,16 +164,16 @@ importers:
         version: 5.59.0(eslint@8.38.0)(typescript@5.0.4)
       aws-cdk-lib:
         specifier: 2.76.0
-        version: 2.76.0(constructs@10.2.2)
+        version: 2.76.0(constructs@10.2.4)
       aws-lambda:
         specifier: ^1.0.7
         version: 1.0.7
       cdk-nag:
         specifier: 2.26.1
-        version: 2.26.1(aws-cdk-lib@2.76.0)(constructs@10.2.2)
+        version: 2.26.1(aws-cdk-lib@2.76.0)(constructs@10.2.4)
       constructs:
-        specifier: 10.2.2
-        version: 10.2.2
+        specifier: 10.2.4
+        version: 10.2.4
       esbuild:
         specifier: ^0.0.0
         version: 0.0.0
@@ -179,22 +224,25 @@ importers:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
         specifier: 0.17.0
-        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)
+        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)
       '@aws-prototyping-sdk/static-website':
         specifier: 0.17.0
-        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(projen@0.71.19)
+        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(projen@0.71.19)
+      '@nsa/common':
+        specifier: '*'
+        version: link:../common
       aws-cdk-lib:
         specifier: ^2.76.0
-        version: 2.76.0(constructs@10.2.3)
+        version: 2.76.0(constructs@10.2.4)
       aws-prototyping-sdk:
         specifier: ^0.17.0
-        version: 0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.19)
+        version: 0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(nx@15.9.2)(projen@0.71.19)
       cdk-nag:
         specifier: ^2.26.2
-        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
+        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
       constructs:
-        specifier: ^10.2.2
-        version: 10.2.3
+        specifier: ^10.2.4
+        version: 10.2.4
     devDependencies:
       '@types/jest':
         specifier: ^29.1.0
@@ -250,9 +298,12 @@ importers:
 
   packages/installer:
     dependencies:
+      '@aws-prototyping-sdk/cdk-graph':
+        specifier: 0.17.0
+        version: 0.17.0(aws-cdk-lib@2.76.0)(constructs@10.2.4)(projen@0.71.19)
       '@aws-prototyping-sdk/pdk-nag':
         specifier: 0.17.0
-        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)
+        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)
       '@aws-sdk/client-cloudformation':
         specifier: ^3.316.0
         version: 3.316.0
@@ -268,24 +319,21 @@ importers:
       '@aws-sdk/client-ec2':
         specifier: ^3.316.0
         version: 3.316.0
+      '@nsa/common':
+        specifier: '*'
+        version: link:../common
       '@nsa/demo':
         specifier: ^0.0.0
         version: link:../demo
-      '@nsa/pool':
-        specifier: ^0.0.0
-        version: link:../pool
-      '@nsa/silo':
-        specifier: ^0.0.0
-        version: link:../silo
       '@types/aws-lambda':
         specifier: ^8.10.114
         version: 8.10.114
       aws-cdk-lib:
         specifier: ^2.76.0
-        version: 2.76.0(constructs@10.2.3)
+        version: 2.76.0(constructs@10.2.4)
       constructs:
-        specifier: ^10.2.2
-        version: 10.2.3
+        specifier: ^10.2.4
+        version: 10.2.4
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
@@ -352,7 +400,7 @@ importers:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
         specifier: 0.17.0
-        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)
+        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)
       '@aws-sdk/client-iam':
         specifier: ^3.316.0
         version: 3.316.0
@@ -362,6 +410,9 @@ importers:
       '@jest/globals':
         specifier: ^29.5.0
         version: 29.5.0
+      '@nsa/common':
+        specifier: '*'
+        version: link:../common
       '@nsa/construct':
         specifier: ^0.0.0
         version: link:../constructs
@@ -370,16 +421,16 @@ importers:
         version: 8.10.114
       aws-cdk-lib:
         specifier: ^2.76.0
-        version: 2.76.0(constructs@10.2.3)
+        version: 2.76.0(constructs@10.2.4)
       aws-prototyping-sdk:
         specifier: ^0.17.0
-        version: 0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.21)
+        version: 0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(nx@15.9.2)(projen@0.71.21)
       cdk-nag:
         specifier: ^2.26.2
-        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
+        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
       constructs:
-        specifier: ^10.2.2
-        version: 10.2.3
+        specifier: ^10.2.4
+        version: 10.2.4
     devDependencies:
       '@types/jest':
         specifier: ^29.1.0
@@ -440,7 +491,7 @@ importers:
     dependencies:
       '@aws-prototyping-sdk/pdk-nag':
         specifier: 0.17.0
-        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)
+        version: 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)
       '@aws-sdk/client-iam':
         specifier: ^3.316.0
         version: 3.316.0
@@ -450,6 +501,9 @@ importers:
       '@jest/globals':
         specifier: ^29.5.0
         version: 29.5.0
+      '@nsa/common':
+        specifier: '*'
+        version: link:../common
       '@nsa/construct':
         specifier: ^0.0.0
         version: link:../constructs
@@ -458,16 +512,16 @@ importers:
         version: 8.10.114
       aws-cdk-lib:
         specifier: ^2.76.0
-        version: 2.76.0(constructs@10.2.3)
+        version: 2.76.0(constructs@10.2.4)
       aws-prototyping-sdk:
         specifier: ^0.17.0
-        version: 0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.21)
+        version: 0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(nx@15.9.2)(projen@0.71.21)
       cdk-nag:
         specifier: ^2.26.2
-        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
+        version: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
       constructs:
-        specifier: ^10.2.2
-        version: 10.2.3
+        specifier: ^10.2.4
+        version: 10.2.4
     devDependencies:
       '@types/jest':
         specifier: ^29.1.0
@@ -542,34 +596,34 @@ packages:
   /@aws-cdk/asset-node-proxy-agent-v5@2.0.123:
     resolution: {integrity: sha512-Su1Dm+Ie58KpkqUly+C4o8FGX4BrQq4XdfyT/hiNo3SlhXq/qcFNYMlciQREospZKzB1F1sSNcTar1Hj6lB9kw==}
 
-  /@aws-cdk/lambda-layer-kubectl-v23@2.0.7(aws-cdk-lib@2.76.0)(constructs@10.2.2):
+  /@aws-cdk/lambda-layer-kubectl-v23@2.0.7(aws-cdk-lib@2.76.0)(constructs@10.2.4):
     resolution: {integrity: sha512-YflWr+dw26oPHrtdw1U6nQ7dEVvs3g7DNQrwb9nep0ryOdDTHdnMfdI65oh6GYMZIxCaVaiRc1RXwHSs+Fc6Bg==}
     peerDependencies:
       aws-cdk-lib: ^2.0.0
       constructs: ^10.0.5
     dependencies:
-      aws-cdk-lib: 2.76.0(constructs@10.2.2)
-      constructs: 10.2.2
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      constructs: 10.2.4
     dev: false
 
-  /@aws-cdk/lambda-layer-kubectl-v24@2.0.167(aws-cdk-lib@2.76.0)(constructs@10.2.2):
+  /@aws-cdk/lambda-layer-kubectl-v24@2.0.167(aws-cdk-lib@2.76.0)(constructs@10.2.4):
     resolution: {integrity: sha512-G0pap52PJjnOinSyAGflFoCedccB6hr1k82s1ve6t93Fj71O0fjZqoYBdDKa1c3bjDW2zysnQMovCwYjMkCUkA==}
     peerDependencies:
       aws-cdk-lib: ^2.0.0
       constructs: ^10.0.5
     dependencies:
-      aws-cdk-lib: 2.76.0(constructs@10.2.2)
-      constructs: 10.2.2
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      constructs: 10.2.4
     dev: false
 
-  /@aws-cdk/lambda-layer-kubectl-v25@2.0.3(aws-cdk-lib@2.76.0)(constructs@10.2.2):
+  /@aws-cdk/lambda-layer-kubectl-v25@2.0.3(aws-cdk-lib@2.76.0)(constructs@10.2.4):
     resolution: {integrity: sha512-+j1YqLsPiHa87Pt/lULgH4c++BSdJQuA7qw6gN7BpbFVUapTkcpxtNjC3YnXk35t380PXPjPlVZrNMRQOWYl7w==}
     peerDependencies:
       aws-cdk-lib: ^2.0.0
       constructs: ^10.0.5
     dependencies:
-      aws-cdk-lib: 2.76.0(constructs@10.2.2)
-      constructs: 10.2.2
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      constructs: 10.2.4
     dev: false
 
   /@aws-crypto/ie11-detection@3.0.0:
@@ -613,19 +667,56 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@aws-prototyping-sdk/pdk-nag@0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3):
+  /@aws-prototyping-sdk/cdk-graph@0.17.0(aws-cdk-lib@2.76.0)(constructs@10.2.4)(projen@0.71.19):
+    resolution: {integrity: sha512-J3ATRhNb0MsN21JVmrrC07cSqLqN6TmRNWresGD1NMNiwzicdt0JPXwsefSA/oo8oYPDfPxrG/AT4wwSdI7dLQ==}
+    peerDependencies:
+      aws-cdk-lib: ^2.60.0
+      constructs: ^10.1.222
+      projen: ^0.71.3
+    dependencies:
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      chalk: 4.1.2
+      constructs: 10.2.4
+      find-up: 4.1.0
+      fs-extra: 11.1.1
+      lodash.clonedeep: 4.5.0
+      lodash.isempty: 4.4.0
+      lodash.memoize: 4.1.2
+      lodash.merge: 4.6.2
+      lodash.omit: 4.5.0
+      lodash.uniq: 4.5.0
+      lodash.uniqby: 4.7.0
+      projen: 0.71.19
+      shorthash2: 1.0.3
+      traverse: 0.6.7
+    dev: false
+    bundledDependencies:
+      - chalk
+      - find-up
+      - fs-extra
+      - lodash.clonedeep
+      - lodash.isempty
+      - lodash.memoize
+      - lodash.merge
+      - lodash.omit
+      - lodash.uniq
+      - lodash.uniqby
+      - shorthash2
+      - traverse
+
+  /@aws-prototyping-sdk/pdk-nag@0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4):
     resolution: {integrity: sha512-d3tJJHKi+tkeJkMDBG210OFCNv5RWtGelMet2NuaCffqlia7GJST5ckm2MngHHEdhmMCTlbMEpWiowei543ktg==}
     peerDependencies:
       aws-cdk-lib: ^2.60.0
       cdk-nag: ^2.21.65
       constructs: ^10.1.222
     dependencies:
-      aws-cdk-lib: 2.76.0(constructs@10.2.3)
-      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
-      constructs: 10.2.3
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      constructs: 10.2.4
     dev: false
 
-  /@aws-prototyping-sdk/static-website@0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(projen@0.71.19):
+  /@aws-prototyping-sdk/static-website@0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(projen@0.71.19):
     resolution: {integrity: sha512-cY3TdQafuBNToA6DAJCY4V+R14su9aPBtnIbpK3bphyokB+Uq92MkglFiLmtFuT2dnnjWkmabcBFOzPpZHct4Q==}
     peerDependencies:
       aws-cdk-lib: ^2.60.0
@@ -633,10 +724,10 @@ packages:
       constructs: ^10.1.222
       projen: ^0.71.3
     dependencies:
-      '@aws-prototyping-sdk/pdk-nag': 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)
-      aws-cdk-lib: 2.76.0(constructs@10.2.3)
-      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
-      constructs: 10.2.3
+      '@aws-prototyping-sdk/pdk-nag': 0.17.0(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      constructs: 10.2.4
       projen: 0.71.19
     dev: false
 
@@ -2674,6 +2765,14 @@ packages:
       tmp: 0.2.1
       tslib: 2.5.0
 
+  /@nrwl/nx-cloud@16.0.1:
+    resolution: {integrity: sha512-z5Ydlw9BU6DJCvwVI0LPVdMRORAxeHdIS4wzdsrSvoCeVEL6l6RCk1c3bXQ6IHtA2EdVt0yDirMp0Q0ybf5fIQ==}
+    dependencies:
+      nx-cloud: 16.0.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /@nrwl/nx-darwin-arm64@15.9.2:
     resolution: {integrity: sha512-Yv+OVsQt3C/hmWOC+YhJZQlsyph5w1BHfbp4jyCvV1ZXBbb8NdvwxgDHPWXxKPTc1EXuB7aEX3qzxM3/OWEUJg==}
     engines: {node: '>= 10'}
@@ -2785,20 +2884,20 @@ packages:
       - debug
     dev: true
 
-  /@nslhb/eks-blueprints@1.6.20:
-    resolution: {integrity: sha512-BfdxMvxbXMWvDsC5L3G4j4k9yXTAEaQhnmA/BijMLg5QmNDmN3t4UUTMa/siOACSGEZ42gbW2P1AJO2XBAXlRA==, tarball: https://npm.pkg.github.com/download/@nslhb/eks-blueprints/1.6.20/90cbc44d26340bd369f16b8728c766973bd1dc50}
+  /@nslhb/eks-blueprints@1.6.21:
+    resolution: {integrity: sha512-S7ikkCPeU8l1hpeKByCuvOksWRSsAtVl7TGlS6yzkp8B6bFKWHW1zuSUGXLmSQog1CTKrr5cnOSemx1h9cm2Qg==, tarball: https://npm.pkg.github.com/download/@nslhb/eks-blueprints/1.6.21/100af3aa3c30d938a6437b474ea7eceaad57c3fe}
     dependencies:
-      '@aws-cdk/lambda-layer-kubectl-v23': 2.0.7(aws-cdk-lib@2.76.0)(constructs@10.2.2)
-      '@aws-cdk/lambda-layer-kubectl-v24': 2.0.167(aws-cdk-lib@2.76.0)(constructs@10.2.2)
-      '@aws-cdk/lambda-layer-kubectl-v25': 2.0.3(aws-cdk-lib@2.76.0)(constructs@10.2.2)
+      '@aws-cdk/lambda-layer-kubectl-v23': 2.0.7(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      '@aws-cdk/lambda-layer-kubectl-v24': 2.0.167(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      '@aws-cdk/lambda-layer-kubectl-v25': 2.0.3(aws-cdk-lib@2.76.0)(constructs@10.2.4)
       '@aws-sdk/client-secrets-manager': 3.317.0
       '@types/assert': 1.5.6
       '@types/bcrypt': 5.0.0
       '@types/lodash.clonedeep': 4.5.7
       '@types/uuid': 9.0.1
-      aws-cdk-lib: 2.76.0(constructs@10.2.2)
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
       bcrypt: 5.1.0
-      constructs: 10.2.2
+      constructs: 10.2.4
       dot-object: 2.1.4
       js-yaml: 4.1.0
       lodash: 4.17.21
@@ -3298,6 +3397,13 @@ packages:
       '@types/node': 18.15.12
     dev: false
 
+  /@types/fs-extra@11.0.1:
+    resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
+    dependencies:
+      '@types/jsonfile': 6.1.1
+      '@types/node': 18.15.12
+    dev: false
+
   /@types/graceful-fs@4.1.6:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
@@ -3338,6 +3444,12 @@ packages:
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
+
+  /@types/jsonfile@6.1.1:
+    resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
+    dependencies:
+      '@types/node': 18.15.12
+    dev: false
 
   /@types/lodash.clonedeep@4.5.7:
     resolution: {integrity: sha512-ccNqkPptFIXrpVqUECi60/DFxjNKsfoQxSQsgcBJCX/fuX1wgyQieojkcWH/KpE3xzLoWN/2k+ZeGqIN3paSvw==}
@@ -3385,7 +3497,6 @@ packages:
 
   /@types/semver@7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
-    dev: true
 
   /@types/stack-utils@2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
@@ -3846,7 +3957,7 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /aws-cdk-lib@2.76.0(constructs@10.2.2):
+  /aws-cdk-lib@2.76.0(constructs@10.2.3):
     resolution: {integrity: sha512-EYWdHh/qJA7v+jD6SeW+BOEChI7oe6IYPHHap+SoJMUrKBVSDKnIGJ8wTP5eV6F27aYaUQiA7rWTKcCWoda8ag==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -3857,7 +3968,7 @@ packages:
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.123
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
-      constructs: 10.2.2
+      constructs: 10.2.3
       fs-extra: 9.1.0
       ignore: 5.2.4
       jsonschema: 1.4.1
@@ -3878,7 +3989,7 @@ packages:
       - table
       - yaml
 
-  /aws-cdk-lib@2.76.0(constructs@10.2.3):
+  /aws-cdk-lib@2.76.0(constructs@10.2.4):
     resolution: {integrity: sha512-EYWdHh/qJA7v+jD6SeW+BOEChI7oe6IYPHHap+SoJMUrKBVSDKnIGJ8wTP5eV6F27aYaUQiA7rWTKcCWoda8ag==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -3889,7 +4000,7 @@ packages:
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.123
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
-      constructs: 10.2.3
+      constructs: 10.2.4
       fs-extra: 9.1.0
       ignore: 5.2.4
       jsonschema: 1.4.1
@@ -3947,13 +4058,40 @@ packages:
     transitivePeerDependencies:
       - '@pnpm/logger'
       - nx
+    dev: true
     bundledDependencies:
       - '@nrwl/devkit'
       - '@pnpm/reviewing.dependencies-hierarchy'
       - fs-extra
       - semver
 
-  /aws-prototyping-sdk@0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.3)(nx@15.9.2)(projen@0.71.19):
+  /aws-prototyping-sdk@0.17.0(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(nx@15.9.2)(projen@0.71.21):
+    resolution: {integrity: sha512-Pt/lWXAo/J/PshZVdGuHdVwvrVEjPK1cLhm8l9ub1MD5OhTgOZhvbiJ5hUKMeXAXiaUk7nlHGvC/thTN+jYtSQ==}
+    peerDependencies:
+      aws-cdk-lib: ^2.60.0
+      cdk-nag: ^2.21.65
+      constructs: ^10.1.222
+      projen: ^0.71.3
+    dependencies:
+      '@nrwl/devkit': 15.9.2(nx@15.9.2)
+      '@pnpm/reviewing.dependencies-hierarchy': 2.0.3(@pnpm/logger@5.0.0)
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      constructs: 10.2.4
+      fs-extra: 10.1.0
+      projen: 0.71.21
+      semver: 4.3.6
+    transitivePeerDependencies:
+      - '@pnpm/logger'
+      - nx
+    dev: false
+    bundledDependencies:
+      - '@nrwl/devkit'
+      - '@pnpm/reviewing.dependencies-hierarchy'
+      - fs-extra
+      - semver
+
+  /aws-prototyping-sdk@0.17.1(@pnpm/logger@5.0.0)(aws-cdk-lib@2.76.0)(cdk-nag@2.26.2)(constructs@10.2.4)(nx@15.9.2)(projen@0.71.19):
     resolution: {integrity: sha512-KTQJLaXSE3WpfaDLqBaQmFhvjBXtma3ULE6/cFglW4y1VpHBxrL0uUXpEgeR50gUGg5XxeX2K8eLLqxULMGcAw==}
     peerDependencies:
       aws-cdk-lib: ^2.60.0
@@ -3963,9 +4101,9 @@ packages:
     dependencies:
       '@nrwl/devkit': 15.9.2(nx@15.9.2)
       '@pnpm/reviewing.dependencies-hierarchy': 2.0.3(@pnpm/logger@5.0.0)
-      aws-cdk-lib: 2.76.0(constructs@10.2.3)
-      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3)
-      constructs: 10.2.3
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      cdk-nag: 2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4)
+      constructs: 10.2.4
       fs-extra: 10.1.0
       projen: 0.71.19
       semver: 4.3.6
@@ -4330,14 +4468,14 @@ packages:
     resolution: {integrity: sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==}
     dev: false
 
-  /cdk-nag@2.26.1(aws-cdk-lib@2.76.0)(constructs@10.2.2):
+  /cdk-nag@2.26.1(aws-cdk-lib@2.76.0)(constructs@10.2.4):
     resolution: {integrity: sha512-+qJwDb4QDVzppLSPGnqzJtFeVj5IPLwlyb70uhtmgRqnLBaKcaKgL7N0YaoeHNwaTvA+N24MLY5Eq/gitob06w==}
     peerDependencies:
       aws-cdk-lib: ^2.45.0
       constructs: ^10.0.5
     dependencies:
-      aws-cdk-lib: 2.76.0(constructs@10.2.2)
-      constructs: 10.2.2
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      constructs: 10.2.4
     dev: true
 
   /cdk-nag@2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.3):
@@ -4348,6 +4486,16 @@ packages:
     dependencies:
       aws-cdk-lib: 2.76.0(constructs@10.2.3)
       constructs: 10.2.3
+
+  /cdk-nag@2.26.2(aws-cdk-lib@2.76.0)(constructs@10.2.4):
+    resolution: {integrity: sha512-bSwEr46GMqaA0x4bIXCnEzpbKCvDs6qZ690jhbbHKfw9jO02MQS2o5Bpe8qlue7Z0Y7qpRVOanUYEIJcKcJB1A==}
+    peerDependencies:
+      aws-cdk-lib: ^2.45.0
+      constructs: ^10.0.5
+    dependencies:
+      aws-cdk-lib: 2.76.0(constructs@10.2.4)
+      constructs: 10.2.4
+    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -4676,12 +4824,12 @@ packages:
   /console-control-strings@1.1.0:
     resolution: {integrity: sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ==}
 
-  /constructs@10.2.2:
-    resolution: {integrity: sha512-1mSuh0pwJUaGEYuxJH+oxtD5n6JlxX5yD3zmaiyZ7Olv0t1hlZCYZ/AAW0wNUbxpp04BakTTMOISo7Rvmdsw4g==}
-    engines: {node: '>= 14.17.0'}
-
   /constructs@10.2.3:
     resolution: {integrity: sha512-9mmO/2ISq9IiQyGOs46mNf0WMDRJ+ok4qC1hzXUtVY8rQVRfxAtQaH1M0b8TX9MKE52DBGk8vOX9icavGl7Bbg==}
+    engines: {node: '>= 14.17.0'}
+
+  /constructs@10.2.4:
+    resolution: {integrity: sha512-lls5uUt3LktiR5xqjwYndV+jzHRbdZn5PuSsc5iUA2zrKTJohTe/zIi0h3/GtMYrkWrAePYorFG2xBXvtPGpPQ==}
     engines: {node: '>= 14.17.0'}
 
   /conventional-changelog-angular@5.0.12:
@@ -7704,20 +7852,38 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+    dev: false
+
+  /lodash.isempty@4.4.0:
+    resolution: {integrity: sha512-oKMuF3xEeqDltrGMfDxAPGIVMSSRv8tbRSODbrs4KGsRRLEhrW8N8Rd4DRgB2+621hY8A8XwwrTVhXWpxFvMzg==}
+    dev: false
+
   /lodash.ismatch@4.4.0:
     resolution: {integrity: sha512-fPMfXjGQEV9Xsq/8MTSgUf255gawYRbjwMyDbcvDhXgV7enSZA0hynz6vMPnpAb5iONEzBHBPsT+0zes5Z301g==}
     dev: true
 
   /lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
-    dev: true
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
-    dev: true
+
+  /lodash.omit@4.5.0:
+    resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    dev: false
 
   /lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
+
+  /lodash.uniq@4.5.0:
+    resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
+    dev: false
+
+  /lodash.uniqby@4.7.0:
+    resolution: {integrity: sha512-e/zcLx6CSbmaEgFHCA7BnoQKyCtKMxnuWrJygbwPs/AIn+IMKl66L8/s+wBUn5LRw2pZx3bUHibiV1b6aTWIww==}
+    dev: false
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -8204,6 +8370,10 @@ packages:
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
 
+  /node-machine-id@1.1.12:
+    resolution: {integrity: sha512-QNABxbrPa3qEIfrE6GOJ7BYIuignnJw7iQ2YPbc3Nla1HzRJjXzZOiikfF8m7eAMfichLt3M4VgLOetqgDmgGQ==}
+    dev: true
+
   /node-releases@2.0.10:
     resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
 
@@ -8510,6 +8680,23 @@ packages:
       console-control-strings: 1.1.0
       gauge: 5.0.0
       set-blocking: 2.0.0
+    dev: true
+
+  /nx-cloud@16.0.1:
+    resolution: {integrity: sha512-epCxvKVK9niHzZ5TiCJ+93PtXcZmXqkITiqV/qwihJEM4xY4H16qYGYN76Y8sF7dRYC+vlYE5WgFwuGlPXo2Fw==}
+    hasBin: true
+    dependencies:
+      '@nrwl/nx-cloud': 16.0.1
+      axios: 1.3.6
+      chalk: 4.1.2
+      dotenv: 10.0.0
+      fs-extra: 11.1.1
+      node-machine-id: 1.1.12
+      strip-json-comments: 3.1.1
+      tar: 6.1.11
+      yargs-parser: 21.1.1
+    transitivePeerDependencies:
+      - debug
     dev: true
 
   /nx@15.9.2:
@@ -9671,6 +9858,10 @@ packages:
       interpret: 1.4.0
       rechoir: 0.6.2
 
+  /shorthash2@1.0.3:
+    resolution: {integrity: sha512-oB8s64JsyJ2xhHJlnTwGg++Y3BTF6XnXeXMC7OygD8vtNcCRDiMxEGONvUOeZbxfwEXENmRlqPDouMR/OtGDsw==}
+    dev: false
+
   /shx@0.3.4:
     resolution: {integrity: sha512-N6A9MLVqjxZYcVn8hLmtneQWIJtp8IKzMP4eMnx+nqkvXoqinUPCbUFLp2UcWTEIUONhlk0ewxr/jaVGlc+J+g==}
     engines: {node: '>=6'}
@@ -10245,6 +10436,10 @@ packages:
 
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
+  /traverse@0.6.7:
+    resolution: {integrity: sha512-/y956gpUo9ZNCb99YjxG7OaslxZWHfCHAUUfshwqOXmxUIvqLjVO581BT+gM59+QV9tFe6/CGG53tsA1Y7RSdg==}
+    dev: false
 
   /treeverse@3.0.0:
     resolution: {integrity: sha512-gcANaAnd2QDZFmHFEOF4k7uc1J/6a6z3DJMd/QwEyxLoKGiptJRwid582r7QIsFlFMIZ3SnxfS52S4hm2DHkuQ==}

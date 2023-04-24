@@ -39,7 +39,7 @@
     },
     {
       "name": "constructs",
-      "version": "10.2.2",
+      "version": "10.2.4",
       "type": "build"
     },
     {
@@ -120,12 +120,26 @@
     },
     {
       "name": "@nslhb/eks-blueprints",
-      "version": "1.6.20",
+      "version": "1.6.21",
+      "type": "bundled"
+    },
+    {
+      "name": "@pnpm/reviewing.dependencies-hierarchy",
+      "type": "bundled"
+    },
+    {
+      "name": "@types/fs-extra",
+      "version": "11.0.1",
       "type": "bundled"
     },
     {
       "name": "@types/js-yaml",
       "version": "4.0.5",
+      "type": "bundled"
+    },
+    {
+      "name": "@types/semver",
+      "version": "7.3.13",
       "type": "bundled"
     },
     {
@@ -148,7 +162,7 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.2",
+      "version": "^10.2.4",
       "type": "peer"
     }
   ],

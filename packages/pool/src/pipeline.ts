@@ -1,23 +1,15 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
+import { PDKNag } from 'aws-prototyping-sdk/pdk-nag';
+import { PipelineStack } from './pipeline-stack';
 
-export class MyStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps = {}) {
-    super(scope, id, props);
-
-    // define resources here...
-  }
-}
-
-// for development, use account/region from cdk cli
-const devEnv = {
-  account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION,
-};
-
-const app = new App();
-
-new MyStack(app, '@nsa/pool-dev', { env: devEnv });
-// new MyStack(app, '@nsa/pool-prod', { env: prodEnv });
-
+const app = PDKNag.app();
+new PipelineStack(app, 'PipelineStack', {
+  id: 'dev-001',
+  tenantId: 'CH',
+  tier: 'small',
+  type: 'pool',
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT!,
+    region: process.env.CDK_DEFAULT_REGION!,
+  },
+});
 app.synth();

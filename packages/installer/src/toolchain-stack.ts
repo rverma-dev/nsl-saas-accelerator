@@ -1,3 +1,4 @@
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { BuildSpec, ComputeType, LinuxArmBuildImage, Project } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
@@ -8,8 +9,8 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
-import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, GITHUB_DOMAIN, REPOSITORY_NAME, REPOSITORY_OWNER } from './configuration';
-import { AddTenantFunction } from '../ddb-stream/add-tenant-function';
+import { AddTenantFunction } from './ddb-stream/add-tenant-function';
+import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, GITHUB_DOMAIN, REPOSITORY_NAME, REPOSITORY_OWNER } from './lib/configuration';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -215,5 +216,17 @@ export class ToolchainStack extends Stack {
       },
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
+    PDKNag.addResourceSuppressionsByPathNoThrow(
+      this,
+      `${PDKNag.getStackPrefix(this)}/*`,
+      [
+        { id: 'AwsSolutions-S1', reason: 'Internal codebuild bucket' },
+        { id: 'AwsSolutions-L1', reason: 'Internal codebuild bucket' },
+        { id: 'AwsSolutions-IAM4', reason: 'Managed IAM Policies' },
+        { id: 'AwsSolutions-IAM5', reason: 'Wildcard policies for AWS Load Balancer Controller' },
+        { id: 'AwsSolutions-CB4', reason: 'Public access for demo purposes' },
+      ],
+      false,
+    );
   }
 }

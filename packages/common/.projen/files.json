@@ -7,9 +7,7 @@
     ".projen/deps.json",
     ".projen/files.json",
     ".projen/tasks.json",
-    "cdk.json",
     "LICENSE",
-    "src/lib/find-eks-custer-function.ts",
     "tsconfig.dev.json",
     "tsconfig.json"
   ],

@@ -4,6 +4,9 @@
     "type": "git",
     "url": "https://github.com/rverma-nsl/nsl-saas-accelerator.git"
   },
+  "bin": {
+    "pdk@pnpm-link-bundled-transitive-deps": "./scripts/pnpm/link-bundled-transitive-deps.ts"
+  },
   "scripts": {
     "build": "npx projen build",
     "bundle": "npx projen bundle",
@@ -40,7 +43,7 @@
     "aws-cdk-lib": "2.76.0",
     "aws-lambda": "^1.0.7",
     "cdk-nag": "2.26.1",
-    "constructs": "10.2.2",
+    "constructs": "10.2.4",
     "esbuild": "^0.0.0",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.7",
@@ -60,13 +63,16 @@
   "peerDependencies": {
     "aws-cdk-lib": "^2.76.0",
     "cdk-nag": "^2.26.1",
-    "constructs": "^10.2.2"
+    "constructs": "^10.2.4"
   },
   "dependencies": {
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
-    "@nslhb/eks-blueprints": "1.6.20",
+    "@nslhb/eks-blueprints": "1.6.21",
+    "@pnpm/reviewing.dependencies-hierarchy": "*",
+    "@types/fs-extra": "11.0.1",
     "@types/js-yaml": "4.0.5",
+    "@types/semver": "7.3.13",
     "js-yaml": "4.1.0",
     "sync-request": "^6.1.0"
   },
@@ -74,7 +80,10 @@
     "@aws-sdk/client-iam",
     "@aws-sdk/client-secrets-manager",
     "@nslhb/eks-blueprints",
+    "@pnpm/reviewing.dependencies-hierarchy",
+    "@types/fs-extra",
     "@types/js-yaml",
+    "@types/semver",
     "js-yaml",
     "sync-request"
   ],
@@ -89,6 +98,7 @@
   "license": "Apache-2.0",
   "version": "0.0.0",
   "jest": {
+    "detectOpenHandles": true,
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)"

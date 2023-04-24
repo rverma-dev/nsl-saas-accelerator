@@ -1,25 +1,24 @@
 import { EksCluster } from '@nsa/construct';
-import { App, Fn, Stack, StackProps } from 'aws-cdk-lib';
+import { aws_dynamodb, Fn, Stack, StackProps } from 'aws-cdk-lib';
+import { AttributeType, BillingMode } from 'aws-cdk-lib/aws-dynamodb';
+import { PDKNag } from 'aws-prototyping-sdk/pdk-nag';
 import { Construct } from 'constructs';
 
-export class MyStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps) {
+export class Silo extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    new EksCluster(app, 'eks-cluster', {
-      stackName: this.node.tryGetContext('STACK_NAME') ?? '',
-      vpcID: this.node.tryGetContext('VPC_ID') ?? '',
-      gitopsRepoBranch: this.node.tryGetContext('GITOPS_REPO_BRANCH')!,
-      platformTeamRole: this.node.tryGetContext('PLATFORM_TEAM_ROLE')!,
-      gitopsRepoUrl:
-        this.node.tryGetContext('GITOPS_REPO_URL')
-          ? this.node.tryGetContext('GITOPS_REPO_URL')
-          : Fn.importValue('CodeCommitRepoUrlExport'),
-      gitopsRepoSecret:
-        this.node.tryGetContext('GITOPS_REPO_SECRET')
-          ? this.node.tryGetContext('GITOPS_REPO_SECRET')
-          : Fn.importValue('CodeCommitSecretNameExport'),
-      env: props.env,
+    const eks = new EksCluster(this, {
+      platformTeamRole: scope.node.tryGetContext('PLATFORM_TEAM_ROLE')!,
+      vpcID: scope.node.tryGetContext('VPC_ID'),
+      gitopsRepoBranch: scope.node.tryGetContext('GITOPS_REPO_BRANCH'),
+      gitopsRepoUrl: Fn.importValue('CodeCommitRepoUrlExport'),
+      gitopsRepoSecret: Fn.importValue('CodeCommitSecretNameExport'),
     });
+    const dynamo = new aws_dynamodb.Table(this, 'dynamo', {
+      partitionKey: { name: 'id', type: AttributeType.STRING },
+      billingMode: BillingMode.PAY_PER_REQUEST,
+    });
+    eks.node.addDependency(dynamo);
   }
 }
 
@@ -29,9 +28,8 @@ const devEnv = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-const app = new App();
+const app = PDKNag.app();
 
-new MyStack(app, '@nsa/silo-dev', { env: devEnv });
-// new MyStack(app, '@nsa/silo-prod', { env: prodEnv });
+new Silo(app, 'silo-dev', { env: devEnv });
 
 app.synth();

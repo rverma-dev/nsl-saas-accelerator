@@ -83,11 +83,10 @@ new EksCluster(scope: Construct, props: EKSClusterProps)
 
 * **scope** (<code>[Construct](#constructs-construct)</code>)  *No description*
 * **props** (<code>[EKSClusterProps](#nsa-construct-eksclusterprops)</code>)  *No description*
-  * **gitopsRepoBranch** (<code>string</code>)  *No description* 
-  * **gitopsRepoSecret** (<code>string</code>)  *No description* 
-  * **gitopsRepoUrl** (<code>string</code>)  *No description* 
   * **platformTeamRole** (<code>string</code>)  *No description* 
-  * **stackName** (<code>string</code>)  *No description* 
+  * **gitopsRepoBranch** (<code>string</code>)  *No description* *Optional*
+  * **gitopsRepoSecret** (<code>string</code>)  *No description* *Optional*
+  * **gitopsRepoUrl** (<code>string</code>)  *No description* *Optional*
   * **vpcID** (<code>string</code>)  *No description* *Optional*
 
 
@@ -98,7 +97,6 @@ new EksCluster(scope: Construct, props: EKSClusterProps)
 Name | Type | Description 
 -----|------|-------------
 **node** | <code>[Node](#constructs-node)</code> | The tree node.
-**testStack**? | <code>[Stack](#aws-cdk-lib-stack)</code> | <br/><br/>*Optional*
 
 ### Methods
 
@@ -145,11 +143,10 @@ Name | Type | Description
 
 Name | Type | Description 
 -----|------|-------------
-**gitopsRepoBranch** | <code>string</code> | <span></span>
-**gitopsRepoSecret** | <code>string</code> | <span></span>
-**gitopsRepoUrl** | <code>string</code> | <span></span>
 **platformTeamRole** | <code>string</code> | <span></span>
-**stackName** | <code>string</code> | <span></span>
+**gitopsRepoBranch**? | <code>string</code> | <br/><br/>*Optional*
+**gitopsRepoSecret**? | <code>string</code> | <br/><br/>*Optional*
+**gitopsRepoUrl**? | <code>string</code> | <br/><br/>*Optional*
 **vpcID**? | <code>string</code> | <br/><br/>*Optional*
 
 
