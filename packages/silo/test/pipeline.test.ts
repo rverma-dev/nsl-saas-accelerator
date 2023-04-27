@@ -1,18 +1,18 @@
-import { App } from 'aws-cdk-lib';
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { Template } from 'aws-cdk-lib/assertions';
-import { Silo } from '../src/pipeline';
+import { PipelineStack } from '../src/pipeline-stack';
 
-test('Snapshot', () => {
-  const app = new App();
-  app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
-  app.node.setContext('VPC_ID', 'vpc-12345678');
-  const stack = new Silo(app, 'test', {
-    env: {
-      account: '123456789',
-      region: 'us-east-1',
-    },
+describe('Demo Profile Unit Tests', () => {
+  it('Defaults', () => {
+    const app = PDKNag.app();
+    const stack = new PipelineStack(app, 'PipelineStack', {
+      id: 'dev-001',
+      tenantId: 'CH',
+      tier: 'small',
+      type: 'pool',
+      account: '1111111',
+      region: 'us-west-2',
+    });
+    expect(Template.fromStack(stack).toJSON()).toMatchSnapshot();
   });
-
-  const template = Template.fromStack(stack);
-  expect(template.toJSON()).toMatchSnapshot();
 });

@@ -2,22 +2,17 @@ import { aws_dynamodb, Stack, StackProps } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 import { AttributeType, BillingMode } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
-import { FindEksCusterFunction } from './lib/find-eks-custer-function';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const providerLambda = new FindEksCusterFunction(this, 'get-eks');
-    const provider = new cdk.custom_resources.Provider(this, 'Custom::GitopsSecrets', {
-      onEventHandler: providerLambda,
-    });
+    // const providerLambda = new FindEksCusterFunction(this, 'get-eks');
+    // const provider = new cdk.custom_resources.Provider(this, 'Custom::GitopsSecrets', {
+    //   onEventHandler: providerLambda,
+    // });
 
-    const eks = new cdk.CustomResource(this, 'Resource', {
-      resourceType: '',
-      serviceToken: provider.serviceToken,
-      properties: {
-        Seed: 'nsl-silo',
-      },
+    const eks = cdk.aws_eks.Cluster.fromClusterAttributes(this, 'pool-cluster', {
+      clusterName: 'nsl-silo',
     });
 
     const dynamo = new aws_dynamodb.Table(this, 'dynamo', {

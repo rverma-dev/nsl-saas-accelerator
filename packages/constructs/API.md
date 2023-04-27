@@ -167,7 +167,10 @@ new SaasPipeline(scope: Construct, id: string, props: PDKPipelineProps)
   * **repositoryName** (<code>string</code>)  Name of the CodeCommit repository to create. 
   * **codeCommitRemovalPolicy** (<code>[RemovalPolicy](#aws-cdk-lib-removalpolicy)</code>)  Possible values for a resource's Removal Policy The removal policy controls what happens to the resource if it stops being managed by CloudFormation. *Optional*
   * **defaultBranchName** (<code>string</code>)  Branch to trigger the pipeline execution. *Default*: mainline
+  * **existingAccessLogBucket** (<code>string</code>)  If we want to reuse existing artifact bucket However for cross account access its better to create bucket per tenant. *Optional*
+  * **existingArtifactBucket** (<code>string</code>)  If we want to reuse existing artifact bucket However for cross account access its better to create bucket per tenant. *Optional*
   * **existingKMSKeyAlias** (<code>string</code>)  Alias to use for existing KMS Key when crossAccount. *Default*: mainline
+  * **isToolChain** (<code>string</code>)  Determine if pipeline is for toolchain or workload. *Optional*
   * **synthShellStepPartialProps** (<code>[ShellStepProps](#aws-cdk-lib-pipelines-shellstepprops)</code>)  PDKPipeline by default assumes a NX Monorepo structure for it's codebase and uses sane defaults for the install and run commands. *Optional*
 
 
@@ -330,7 +333,10 @@ Name | Type | Description
 **dockerEnabledForSelfMutation**? | <code>boolean</code> | Enable Docker for the self-mutate step.<br/><br/>*Default*: false
 **dockerEnabledForSynth**? | <code>boolean</code> | Enable Docker for the 'synth' step.<br/><br/>*Default*: false
 **enableKeyRotation**? | <code>boolean</code> | Enable KMS key rotation for the generated KMS keys.<br/><br/>*Default*: false (key rotation is disabled)
+**existingAccessLogBucket**? | <code>string</code> | If we want to reuse existing artifact bucket However for cross account access its better to create bucket per tenant.<br/><br/>*Optional*
+**existingArtifactBucket**? | <code>string</code> | If we want to reuse existing artifact bucket However for cross account access its better to create bucket per tenant.<br/><br/>*Optional*
 **existingKMSKeyAlias**? | <code>string</code> | Alias to use for existing KMS Key when crossAccount.<br/><br/>*Default*: mainline
+**isToolChain**? | <code>string</code> | Determine if pipeline is for toolchain or workload.<br/><br/>*Optional*
 **pipelineName**? | <code>string</code> | The name of the CodePipeline pipeline.<br/><br/>*Default*: Automatically generated
 **publishAssetsInParallel**? | <code>boolean</code> | Publish assets in multiple CodeBuild projects.<br/><br/>*Default*: true
 **reuseCrossRegionSupportStacks**? | <code>boolean</code> | Reuse the same cross region support stack for all pipelines in the App.<br/><br/>*Default*: true (Use the same support stack for all pipelines in App)

@@ -5,6 +5,6 @@ import { ApplicationStack } from './application-stack';
 export class ApplicationStage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
-    new ApplicationStack(this, 'test', 'silo', 'dev-001');
+    new ApplicationStack(this, 'test', 'silo', 'dev-001', { env: props?.env });
   }
 }

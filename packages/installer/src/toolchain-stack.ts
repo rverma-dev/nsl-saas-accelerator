@@ -1,4 +1,3 @@
-import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { SaasPipeline } from '@nsa/construct';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import {
@@ -26,6 +25,7 @@ import {
   REPOSITORY_NAME,
   REPOSITORY_OWNER,
 } from './lib/configuration';
+import { NagSuppressions } from 'cdk-nag';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -49,10 +49,10 @@ export class ToolchainStack extends Stack {
     const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
 
     const pipeline = new SaasPipeline(this, 'cicd-pipeline', {
-      pipelineName: 'Toolchain-CI-Pipeline',
+      // pipelineName: 'Toolchain-CI-Pipeline',
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'packages/installer/cdk.out',
-      repositoryName: this.node.tryGetContext('repositoryName') || 'nsl-saas-accelerator',
+      repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
       crossAccountKeys: true,
       synth: {},
       dockerEnabledForSynth: true,
@@ -60,14 +60,14 @@ export class ToolchainStack extends Stack {
       synthCodeBuildDefaults: {
         cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
-          computeType: ComputeType.MEDIUM,
+          computeType: ComputeType.SMALL,
           buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
           privileged: true,
         },
       },
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: ComputeType.MEDIUM,
+          computeType: ComputeType.SMALL,
           buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
         },
       },
@@ -233,9 +233,9 @@ export class ToolchainStack extends Stack {
       },
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
-    PDKNag.addResourceSuppressionsByPathNoThrow(
+
+    NagSuppressions.addStackSuppressions(
       this,
-      `${PDKNag.getStackPrefix(this)}/*`,
       [
         { id: 'AwsSolutions-S1', reason: 'Internal codebuild bucket' },
         { id: 'AwsSolutions-L1', reason: 'Internal codebuild bucket' },
@@ -243,7 +243,7 @@ export class ToolchainStack extends Stack {
         { id: 'AwsSolutions-IAM5', reason: 'Wildcard policies for AWS Load Balancer Controller' },
         { id: 'AwsSolutions-CB4', reason: 'Public access for demo purposes' },
       ],
-      false,
+      true,
     );
   }
 }

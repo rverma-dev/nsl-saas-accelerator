@@ -44,8 +44,8 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@aws-prototyping-sdk/cdk-graph": "0.17.0",
-    "@aws-prototyping-sdk/pdk-nag": "0.17.0",
+    "@aws-prototyping-sdk/cdk-graph": "0.17.3",
+    "@aws-prototyping-sdk/pdk-nag": "0.17.3",
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
     "@jest/globals": "^29.5.0",

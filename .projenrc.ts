@@ -1,18 +1,17 @@
-import { nx_monorepo } from 'aws-prototyping-sdk';
+import { NxMonorepoProject } from '@aws-prototyping-sdk/nx-monorepo';
 import { awscdk } from 'projen';
 import { ArrowParens, TrailingComma } from 'projen/lib/javascript';
 import { NodePackageManager } from 'projen/lib/javascript/node-package';
 import { TypeScriptProject } from 'projen/lib/typescript';
 
 const AWS_SDK_VERSION = '^3.316.0';
-const AWS_PDK_VERSION = '0.17.0';
 const CDK_VERSION = '2.76.0';
 const CONSTRUCT_VERSION = '10.2.4';
 const JEST_VERION = '^29.1.0';
 
-const root = new nx_monorepo.NxMonorepoProject({
+const root = new NxMonorepoProject({
   defaultReleaseBranch: 'main',
-  devDeps: [`aws-prototyping-sdk@${AWS_PDK_VERSION}`, 'lerna@^6.6.1', '@nrwl/devkit@^15.9.2', '@nrwl/nx-cloud@^16.0.1'],
+  devDeps: ['@aws-prototyping-sdk/nx-monorepo'],
   name: 'nsa',
   projenrcTs: true,
   description: 'Nsl SAAS Accelerator on AWS',
@@ -44,7 +43,7 @@ const root = new nx_monorepo.NxMonorepoProject({
     linkLocalWorkspaceBins: true,
   },
   nxConfig: {
-    cacheableOperations: ['build', 'bundle', 'eslint', 'test', 'package'],
+    cacheableOperations: ['compile', 'build', 'bundle', 'eslint', 'test', 'synth'],
     affectedBranch: 'main',
     nxCloudReadOnlyAccessToken: 'ZjMyMGNjMDgtMmQzNi00MDJkLTlmZWYtZjcwOTdhMmNlYTFifHJlYWQtd3JpdGU=',
   },
@@ -101,18 +100,15 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   authorAddress: 'rohit.verma@nslhub.com',
   repositoryUrl: 'https://github.com/rverma-nsl/nsl-saas-accelerator.git',
   jsiiVersion: '5.0.6',
-  bin: {
-    'pdk@pnpm-link-bundled-transitive-deps': './scripts/pnpm/link-bundled-transitive-deps.ts',
-  },
 });
 
 const demo = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/demo',
   deps: [
-    `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
-    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
-    `@aws-prototyping-sdk/static-website@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/pdk-nag`,
+    `@aws-prototyping-sdk/cdk-graph`,
+    `@aws-prototyping-sdk/static-website`,
     '@nsa/common',
     '@nsa/construct',
   ],
@@ -132,8 +128,8 @@ new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/silo',
   deps: [
-    `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
-    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/pdk-nag`,
+    `@aws-prototyping-sdk/cdk-graph`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -157,8 +153,8 @@ new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/pool',
   deps: [
-    `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
-    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/pdk-nag`,
+    `@aws-prototyping-sdk/cdk-graph`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -194,14 +190,15 @@ new awscdk.AwsCdkTypeScriptApp({
     `@aws-sdk/client-codebuild@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-dynamodb@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-ec2@${AWS_SDK_VERSION}`,
-    `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
-    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/pdk-nag`,
+    `@aws-prototyping-sdk/cdk-graph`,
     '@types/aws-lambda',
     '@nsa/common',
     '@nsa/construct',
     '@nsa/demo',
     '@nsa/silo',
     '@nsa/pool',
+    'cdk-nag',
     'source-map-support',
     'vm2@3.9.17',
   ],

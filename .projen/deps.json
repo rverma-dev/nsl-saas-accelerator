@@ -1,12 +1,11 @@
 {
   "dependencies": [
     {
-      "name": "@nrwl/cli",
+      "name": "@aws-prototyping-sdk/nx-monorepo",
       "type": "build"
     },
     {
-      "name": "@nrwl/devkit",
-      "version": "^15.9.2",
+      "name": "@nrwl/cli",
       "type": "build"
     },
     {
@@ -33,11 +32,6 @@
       "type": "build"
     },
     {
-      "name": "aws-prototyping-sdk",
-      "version": "0.17.0",
-      "type": "build"
-    },
-    {
       "name": "eslint-config-prettier",
       "type": "build"
     },
@@ -60,11 +54,6 @@
     {
       "name": "eslint",
       "version": "^8",
-      "type": "build"
-    },
-    {
-      "name": "lerna",
-      "version": "^6.6.1",
       "type": "build"
     },
     {

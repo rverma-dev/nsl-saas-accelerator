@@ -4,7 +4,11 @@ import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { ApplicationStage } from './application-stage';
 
-interface WorkloadPipelineProps extends DeploymentRecord {}
+interface WorkloadPipelineProps extends DeploymentRecord {
+  readonly toolchainKms?: string;
+  readonly toolchainLogBucket?: string;
+  readonly toolchainAssetBucket?: string;
+}
 
 export class PipelineStack extends Stack {
   readonly pipeline: SaasPipeline;
@@ -13,13 +17,14 @@ export class PipelineStack extends Stack {
     super(scope, id, { env: { account: props.account, region: props.region } });
     this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-demo`, {
       primarySynthDirectory: 'packages/demo/cdk.out',
-      repositoryName: this.node.tryGetContext('repositoryName') || 'nsl-saas-accelerator',
-      publishAssetsInParallel: false,
+      repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
+      publishAssetsInParallel: true,
       crossAccountKeys: true,
-      existingKMSKeyAlias: 'nsa/provisioner',
       synth: {},
       dockerEnabledForSynth: true,
-      dockerEnabledForSelfMutation: true,
+      existingKMSKeyAlias: props.toolchainKms,
+      existingArtifactBucket: props.toolchainAssetBucket,
+      existingAccessLogBucket: props.toolchainLogBucket,
     });
     const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
     this.pipeline.addStage(devStage);

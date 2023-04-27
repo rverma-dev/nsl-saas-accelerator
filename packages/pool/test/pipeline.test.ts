@@ -2,7 +2,7 @@ import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { Template } from 'aws-cdk-lib/assertions';
 import { PipelineStack } from '../src/pipeline-stack';
 
-describe('Static Website Unit Tests', () => {
+describe('Pool profile Unit Tests', () => {
   it('Defaults', () => {
     const app = PDKNag.app();
     const stack = new PipelineStack(app, 'PipelineStack', {

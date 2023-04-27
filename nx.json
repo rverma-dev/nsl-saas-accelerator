@@ -7,11 +7,12 @@
       "options": {
         "useDaemonProcess": false,
         "cacheableOperations": [
+          "compile",
           "build",
           "bundle",
           "eslint",
           "test",
-          "package"
+          "synth"
         ],
         "accessToken": "ZjMyMGNjMDgtMmQzNi00MDJkLTlmZWYtZjcwOTdhMmNlYTFifHJlYWQtd3JpdGU="
       }

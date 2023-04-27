@@ -11,7 +11,7 @@ describe('Static Website Unit Tests', () => {
       tier: 'small',
       type: 'silo',
       account: '1111111',
-      region: 'us-west-2',
+      region: 'ap-south-1',
     });
     expect(Template.fromStack(stack).toJSON()).toMatchSnapshot();
   });

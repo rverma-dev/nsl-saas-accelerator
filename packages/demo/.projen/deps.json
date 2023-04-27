@@ -80,17 +80,14 @@
     },
     {
       "name": "@aws-prototyping-sdk/cdk-graph",
-      "version": "0.17.0",
       "type": "runtime"
     },
     {
       "name": "@aws-prototyping-sdk/pdk-nag",
-      "version": "0.17.0",
       "type": "runtime"
     },
     {
       "name": "@aws-prototyping-sdk/static-website",
-      "version": "0.17.0",
       "type": "runtime"
     },
     {

@@ -17,7 +17,7 @@ import {
 import { DynamoDBClient, paginateScan, ScanCommandInput } from '@aws-sdk/client-dynamodb';
 import { DescribeRegionsCommand, DescribeRegionsCommandInput, EC2Client } from '@aws-sdk/client-ec2';
 import { DEPLOYMENT_TABLE_NAME } from './configuration';
-import { DeploymentRecord } from './types';
+import { DeploymentRecord } from "@nsa/common";
 
 if (!('AWS_REGION' in process.env)) {
   throw new Error('AWS_REGION is not specified. Please set AWS_REGION to the target deployment pipeline region.');

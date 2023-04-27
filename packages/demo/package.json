@@ -41,9 +41,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@aws-prototyping-sdk/cdk-graph": "0.17.0",
-    "@aws-prototyping-sdk/pdk-nag": "0.17.0",
-    "@aws-prototyping-sdk/static-website": "0.17.0",
+    "@aws-prototyping-sdk/cdk-graph": "0.17.3",
+    "@aws-prototyping-sdk/pdk-nag": "0.17.3",
+    "@aws-prototyping-sdk/static-website": "0.17.3",
     "@nsa/common": "^0.0.0",
     "@nsa/construct": "^0.0.0",
     "aws-cdk-lib": "^2.76.0",
