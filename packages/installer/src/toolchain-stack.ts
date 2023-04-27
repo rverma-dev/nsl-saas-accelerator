@@ -16,6 +16,7 @@ import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
+import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
@@ -25,7 +26,6 @@ import {
   REPOSITORY_NAME,
   REPOSITORY_OWNER,
 } from './lib/configuration';
-import { NagSuppressions } from 'cdk-nag';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {

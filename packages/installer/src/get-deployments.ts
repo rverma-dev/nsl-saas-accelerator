@@ -1,6 +1,6 @@
+import { DeploymentRecord, Deployment, getPipelineName } from '@nsa/common';
 import { getCloudFormationStacks, getRegions, scanDynamoDB } from './lib/apitools';
 import { saveConfig, isValidDeploymentRecord } from './lib/configtools';
-import { DeploymentRecord, Deployment, getPipelineName } from '@nsa/common';
 
 /*
  * This utility reads a point-in-time snapshot of the deployment database,

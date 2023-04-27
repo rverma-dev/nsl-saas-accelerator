@@ -2,6 +2,32 @@
 
 exports[`ToolChain Stack 1`] = `
 {
+  "Metadata": {
+    "cdk_nag": {
+      "rules_to_suppress": [
+        {
+          "id": "AwsSolutions-S1",
+          "reason": "Internal codebuild bucket",
+        },
+        {
+          "id": "AwsSolutions-L1",
+          "reason": "Internal codebuild bucket",
+        },
+        {
+          "id": "AwsSolutions-IAM4",
+          "reason": "Managed IAM Policies",
+        },
+        {
+          "id": "AwsSolutions-IAM5",
+          "reason": "Wildcard policies for AWS Load Balancer Controller",
+        },
+        {
+          "id": "AwsSolutions-CB4",
+          "reason": "Public access for demo purposes",
+        },
+      ],
+    },
+  },
   "Parameters": {
     "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -72,6 +98,64 @@ exports[`ToolChain Stack 1`] = `
               "Version": "2012-10-17",
             },
             "PolicyName": "Inline",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+      "DependsOn": [
+        "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "40aa87cdf43c4095cec18bc443965f22ab2f8c1ace47e482a0ba4e35d83b0cc9.zip",
+        },
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Lambda function for auto-deleting objects in ",
+              {
+                "Ref": "cicdpipelineAccessLogsBucket10A02A33",
+              },
+              " S3 bucket.",
+            ],
+          ],
+        },
+        "Handler": "__entrypoint__.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
           },
         ],
       },
@@ -189,7 +273,369 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cicdpipelineCodeBuildActionRole72E1AFEF": {
+    "cicdpipelineAccessLogsBucket10A02A33": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "cicdpipelineAccessLogsBucketAutoDeleteObjectsCustomResource36B36E4E": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "cicdpipelineAccessLogsBucketPolicy30536375",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "cicdpipelineAccessLogsBucket10A02A33",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "cicdpipelineAccessLogsBucketPolicy30536375": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "cicdpipelineAccessLogsBucket10A02A33",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "cicdpipelineAccessLogsBucket10A02A33",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "cicdpipelineAccessLogsBucket10A02A33",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "cicdpipelineAccessLogsBucket10A02A33",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "cicdpipelineAccessLogsBucket10A02A33",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "s3:PutObject",
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::GetAtt": [
+                      "cicdpipelineArtifactsBucket2240AF62",
+                      "Arn",
+                    ],
+                  },
+                },
+                "StringEquals": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId",
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "logging.s3.amazonaws.com",
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "cicdpipelineAccessLogsBucket10A02A33",
+                        "Arn",
+                      ],
+                    },
+                    "/access-logs*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "cicdpipelineArtifactKey97C0D696": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "EnableKeyRotation": true,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "cicdpipelineArtifactsBucket2240AF62": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "cicdpipelineArtifactKey97C0D696",
+                    "Arn",
+                  ],
+                },
+                "SSEAlgorithm": "aws:kms",
+              },
+            },
+          ],
+        },
+        "LoggingConfiguration": {
+          "DestinationBucketName": {
+            "Ref": "cicdpipelineAccessLogsBucket10A02A33",
+          },
+          "LogFilePrefix": "access-logs",
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "cicdpipelineArtifactsBucketAutoDeleteObjectsCustomResource3B521FC1": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "cicdpipelineArtifactsBucketPolicy42F1F410",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "cicdpipelineArtifactsBucket2240AF62",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "cicdpipelineArtifactsBucketPolicy42F1F410": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "cicdpipelineArtifactsBucket2240AF62",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "cicdpipelineArtifactsBucket2240AF62",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "cicdpipelineArtifactsBucket2240AF62",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "cicdpipelineArtifactsBucket2240AF62",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "cicdpipelineArtifactsBucket2240AF62",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "cicdpipelineCodeBuildActionRole34CE8848": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -226,7 +672,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cicdpipelineCodeBuildActionRoleDefaultPolicy1ADEC8A0": {
+    "cicdpipelineCodeBuildActionRoleDefaultPolicy3EBF380D": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -239,7 +685,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7",
+                  "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF",
                   "Arn",
                 ],
               },
@@ -253,7 +699,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "cicdpipelineUpdatePipelineSelfMutation6D482710",
+                  "cicdpipelineUpdatePipelineSelfMutation7413EEF1",
                   "Arn",
                 ],
               },
@@ -267,7 +713,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531",
+                  "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A",
                   "Arn",
                 ],
               },
@@ -275,346 +721,157 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "cicdpipelineCodeBuildActionRoleDefaultPolicy1ADEC8A0",
+        "PolicyName": "cicdpipelineCodeBuildActionRoleDefaultPolicy3EBF380D",
         "Roles": [
           {
-            "Ref": "cicdpipelineCodeBuildActionRole72E1AFEF",
+            "Ref": "cicdpipelineCodeBuildActionRole34CE8848",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "cicdpipelinePipeline8078B859": {
-      "DependsOn": [
-        "cicdpipelinePipelineRoleDefaultPolicy553B733B",
-        "cicdpipelinePipelineRole1C7C7B1B",
-      ],
-      "Properties": {
-        "ArtifactStore": {
-          "Location": {
-            "Ref": "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-          },
-          "Type": "S3",
-        },
-        "Name": "Toolchain-CI-Pipeline",
-        "RestartExecutionOnUpdate": true,
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "cicdpipelinePipelineRole1C7C7B1B",
-            "Arn",
-          ],
-        },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "AWS",
-                  "Provider": "ECR",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ImageTag": "latest",
-                  "RepositoryName": {
-                    "Ref": "nsainstallerEFA9386B",
-                  },
-                },
-                "Name": {
-                  "Fn::Join": [
-                    "_",
-                    {
-                      "Fn::Split": [
-                        "/",
-                        {
-                          "Ref": "nsainstallerEFA9386B",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                "OutputArtifacts": [
-                  {
-                    "Name": "c87f1cdd4c76dd75839b3c9c642823b2cc3b8bc664_Source",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "cicdpipelinePipelineSourceECRCodePipelineActionRole0DCD1AC8",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"384f915b3385ec7f374da3fad9fb4e9ad1177bdfaa69e21128b6877e9f910284"}]",
-                  "ProjectName": {
-                    "Ref": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "c87f1cdd4c76dd75839b3c9c642823b2cc3b8bc664_Source",
-                  },
-                ],
-                "Name": "toolchain-synth",
-                "OutputArtifacts": [
-                  {
-                    "Name": "toolchain_synth_Output",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "cicdpipelineCodeBuildActionRole72E1AFEF",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"575aa581a57880525da45ee3b34fb4a14cc4b7eef4d96e8d042c1c5805bfbae5"}]",
-                  "ProjectName": {
-                    "Ref": "cicdpipelineUpdatePipelineSelfMutation6D482710",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "toolchain_synth_Output",
-                  },
-                ],
-                "Name": "SelfMutate",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "cicdpipelineCodeBuildActionRole72E1AFEF",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdatePipeline",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "c87f1cdd4c76dd75839b3c9c642823b2cc3b8bc664_Source",
-                  },
-                ],
-                "Name": "update-deployments",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "cicdpipelineCodeBuildActionRole72E1AFEF",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdateDeployments",
-          },
-        ],
-      },
-      "Type": "AWS::CodePipeline::Pipeline",
-    },
-    "cicdpipelinePipelineArtifactsBucket50DD6E0E": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "aws:kms",
-              },
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "cicdpipelinePipelineArtifactsBucketPolicy5E2E122B": {
-      "Properties": {
-        "Bucket": {
-          "Ref": "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7": {
+    "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
         },
         "Cache": {
-          "Type": "NO_CACHE",
+          "Modes": [
+            "LOCAL_DOCKER_LAYER_CACHE",
+          ],
+          "Type": "LOCAL",
         },
-        "Description": "Pipeline step toolchain/Pipeline/Build/toolchain-synth",
-        "EncryptionKey": "alias/aws/s3",
+        "Description": "Pipeline step toolchain/CodePipeline/Build/Synth",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "cicdpipelineArtifactKey97C0D696",
+            "Arn",
+          ],
+        },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": false,
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:2.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": true,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProjectRole1D023BFB",
+            "cicdpipelineCodePipelineBuildSynthCdkBuildProjectRoleB4FCF70D",
             "Arn",
           ],
         },
         "Source": {
-          "BuildSpec": "{
+          "BuildSpec": {
+            "Fn::Join": [
+              "",
+              [
+                "{
   "version": "0.2",
   "phases": {
+    "pre_build": {
+      "commands": [
+        "mkdir $HOME/.cdk",
+        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\"",
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "/",
+                        {
+                          "Fn::Join": [
+                            "",
+                            [
+                              {
+                                "Fn::Select": [
+                                  4,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "nsainstallerEFA9386B",
+                                          "Arn",
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                              ".dkr.ecr.",
+                              {
+                                "Fn::Select": [
+                                  3,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "nsainstallerEFA9386B",
+                                          "Arn",
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                              ".",
+                              {
+                                "Ref": "AWS::URLSuffix",
+                              },
+                              "/",
+                              {
+                                "Ref": "nsainstallerEFA9386B",
+                              },
+                            ],
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                "\\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-creds.json"
+      ]
+    },
+    "install": {
+      "commands": [
+        "npm install -g aws-cdk pnpm",
+        "pnpm install --frozen-lockfile"
+      ]
+    },
     "build": {
       "commands": [
-        "cd /app",
-        "yarn cdk synth --toolkit-stack-name nsl-CDKToolkit -q --verbose"
+        "npx nx run-many --target=build --all"
       ]
     }
   },
   "artifacts": {
-    "base-directory": "/app/cdk.out",
-    "files": "**/*"
+    "secondary-artifacts": {
+      "Synth_Output": {
+        "base-directory": "packages/installer/cdk.out",
+        "files": [
+          "**/*"
+        ]
+      },
+      "Synth__": {
+        "base-directory": ".",
+        "files": [
+          "**/*"
+        ]
+      }
+    }
   }
 }",
+              ],
+            ],
+          },
           "Type": "CODEPIPELINE",
         },
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProjectRole1D023BFB": {
+    "cicdpipelineCodePipelineBuildSynthCdkBuildProjectRoleB4FCF70D": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -631,29 +888,10 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProjectRoleDefaultPolicy38D9FBD7": {
+    "cicdpipelineCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy92C0F4E5": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -680,7 +918,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7",
+                        "Ref": "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF",
                       },
                     ],
                   ],
@@ -703,7 +941,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7",
+                        "Ref": "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF",
                       },
                       ":*",
                     ],
@@ -738,7 +976,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProject72042CE7",
+                      "Ref": "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF",
                     },
                     "-*",
                   ],
@@ -762,7 +1000,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                    "cicdpipelineArtifactsBucket2240AF62",
                     "Arn",
                   ],
                 },
@@ -772,7 +1010,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                          "cicdpipelineArtifactsBucket2240AF62",
                           "Arn",
                         ],
                       },
@@ -782,79 +1020,232 @@ exports[`ToolChain Stack 1`] = `
                 },
               ],
             },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProjectRoleDefaultPolicy38D9FBD7",
-        "Roles": [
-          {
-            "Ref": "cicdpipelinePipelineBuildtoolchainsynthCdkBuildProjectRole1D023BFB",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "cicdpipelinePipelineEventsRole3DA6AD5C": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
             {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "events.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "cicdpipelinePipelineEventsRoleDefaultPolicy30E92CD0": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "codepipeline:StartPipelineExecution",
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
               "Effect": "Allow",
               "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codepipeline:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":",
-                    {
-                      "Ref": "cicdpipelinePipeline8078B859",
-                    },
-                  ],
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
                 ],
               },
             },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "nsainstallerEFA9386B",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "cicdpipelinePipelineEventsRoleDefaultPolicy30E92CD0",
+        "PolicyName": "cicdpipelineCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy92C0F4E5",
         "Roles": [
           {
-            "Ref": "cicdpipelinePipelineEventsRole3DA6AD5C",
+            "Ref": "cicdpipelineCodePipelineBuildSynthCdkBuildProjectRoleB4FCF70D",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "cicdpipelinePipelineRole1C7C7B1B": {
+    "cicdpipelineCodePipelineE1C78622": {
+      "DependsOn": [
+        "cicdpipelineCodePipelineRoleDefaultPolicy067B26E7",
+        "cicdpipelineCodePipelineRole8C7C3128",
+      ],
+      "Properties": {
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "cicdpipelineArtifactKey97C0D696",
+                "Arn",
+              ],
+            },
+            "Type": "KMS",
+          },
+          "Location": {
+            "Ref": "cicdpipelineArtifactsBucket2240AF62",
+          },
+          "Type": "S3",
+        },
+        "RestartExecutionOnUpdate": true,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "cicdpipelineCodePipelineRole8C7C3128",
+            "Arn",
+          ],
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "Branch": "main",
+                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
+                  "Owner": "rverma-nsl",
+                  "PollForSourceChanges": false,
+                  "Repo": "nsl-saas-accelerator",
+                },
+                "Name": "rverma-nsl_nsl-saas-accelerator",
+                "OutputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Source",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"da85c1a1cd45abce2c9fd4a5d952323aa96fbbfda54c214226b50733e9b9ea6c"}]",
+                  "ProjectName": {
+                    "Ref": "cicdpipelineCodePipelineBuildSynthCdkBuildProject414FACAF",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "Name": "Synth",
+                "OutputArtifacts": [
+                  {
+                    "Name": "Synth_Output",
+                  },
+                  {
+                    "Name": "Synth__",
+                  },
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "cicdpipelineCodeBuildActionRole34CE8848",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Build",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"6c1a7c11dd7d5cd4bea6adaa7b850f29fc165267125b4306a77b711f93a57548"}]",
+                  "ProjectName": {
+                    "Ref": "cicdpipelineUpdatePipelineSelfMutation7413EEF1",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Synth_Output",
+                  },
+                ],
+                "Name": "SelfMutate",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "cicdpipelineCodeBuildActionRole34CE8848",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "UpdatePipeline",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "Name": "update-deployments",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "cicdpipelineCodeBuildActionRole34CE8848",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "UpdateDeployments",
+          },
+        ],
+      },
+      "Type": "AWS::CodePipeline::Pipeline",
+    },
+    "cicdpipelineCodePipelineRole8C7C3128": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -871,7 +1262,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cicdpipelinePipelineRoleDefaultPolicy553B733B": {
+    "cicdpipelineCodePipelineRoleDefaultPolicy067B26E7": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -892,7 +1283,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                    "cicdpipelineArtifactsBucket2240AF62",
                     "Arn",
                   ],
                 },
@@ -902,7 +1293,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                          "cicdpipelineArtifactsBucket2240AF62",
                           "Arn",
                         ],
                       },
@@ -911,196 +1302,46 @@ exports[`ToolChain Stack 1`] = `
                   ],
                 },
               ],
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "cicdpipelinePipelineSourceECRCodePipelineActionRole0DCD1AC8",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "cicdpipelineCodeBuildActionRole72E1AFEF",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "cicdpipelinePipelineRoleDefaultPolicy553B733B",
-        "Roles": [
-          {
-            "Ref": "cicdpipelinePipelineRole1C7C7B1B",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "cicdpipelinePipelineSourceECRCodePipelineActionRole0DCD1AC8": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
-                    ],
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "cicdpipelinePipelineSourceECRCodePipelineActionRoleDefaultPolicy44E4B6EC": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "ecr:DescribeImages",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
             },
             {
               "Action": [
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineCodeBuildActionRole34CE8848",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "cicdpipelinePipelineSourceECRCodePipelineActionRoleDefaultPolicy44E4B6EC",
+        "PolicyName": "cicdpipelineCodePipelineRoleDefaultPolicy067B26E7",
         "Roles": [
           {
-            "Ref": "cicdpipelinePipelineSourceECRCodePipelineActionRole0DCD1AC8",
+            "Ref": "cicdpipelineCodePipelineRole8C7C3128",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "cicdpipelinePipelineSourceECRtoolchaincicdpipelinePipeline930A40EDSourceEventRule52E18D9F": {
-      "Properties": {
-        "EventPattern": {
-          "detail": {
-            "action-type": [
-              "PUSH",
-            ],
-            "image-tag": [
-              "latest",
-            ],
-            "repository-name": [
-              {
-                "Ref": "nsainstallerEFA9386B",
-              },
-            ],
-            "result": [
-              "SUCCESS",
-            ],
-          },
-          "detail-type": [
-            "ECR Image Action",
-          ],
-          "source": [
-            "aws.ecr",
-          ],
-        },
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:",
-                  {
-                    "Ref": "AWS::Partition",
-                  },
-                  ":codepipeline:",
-                  {
-                    "Ref": "AWS::Region",
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId",
-                  },
-                  ":",
-                  {
-                    "Ref": "cicdpipelinePipeline8078B859",
-                  },
-                ],
-              ],
-            },
-            "Id": "Target0",
-            "RoleArn": {
-              "Fn::GetAtt": [
-                "cicdpipelinePipelineEventsRole3DA6AD5C",
-                "Arn",
-              ],
-            },
-          },
-        ],
-      },
-      "Type": "AWS::Events::Rule",
-    },
-    "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531": {
+    "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -1108,62 +1349,19 @@ exports[`ToolChain Stack 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step toolchain/Pipeline/UpdateDeployments/update-deployments",
-        "EncryptionKey": "alias/aws/s3",
+        "Description": "Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "cicdpipelineArtifactKey97C0D696",
+            "Arn",
+          ],
+        },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "Image": "aws/codebuild/standard:6.0",
+          "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
+          "Type": "LINUX_CONTAINER",
         },
         "ServiceRole": {
           "Fn::GetAtt": [
@@ -1189,7 +1387,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "cicdpipelineUpdatePipelineSelfMutation6D482710": {
+    "cicdpipelineUpdatePipelineSelfMutation7413EEF1": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -1197,26 +1395,99 @@ exports[`ToolChain Stack 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step toolchain/Pipeline/UpdatePipeline/SelfMutate",
-        "EncryptionKey": "alias/aws/s3",
+        "Description": "Pipeline step toolchain/CodePipeline/UpdatePipeline/SelfMutate",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "cicdpipelineArtifactKey97C0D696",
+            "Arn",
+          ],
+        },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:6.0",
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:2.0",
           "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
-          "Type": "LINUX_CONTAINER",
+          "Type": "ARM_CONTAINER",
         },
-        "Name": "Toolchain-CI-Pipeline-selfupdate",
         "ServiceRole": {
           "Fn::GetAtt": [
-            "cicdpipelineUpdatePipelineSelfMutationRole86633F76",
+            "cicdpipelineUpdatePipelineSelfMutationRole445C9873",
             "Arn",
           ],
         },
         "Source": {
-          "BuildSpec": "{
+          "BuildSpec": {
+            "Fn::Join": [
+              "",
+              [
+                "{
   "version": "0.2",
   "phases": {
+    "pre_build": {
+      "commands": [
+        "mkdir $HOME/.cdk",
+        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\"",
+                {
+                  "Fn::Select": [
+                    0,
+                    {
+                      "Fn::Split": [
+                        "/",
+                        {
+                          "Fn::Join": [
+                            "",
+                            [
+                              {
+                                "Fn::Select": [
+                                  4,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "nsainstallerEFA9386B",
+                                          "Arn",
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                              ".dkr.ecr.",
+                              {
+                                "Fn::Select": [
+                                  3,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "nsainstallerEFA9386B",
+                                          "Arn",
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                              ".",
+                              {
+                                "Ref": "AWS::URLSuffix",
+                              },
+                              "/",
+                              {
+                                "Ref": "nsainstallerEFA9386B",
+                              },
+                            ],
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                "\\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-creds.json"
+      ]
+    },
     "install": {
       "commands": [
         "npm install -g aws-cdk@2.72.0"
@@ -1229,12 +1500,15 @@ exports[`ToolChain Stack 1`] = `
     }
   }
 }",
+              ],
+            ],
+          },
           "Type": "CODEPIPELINE",
         },
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "cicdpipelineUpdatePipelineSelfMutationRole86633F76": {
+    "cicdpipelineUpdatePipelineSelfMutationRole445C9873": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1251,7 +1525,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "cicdpipelineUpdatePipelineSelfMutationRoleDefaultPolicy949EC7C6": {
+    "cicdpipelineUpdatePipelineSelfMutationRoleDefaultPolicy51F9A620": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -1281,7 +1555,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelineUpdatePipelineSelfMutation6D482710",
+                        "Ref": "cicdpipelineUpdatePipelineSelfMutation7413EEF1",
                       },
                     ],
                   ],
@@ -1304,7 +1578,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelineUpdatePipelineSelfMutation6D482710",
+                        "Ref": "cicdpipelineUpdatePipelineSelfMutation7413EEF1",
                       },
                       ":*",
                     ],
@@ -1339,7 +1613,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "cicdpipelineUpdatePipelineSelfMutation6D482710",
+                      "Ref": "cicdpipelineUpdatePipelineSelfMutation7413EEF1",
                     },
                     "-*",
                   ],
@@ -1391,7 +1665,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                    "cicdpipelineArtifactsBucket2240AF62",
                     "Arn",
                   ],
                 },
@@ -1401,7 +1675,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                          "cicdpipelineArtifactsBucket2240AF62",
                           "Arn",
                         ],
                       },
@@ -1411,13 +1685,60 @@ exports[`ToolChain Stack 1`] = `
                 },
               ],
             },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "nsainstallerEFA9386B",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "cicdpipelineUpdatePipelineSelfMutationRoleDefaultPolicy949EC7C6",
+        "PolicyName": "cicdpipelineUpdatePipelineSelfMutationRoleDefaultPolicy51F9A620",
         "Roles": [
           {
-            "Ref": "cicdpipelineUpdatePipelineSelfMutationRole86633F76",
+            "Ref": "cicdpipelineUpdatePipelineSelfMutationRole445C9873",
           },
         ],
       },
@@ -1543,58 +1864,10 @@ exports[`ToolChain Stack 1`] = `
         "EncryptionKey": "alias/aws/s3",
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "Image": "aws/codebuild/standard:1.0",
+          "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
+          "Type": "LINUX_CONTAINER",
         },
         "Name": "provisioning-project",
         "ServiceRole": {
@@ -1615,8 +1888,11 @@ exports[`ToolChain Stack 1`] = `
     }
   }
 }",
-          "Type": "NO_SOURCE",
+          "Location": "https://github.com/rverma-nsl/nsl-saas-accelerator.git",
+          "ReportBuildStatus": true,
+          "Type": "GITHUB",
         },
+        "SourceVersion": "refs/heads/main",
       },
       "Type": "AWS::CodeBuild::Project",
     },
@@ -1641,25 +1917,6 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -1971,25 +2228,6 @@ exports[`ToolChain Stack 1`] = `
           "Statement": [
             {
               "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:PutLogEvents",
@@ -2014,7 +2252,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531",
+                        "Ref": "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A",
                       },
                     ],
                   ],
@@ -2037,7 +2275,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531",
+                        "Ref": "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A",
                       },
                       ":*",
                     ],
@@ -2072,7 +2310,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "cicdpipelinePipelineUpdateDeploymentsupdatedeployments39F22531",
+                      "Ref": "cicdpipelineCodePipelineUpdateDeploymentsupdatedeployments0C65314A",
                     },
                     "-*",
                   ],
@@ -2089,7 +2327,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                    "cicdpipelineArtifactsBucket2240AF62",
                     "Arn",
                   ],
                 },
@@ -2099,7 +2337,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "cicdpipelinePipelineArtifactsBucket50DD6E0E",
+                          "cicdpipelineArtifactsBucket2240AF62",
                           "Arn",
                         ],
                       },
@@ -2108,6 +2346,34 @@ exports[`ToolChain Stack 1`] = `
                   ],
                 },
               ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cicdpipelineArtifactKey97C0D696",
+                  "Arn",
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -2152,7 +2418,85 @@ exports[`ToolChain Stack 1`] = `
 }
 `;
 
-exports[`Workload Stack 1`] = `
+exports[`Workload DEMO Stack 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Workload POOL Stack 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Workload SILO Stack 1`] = `
 {
   "Parameters": {
     "BootstrapVersion": {

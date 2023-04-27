@@ -4,6 +4,9 @@
     "type": "git",
     "url": "https://github.com/rverma-nsl/nsl-saas-accelerator.git"
   },
+  "bin": {
+    "pdk@pnpm-link-bundled-transitive-deps": "./scripts/pnpm/link-bundled-transitive-deps.ts"
+  },
   "scripts": {
     "build": "npx projen build",
     "bundle": "npx projen bundle",

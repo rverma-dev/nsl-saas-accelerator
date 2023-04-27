@@ -39,13 +39,13 @@ const root = new NxMonorepoProject({
   minNodeVersion: '18.0.0',
   typescriptVersion: '~5.0.4',
   vscode: true,
-  workspaceConfig: {
-    linkLocalWorkspaceBins: true,
-  },
   nxConfig: {
     cacheableOperations: ['compile', 'build', 'bundle', 'eslint', 'test', 'synth'],
     affectedBranch: 'main',
     nxCloudReadOnlyAccessToken: 'ZjMyMGNjMDgtMmQzNi00MDJkLTlmZWYtZjcwOTdhMmNlYTFifHJlYWQtd3JpdGU=',
+  },
+  workspaceConfig: {
+    linkLocalWorkspaceBins: true,
   },
 });
 
@@ -100,6 +100,9 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   authorAddress: 'rohit.verma@nslhub.com',
   repositoryUrl: 'https://github.com/rverma-nsl/nsl-saas-accelerator.git',
   jsiiVersion: '5.0.6',
+  bin: {
+    'pdk@pnpm-link-bundled-transitive-deps': './scripts/pnpm/link-bundled-transitive-deps.ts',
+  },
 });
 
 const demo = new awscdk.AwsCdkTypeScriptApp({
