@@ -1,16 +1,31 @@
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
+import { SaasPipeline } from '@nsa/construct';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import { BuildSpec, ComputeType, LinuxArmBuildImage, Project } from 'aws-cdk-lib/aws-codebuild';
+import {
+  BuildSpec,
+  Cache,
+  ComputeType,
+  LinuxArmBuildImage,
+  LocalCacheMode,
+  Project,
+  Source,
+} from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
-import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, GITHUB_DOMAIN, REPOSITORY_NAME, REPOSITORY_OWNER } from './lib/configuration';
+import {
+  CDK_VERSION,
+  DEPLOYMENT_TABLE_NAME,
+  GITHUB_DOMAIN,
+  REPOSITORY_NAME,
+  REPOSITORY_OWNER,
+} from './lib/configuration';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -32,26 +47,30 @@ export class ToolchainStack extends Stack {
     });
 
     const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
-    // const githubInput = CodePipelineSource.gitHub(`${REPOSITORY_OWNER}/${REPOSITORY_NAME}`, 'main', {
-    //   trigger: GitHubTrigger.NONE,
-    //   authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
-    //     jsonField: 'github_token',
-    //   }),
-    // });
-    const ecrInput = CodePipelineSource.ecr(installerImage, { imageTag: 'latest' });
-    const pipeline = new CodePipeline(this, 'cicd-pipeline', {
+
+    const pipeline = new SaasPipeline(this, 'cicd-pipeline', {
       pipelineName: 'Toolchain-CI-Pipeline',
       cliVersion: CDK_VERSION,
-      selfMutation: true,
-      synth: new CodeBuildStep('toolchain-synth', {
-        input: ecrInput,
+      primarySynthDirectory: 'packages/installer/cdk.out',
+      repositoryName: this.node.tryGetContext('repositoryName') || 'nsl-saas-accelerator',
+      crossAccountKeys: true,
+      synth: {},
+      dockerEnabledForSynth: true,
+      dockerCredentials: [DockerCredential.ecr([installerImage])],
+      synthCodeBuildDefaults: {
+        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
-          buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
-          computeType: ComputeType.SMALL,
+          computeType: ComputeType.MEDIUM,
+          buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
+          privileged: true,
         },
-        commands: ['cd /app', 'yarn cdk synth --toolkit-stack-name nsl-CDKToolkit -q --verbose'],
-        primaryOutputDirectory: '/app/cdk.out',
-      }),
+      },
+      selfMutationCodeBuildDefaults: {
+        buildEnvironment: {
+          computeType: ComputeType.MEDIUM,
+          buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
+        },
+      },
     });
 
     const updateDeploymentsRole = new Role(this, 'update-deployments-role', {
@@ -96,7 +115,6 @@ export class ToolchainStack extends Stack {
         new CodeBuildStep('update-deployments', {
           commands: ['cd /app', 'yarn ts-node bin/get-deployments.ts', 'yarn ts-node bin/update-deployments.ts'],
           buildEnvironment: {
-            buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
             computeType: ComputeType.SMALL,
           },
           role: updateDeploymentsRole,
@@ -107,13 +125,12 @@ export class ToolchainStack extends Stack {
     // CodeBuild Project for Provisioning Build Job
     const project = new Project(this, 'provisioning-project', {
       projectName: 'provisioning-project',
-      // source: Source.gitHub({
-      //   owner: REPOSITORY_OWNER,
-      //   repo: REPOSITORY_NAME,
-      //   branchOrRef: 'refs/heads/main',
-      // }),
+      source: Source.gitHub({
+        owner: REPOSITORY_OWNER,
+        repo: REPOSITORY_NAME,
+        branchOrRef: 'refs/heads/main',
+      }),
       environment: {
-        buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
         computeType: ComputeType.SMALL,
       },
       buildSpec: BuildSpec.fromObject({

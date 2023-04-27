@@ -16,7 +16,7 @@
     }
   },
   {
-    "name": "small-beta",
+    "name": "small-rc",
     "eks": {
       "version": "1.25"
     },

@@ -1,18 +1,17 @@
 import { DeploymentRecord } from '@nsa/common';
+import { SaasPipeline } from '@nsa/construct';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { PDKPipeline } from 'aws-prototyping-sdk/pipeline';
 import { Construct } from 'constructs';
 import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord, StackProps {}
 
 export class PipelineStack extends Stack {
-  readonly pipeline: PDKPipeline;
+  readonly pipeline: SaasPipeline;
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, props);
-    this.pipeline = new PDKPipeline(this, 'ApplicationPipeline', {
-      pipelineName: `${props.tenantId}-${props.id}-${props.type}`,
+    this.pipeline = new SaasPipeline(this, 'ApplicationPipeline', {
       primarySynthDirectory: 'packages/pool/cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || 'nsl-saas-accelerator',
       publishAssetsInParallel: false,
@@ -27,8 +26,8 @@ export class PipelineStack extends Stack {
       },
     });
 
-    const appWave = this.pipeline.codePipeline.addWave('application');
-    appWave.addStage(devStage);
+    this.pipeline.addWave('application')
+      .addStage(devStage);
     this.pipeline.buildPipeline(); // Needed for CDK Nag
   }
 }

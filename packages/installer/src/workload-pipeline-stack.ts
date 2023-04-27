@@ -1,7 +1,9 @@
-import { DemoPipeline } from '@nsa/demo/lib/pipeline-stack';
+import { DeploymentRecord, getPipelineName } from '@nsa/common';
+// import * as demo from '@nsa/demo/lib/pipeline-stack';
+import * as pool from '@nsa/pool/lib/pipeline-stack';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { DeploymentRecord, getPipelineName } from './lib/types';
+
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
 export class WorkloadPipelineStack extends Stack {
@@ -16,13 +18,31 @@ export class WorkloadPipelineStack extends Stack {
     //   }),
     // });
     const pipelineName = getPipelineName(props);
-    new DemoPipeline(this, pipelineName, {
-      tenantID: props.tenantId!,
-      deploymentId: props.id,
-      deploymentType: props.type!,
-      deploymentTier: props.tier!,
-      env: { account: props.account, region: props.region }, // defines where the resources will be provisioned
-    });
+    switch (props.type) {
+      case 'demo':
+        // new demo.PipelineStack(this, pipelineName, {
+        //   tenantId: props.tenantId!,
+        //   id: props.id,
+        //   type: props.type!,
+        //   tier: props.tier!,
+        //   account: props.account,
+        //   region: props.region,
+        // });
+        break;
+      case 'pool':
+        new pool.PipelineStack(this, pipelineName, {
+          tenantId: props.tenantId!,
+          id: props.id,
+          type: props.type!,
+          tier: props.tier!,
+          account: props.account,
+          region: props.region,
+        });
+        break;
+      default:
+        throw new Error('Provisioning not supported');
+    }
+
     // new pipelines.CodeBuildStep('synth', {
     //   input: sourceInput,
     //   buildEnvironment: {

@@ -79,6 +79,11 @@
       "type": "build"
     },
     {
+      "name": "@aws-prototyping-sdk/cdk-graph",
+      "version": "0.17.0",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-prototyping-sdk/pdk-nag",
       "version": "0.17.0",
       "type": "runtime"
@@ -93,16 +98,12 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/construct",
+      "type": "runtime"
+    },
+    {
       "name": "aws-cdk-lib",
       "version": "^2.76.0",
-      "type": "runtime"
-    },
-    {
-      "name": "aws-prototyping-sdk",
-      "type": "runtime"
-    },
-    {
-      "name": "cdk-nag",
       "type": "runtime"
     },
     {

@@ -1,4 +1,4 @@
-import { PDKNag } from 'aws-prototyping-sdk/pdk-nag';
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { PipelineStack } from './pipeline-stack';
 
 const app = PDKNag.app();

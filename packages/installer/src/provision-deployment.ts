@@ -1,9 +1,9 @@
 import { execSync } from 'child_process';
 import * as console from 'console';
 import * as process from 'process';
+import { DeploymentRecord, getPipelineName } from '@nsa/common';
 import { getRegions } from './lib/apitools';
 import { isValidDeploymentRecord } from './lib/configtools';
-import { DeploymentRecord, getPipelineName } from './lib/types';
 
 /*
  * This utility is responsible for provisioning a new tenant pipeline. The utility

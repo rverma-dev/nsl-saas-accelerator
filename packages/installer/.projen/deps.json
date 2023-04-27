@@ -122,7 +122,19 @@
       "type": "runtime"
     },
     {
+      "name": "@nsa/construct",
+      "type": "runtime"
+    },
+    {
       "name": "@nsa/demo",
+      "type": "runtime"
+    },
+    {
+      "name": "@nsa/pool",
+      "type": "runtime"
+    },
+    {
+      "name": "@nsa/silo",
       "type": "runtime"
     },
     {

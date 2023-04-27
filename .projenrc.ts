@@ -1,4 +1,4 @@
-import { nx_monorepo, pipeline } from 'aws-prototyping-sdk';
+import { nx_monorepo } from 'aws-prototyping-sdk';
 import { awscdk } from 'projen';
 import { ArrowParens, TrailingComma } from 'projen/lib/javascript';
 import { NodePackageManager } from 'projen/lib/javascript/node-package';
@@ -106,13 +106,15 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   },
 });
 
-const demo = new pipeline.PDKPipelineTsProject({
+const demo = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/demo',
   deps: [
     `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
     `@aws-prototyping-sdk/static-website@${AWS_PDK_VERSION}`,
     '@nsa/common',
+    '@nsa/construct',
   ],
   defaultReleaseBranch: 'main',
   name: '@nsa/demo',
@@ -123,15 +125,15 @@ const demo = new pipeline.PDKPipelineTsProject({
   jestOptions: {
     jestVersion: JEST_VERION,
   },
-  prettier: false,
 });
 root.addImplicitDependency(demo, constructs);
 
-new pipeline.PDKPipelineTsProject({
+new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/silo',
   deps: [
     `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -149,15 +151,14 @@ new pipeline.PDKPipelineTsProject({
   jestOptions: {
     jestVersion: JEST_VERION,
   },
-  prettier: false,
-  sampleCode: true,
 });
 
-new pipeline.PDKPipelineTsProject({
+new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/pool',
   deps: [
     `@aws-prototyping-sdk/pdk-nag@${AWS_PDK_VERSION}`,
+    `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -175,9 +176,6 @@ new pipeline.PDKPipelineTsProject({
   jestOptions: {
     jestVersion: JEST_VERION,
   },
-  prettier: false,
-  sampleCode: true,
-  lambdaAutoDiscover: true,
   lambdaOptions: {
     runtime: awscdk.LambdaRuntime.NODEJS_18_X,
     bundlingOptions: {
@@ -200,9 +198,10 @@ new awscdk.AwsCdkTypeScriptApp({
     `@aws-prototyping-sdk/cdk-graph@${AWS_PDK_VERSION}`,
     '@types/aws-lambda',
     '@nsa/common',
+    '@nsa/construct',
     '@nsa/demo',
-    // '@nsa/silo',
-    // '@nsa/pool',
+    '@nsa/silo',
+    '@nsa/pool',
     'source-map-support',
     'vm2@3.9.17',
   ],

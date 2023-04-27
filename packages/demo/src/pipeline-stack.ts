@@ -1,22 +1,22 @@
 import { DeploymentRecord } from '@nsa/common';
+import { SaasPipeline } from '@nsa/construct';
 import { Stack } from 'aws-cdk-lib';
-import { PDKPipeline } from 'aws-prototyping-sdk/pipeline';
 import { Construct } from 'constructs';
 import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord {}
 
 export class PipelineStack extends Stack {
-  readonly pipeline: PDKPipeline;
+  readonly pipeline: SaasPipeline;
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
-    // const installerImage = new Repository(this, 'demo-installer', { repositoryName: 'demo-installer' });
-    this.pipeline = new PDKPipeline(this, 'ApplicationPipeline', {
+    this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-demo`, {
       primarySynthDirectory: 'packages/demo/cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || 'nsl-saas-accelerator',
       publishAssetsInParallel: false,
       crossAccountKeys: true,
+      existingKMSKeyAlias: 'nsa/provisioner',
       synth: {},
       dockerEnabledForSynth: true,
       dockerEnabledForSelfMutation: true,
