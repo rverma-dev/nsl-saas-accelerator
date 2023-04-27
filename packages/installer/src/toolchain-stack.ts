@@ -16,6 +16,7 @@ import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
+import * as imagedeploy from 'cdk-docker-image-deployment';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
@@ -30,7 +31,7 @@ import {
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
-
+    const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const deploymentTable = new Table(this, 'deployment-table', {
       tableName: DEPLOYMENT_TABLE_NAME,
       partitionKey: {
@@ -48,8 +49,12 @@ export class ToolchainStack extends Stack {
 
     const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
 
-    const pipeline = new SaasPipeline(this, 'cicd-pipeline', {
-      // pipelineName: 'Toolchain-CI-Pipeline',
+    new imagedeploy.DockerImageDeployment(installerImage, 'ToolchainImageDeploymentWithTag', {
+      source: imagedeploy.Source.directory('packages/installer'),
+      destination: imagedeploy.Destination.ecr(installerImage, { tag: 'latest' }),
+    });
+
+    const pipeline = new SaasPipeline(this, 'toolchain', {
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'packages/installer/cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
@@ -61,14 +66,14 @@ export class ToolchainStack extends Stack {
         cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
           computeType: ComputeType.SMALL,
-          buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
+          buildImage: buildImage,
           privileged: true,
         },
       },
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
           computeType: ComputeType.SMALL,
-          buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_2_0,
+          buildImage: buildImage,
         },
       },
     });
@@ -116,6 +121,7 @@ export class ToolchainStack extends Stack {
           commands: ['cd /app', 'yarn ts-node bin/get-deployments.ts', 'yarn ts-node bin/update-deployments.ts'],
           buildEnvironment: {
             computeType: ComputeType.SMALL,
+            buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
           },
           role: updateDeploymentsRole,
         }),
@@ -132,6 +138,7 @@ export class ToolchainStack extends Stack {
       }),
       environment: {
         computeType: ComputeType.SMALL,
+        buildImage: LinuxArmBuildImage.fromEcrRepository(installerImage),
       },
       buildSpec: BuildSpec.fromObject({
         version: '0.2',

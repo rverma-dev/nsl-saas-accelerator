@@ -6,8 +6,8 @@ import { TypeScriptProject } from 'projen/lib/typescript';
 
 const AWS_SDK_VERSION = '^3.316.0';
 const CDK_VERSION = '2.76.0';
-const CONSTRUCT_VERSION = '10.2.4';
-const JEST_VERION = '^29.1.0';
+const CONSTRUCT_VERSION = '10.2.5';
+const JEST_VERSION = '^29.1.0';
 
 const root = new NxMonorepoProject({
   defaultReleaseBranch: 'main',
@@ -44,9 +44,6 @@ const root = new NxMonorepoProject({
     affectedBranch: 'main',
     nxCloudReadOnlyAccessToken: 'ZjMyMGNjMDgtMmQzNi00MDJkLTlmZWYtZjcwOTdhMmNlYTFifHJlYWQtd3JpdGU=',
   },
-  workspaceConfig: {
-    linkLocalWorkspaceBins: true,
-  },
 });
 
 new TypeScriptProject({
@@ -70,13 +67,12 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@types/js-yaml@4.0.5',
     'js-yaml@4.1.0',
-    'sync-request',
+    'sync-request@6.1.0',
     '@types/fs-extra@11.0.1',
     '@types/semver@7.3.13',
-    '@pnpm/reviewing.dependencies-hierarchy',
   ],
   peerDeps: ['cdk-nag'],
-  devDeps: ['@types/aws-lambda', 'aws-lambda', 'jsii-pacmak@1.80.0'],
+  devDeps: ['@types/aws-lambda', 'aws-lambda'],
   defaultReleaseBranch: 'main',
   name: '@nsa/construct',
   packageManager: NodePackageManager.PNPM,
@@ -84,7 +80,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
-    jestVersion: JEST_VERION,
+    jestVersion: JEST_VERSION,
     jestConfig: {
       detectOpenHandles: true,
     },
@@ -110,7 +106,6 @@ const demo = new awscdk.AwsCdkTypeScriptApp({
   outdir: 'packages/demo',
   deps: [
     `@aws-prototyping-sdk/pdk-nag`,
-    `@aws-prototyping-sdk/cdk-graph`,
     `@aws-prototyping-sdk/static-website`,
     '@nsa/common',
     '@nsa/construct',
@@ -122,7 +117,7 @@ const demo = new awscdk.AwsCdkTypeScriptApp({
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
-    jestVersion: JEST_VERION,
+    jestVersion: JEST_VERSION,
   },
 });
 root.addImplicitDependency(demo, constructs);
@@ -132,7 +127,6 @@ new awscdk.AwsCdkTypeScriptApp({
   outdir: 'packages/silo',
   deps: [
     `@aws-prototyping-sdk/pdk-nag`,
-    `@aws-prototyping-sdk/cdk-graph`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -148,7 +142,7 @@ new awscdk.AwsCdkTypeScriptApp({
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
-    jestVersion: JEST_VERION,
+    jestVersion: JEST_VERSION,
   },
 });
 
@@ -157,7 +151,6 @@ new awscdk.AwsCdkTypeScriptApp({
   outdir: 'packages/pool',
   deps: [
     `@aws-prototyping-sdk/pdk-nag`,
-    `@aws-prototyping-sdk/cdk-graph`,
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@jest/globals',
@@ -173,7 +166,7 @@ new awscdk.AwsCdkTypeScriptApp({
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
-    jestVersion: JEST_VERION,
+    jestVersion: JEST_VERSION,
   },
   lambdaOptions: {
     runtime: awscdk.LambdaRuntime.NODEJS_18_X,
@@ -204,6 +197,7 @@ new awscdk.AwsCdkTypeScriptApp({
     'cdk-nag',
     'source-map-support',
     'vm2@3.9.17',
+    'cdk-docker-image-deployment@^0.0.234',
   ],
   devDeps: ['aws-lambda'],
   defaultReleaseBranch: 'main',
@@ -213,7 +207,7 @@ new awscdk.AwsCdkTypeScriptApp({
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
-    jestVersion: JEST_VERION,
+    jestVersion: JEST_VERSION,
   },
 });
 

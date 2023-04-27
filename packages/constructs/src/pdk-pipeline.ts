@@ -92,8 +92,8 @@ export class SaasPipeline extends Construct {
     this.node.setContext('@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy', true);
 
     const accessLogsBucket = props.existingAccessLogBucket ?
-      Bucket.fromBucketName(this, 'ExAccessLogsBucket', props.existingAccessLogBucket) :
-      new Bucket(this, 'AccessLogsBucket', {
+      Bucket.fromBucketName(this, `${id}AccessLogsBucket`, props.existingAccessLogBucket) :
+      new Bucket(this, `${id}AccessLogsBucket`, {
         versioned: false,
         enforceSSL: true,
         autoDeleteObjects: true,
@@ -105,18 +105,19 @@ export class SaasPipeline extends Construct {
       });
 
     const artifactBucket = props.existingArtifactBucket ?
-      Bucket.fromBucketName(this, 'ExArtifactsBucket', props.existingArtifactBucket) :
-      new Bucket(this, 'ArtifactsBucket', {
+      Bucket.fromBucketName(this, `${id}ArtifactsBucket`, props.existingArtifactBucket) :
+      new Bucket(this, `${id}ArtifactsBucket`, {
         enforceSSL: true,
         autoDeleteObjects: true,
         removalPolicy: RemovalPolicy.DESTROY,
         encryption: props.crossAccountKeys ? BucketEncryption.KMS : BucketEncryption.S3_MANAGED,
         encryptionKey: props.crossAccountKeys && props.existingKMSKeyAlias ?
-          Key.fromLookup(this, 'ArtifactKey', { aliasName: props.existingKMSKeyAlias }) :
+          Key.fromLookup(this, `${id}ArtifactKey`, { aliasName: props.existingKMSKeyAlias }) :
           props.crossAccountKeys ?
-            new Key(this, 'ArtifactKey', {
+            new Key(this, `${id}ArtifactKey`, {
               enableKeyRotation: true,
               removalPolicy: RemovalPolicy.DESTROY,
+              alias: `pipeline/${id}`,
             }) : undefined,
         objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
         publicReadAccess: false,
@@ -136,7 +137,8 @@ export class SaasPipeline extends Construct {
       },
     );
 
-    const codePipeline = new Pipeline(this, 'CodePipeline', {
+    const codePipeline = new Pipeline(this, `${id}CodePipeline`, {
+      pipelineName: id,
       enableKeyRotation: props.crossAccountKeys,
       restartExecutionOnUpdate: true,
       crossAccountKeys: props.crossAccountKeys,
@@ -147,9 +149,9 @@ export class SaasPipeline extends Construct {
     const { input, primaryOutputDirectory, commands, ...synthShellStepPartialProps } =
     props.synthShellStepPartialProps || {};
 
-    const synthShellStep = new pipelines.ShellStep('Synth', {
+    const synthShellStep = new pipelines.ShellStep(`${id}Synth`, {
       input: githubInput,
-      installCommands: ['npm install -g aws-cdk pnpm', 'pnpm install --frozen-lockfile'],
+      installCommands: ['n 18', 'npm install -g pnpm', 'pnpm install --frozen-lockfile'],
       commands: commands && commands.length > 0 ? commands : ['npx nx run-many --target=build --all'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
