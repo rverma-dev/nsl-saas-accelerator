@@ -139,14 +139,14 @@ exports[`ToolChain Stack 1`] = `
           [
             {
               "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagCustomResource16826651089769A5830D7",
+                "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198",
                 "Status",
               ],
             },
             ", see the logs here: ",
             {
               "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagCustomResource16826651089769A5830D7",
+                "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198",
                 "LogsUrl",
               ],
             },
@@ -1069,7 +1069,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "nsainstallerToolchainImageDeploymentWithTagCustomResource16826651089769A5830D7": {
+    "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
         "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleDefaultPolicyA7E77EEB",
@@ -1136,12 +1136,12 @@ exports[`ToolChain Stack 1`] = `
                 ".amazonaws.com",
         "docker pull ",
                 {
-                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:a4450dcf6c111bd5a24c566e5d97ad05c3ea2b2d9583dd27bfedd87de3da40e6",
+                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:96a2fcfa63ed5b7434d4881c20ca36ff4ddd5a9013ca6ce20860f42e09c94611",
                 },
                 "",
         "docker tag ",
                 {
-                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:a4450dcf6c111bd5a24c566e5d97ad05c3ea2b2d9583dd27bfedd87de3da40e6",
+                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:96a2fcfa63ed5b7434d4881c20ca36ff4ddd5a9013ca6ce20860f42e09c94611",
                 },
                 " ",
                 {

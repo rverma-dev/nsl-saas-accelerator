@@ -44,6 +44,9 @@ const root = new NxMonorepoProject({
     affectedBranch: 'main',
     nxCloudReadOnlyAccessToken: 'ZjMyMGNjMDgtMmQzNi00MDJkLTlmZWYtZjcwOTdhMmNlYTFifHJlYWQtd3JpdGU=',
   },
+  workspaceConfig: {
+    linkLocalWorkspaceBins: true,
+  },
 });
 
 const common = new TypeScriptProject({
