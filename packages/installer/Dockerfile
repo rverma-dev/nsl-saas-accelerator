@@ -3,6 +3,7 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HUSKY=0
 # Dependencies
+RUN ls
 COPY packages/installer/package.json ./packages/installer/
 # COPY packages/installer/lib/lambda-stream/package.json packages/installer/lib/lambda-stream/yarn.lock* ./packages/installer/lib/lambda-stream/
 # COPY packages/demo/package.json packages/demo/yarn.lock* ./packages/demo/

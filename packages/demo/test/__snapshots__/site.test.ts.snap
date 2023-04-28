@@ -25,7 +25,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                "Ref": "demodev001demoundefinedAccessLogsBucketEA481822",
               },
               " S3 bucket.",
             ],
@@ -104,10 +104,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset1",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset1",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -183,10 +183,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset2",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset2",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -262,10 +262,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset3",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset3",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -341,10 +341,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset4",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset4",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -420,10 +420,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset5",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset5",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -499,10 +499,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset6",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset6",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -578,10 +578,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset7",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Assets/FileAsset7",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -786,7 +786,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -796,7 +796,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -814,7 +814,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -937,7 +937,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                  "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   "Arn",
                 ],
               },
@@ -1104,10 +1104,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/UpdatePipeline/SelfMutate",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/UpdatePipeline/SelfMutate",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -1327,7 +1327,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -1337,7 +1337,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -1355,7 +1355,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -1370,7 +1370,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -1387,10 +1387,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "demodev001demodemodev001demoAccessLogsBucketAutoDeleteObjectsCustomResource2A3F5D74": {
+    "demodev001demoundefinedAccessLogsBucketAutoDeleteObjectsCustomResource742CABCA": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
-        "demodev001demodemodev001demoAccessLogsBucketPolicy450CEBE0",
+        "demodev001demoundefinedAccessLogsBucketPolicy427A3E96",
       ],
       "Metadata": {
         "cdk_nag": {
@@ -1424,7 +1424,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Properties": {
         "BucketName": {
-          "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+          "Ref": "demodev001demoundefinedAccessLogsBucketEA481822",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -1436,7 +1436,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       "Type": "Custom::S3AutoDeleteObjects",
       "UpdateReplacePolicy": "Delete",
     },
-    "demodev001demodemodev001demoAccessLogsBucketEAE80F84": {
+    "demodev001demoundefinedAccessLogsBucketEA481822": {
       "DeletionPolicy": "Delete",
       "Metadata": {
         "cdk_nag": {
@@ -1501,7 +1501,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
     },
-    "demodev001demodemodev001demoAccessLogsBucketPolicy450CEBE0": {
+    "demodev001demoundefinedAccessLogsBucketPolicy427A3E96": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -1534,7 +1534,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Properties": {
         "Bucket": {
-          "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+          "Ref": "demodev001demoundefinedAccessLogsBucketEA481822",
         },
         "PolicyDocument": {
           "Statement": [
@@ -1552,7 +1552,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                    "demodev001demoundefinedAccessLogsBucketEA481822",
                     "Arn",
                   ],
                 },
@@ -1562,7 +1562,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                          "demodev001demoundefinedAccessLogsBucketEA481822",
                           "Arn",
                         ],
                       },
@@ -1590,7 +1590,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                    "demodev001demoundefinedAccessLogsBucketEA481822",
                     "Arn",
                   ],
                 },
@@ -1600,7 +1600,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                          "demodev001demoundefinedAccessLogsBucketEA481822",
                           "Arn",
                         ],
                       },
@@ -1616,7 +1616,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 "ArnLike": {
                   "aws:SourceArn": {
                     "Fn::GetAtt": [
-                      "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                      "demodev001demoundefinedArtifactsBucket6FC34329",
                       "Arn",
                     ],
                   },
@@ -1635,7 +1635,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   [
                     {
                       "Fn::GetAtt": [
-                        "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                        "demodev001demoundefinedAccessLogsBucketEA481822",
                         "Arn",
                       ],
                     },
@@ -1650,49 +1650,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "demodev001demodemodev001demoArtifactKeyAlias3184D888": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "AliasName": "alias/pipeline/demo-dev-001-demo",
-        "TargetKeyId": {
-          "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::KMS::Alias",
-    },
-    "demodev001demodemodev001demoArtifactKeyF07B215F": {
+    "demodev001demoundefinedArtifactKey0A9D1FD3": {
       "DeletionPolicy": "Delete",
       "Metadata": {
         "cdk_nag": {
@@ -1776,7 +1734,49 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       "Type": "AWS::KMS::Key",
       "UpdateReplacePolicy": "Delete",
     },
-    "demodev001demodemodev001demoArtifactsBucket292FC90E": {
+    "demodev001demoundefinedArtifactKeyAlias4CFFF3EB": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AliasName": "alias/pipeline/undefined",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "demodev001demoundefinedArtifactsBucket6FC34329": {
       "DeletionPolicy": "Delete",
       "Metadata": {
         "cdk_nag": {
@@ -1815,7 +1815,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "ServerSideEncryptionByDefault": {
                 "KMSMasterKeyID": {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactKeyF07B215F",
+                    "demodev001demoundefinedArtifactKey0A9D1FD3",
                     "Arn",
                   ],
                 },
@@ -1826,7 +1826,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         },
         "LoggingConfiguration": {
           "DestinationBucketName": {
-            "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+            "Ref": "demodev001demoundefinedAccessLogsBucketEA481822",
           },
           "LogFilePrefix": "access-logs",
         },
@@ -1853,10 +1853,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
     },
-    "demodev001demodemodev001demoArtifactsBucketAutoDeleteObjectsCustomResourceC0CBC346": {
+    "demodev001demoundefinedArtifactsBucketAutoDeleteObjectsCustomResource9C62FE46": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
-        "demodev001demodemodev001demoArtifactsBucketPolicyB9010054",
+        "demodev001demoundefinedArtifactsBucketPolicyDF398B35",
       ],
       "Metadata": {
         "cdk_nag": {
@@ -1890,7 +1890,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Properties": {
         "BucketName": {
-          "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+          "Ref": "demodev001demoundefinedArtifactsBucket6FC34329",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -1902,7 +1902,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       "Type": "Custom::S3AutoDeleteObjects",
       "UpdateReplacePolicy": "Delete",
     },
-    "demodev001demodemodev001demoArtifactsBucketPolicyB9010054": {
+    "demodev001demoundefinedArtifactsBucketPolicyDF398B35": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -1935,7 +1935,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Properties": {
         "Bucket": {
-          "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+          "Ref": "demodev001demoundefinedArtifactsBucket6FC34329",
         },
         "PolicyDocument": {
           "Statement": [
@@ -1953,7 +1953,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -1963,7 +1963,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -1991,7 +1991,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -2001,7 +2001,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -2035,7 +2035,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -2045,7 +2045,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -2061,10 +2061,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "demodev001demodemodev001demoCodePipeline3F04E5BC": {
+    "demodev001demoundefinedCodePipeline3C00554B": {
       "DependsOn": [
-        "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541",
-        "demodev001demodemodev001demoCodePipelineRole8BD813E1",
+        "demodev001demoundefinedCodePipelineRoleDefaultPolicy06BA135A",
+        "demodev001demoundefinedCodePipelineRoleA17C6788",
       ],
       "Metadata": {
         "cdk_nag": {
@@ -2101,22 +2101,21 @@ exports[`Static Website Unit Tests Defaults 1`] = `
           "EncryptionKey": {
             "Id": {
               "Fn::GetAtt": [
-                "demodev001demodemodev001demoArtifactKeyF07B215F",
+                "demodev001demoundefinedArtifactKey0A9D1FD3",
                 "Arn",
               ],
             },
             "Type": "KMS",
           },
           "Location": {
-            "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+            "Ref": "demodev001demoundefinedArtifactsBucket6FC34329",
           },
           "Type": "S3",
         },
-        "Name": "demo-dev-001-demo",
         "RestartExecutionOnUpdate": true,
         "RoleArn": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoCodePipelineRole8BD813E1",
+            "demodev001demoundefinedCodePipelineRoleA17C6788",
             "Arn",
           ],
         },
@@ -2158,9 +2157,9 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"f6f30c2ca8db6ee0902daf517f21af8c292f1fc21295926c2e93df08340bb358"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"ec65dfe1c0050104ee9379c018943787def798934b4c32a728c6b8294240724b"}]",
                   "ProjectName": {
-                    "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                    "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   },
                 },
                 "InputArtifacts": [
@@ -2168,13 +2167,13 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     "Name": "rverma_nsl_nsl_saas_accelerator_Source",
                   },
                 ],
-                "Name": "demo-dev-001-demoSynth",
+                "Name": "undefinedSynth",
                 "OutputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                   {
-                    "Name": "demo_dev_001_demoSynth__",
+                    "Name": "undefinedSynth__",
                   },
                 ],
                 "RoleArn": {
@@ -2205,7 +2204,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "SelfMutate",
@@ -2236,7 +2235,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset1",
@@ -2262,7 +2261,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset2",
@@ -2288,7 +2287,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset3",
@@ -2314,7 +2313,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset4",
@@ -2340,7 +2339,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset5",
@@ -2366,7 +2365,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset6",
@@ -2392,7 +2391,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "FileAsset7",
@@ -2433,11 +2432,11 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     ],
                   },
                   "StackName": "Dev-test",
-                  "TemplatePath": "demo_dev_001_demoSynth_Output::assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.template.json",
+                  "TemplatePath": "undefinedSynth_Output::assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.template.json",
                 },
                 "InputArtifacts": [
                   {
-                    "Name": "demo_dev_001_demoSynth_Output",
+                    "Name": "undefinedSynth_Output",
                   },
                 ],
                 "Name": "Prepare",
@@ -2489,7 +2488,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::CodePipeline::Pipeline",
     },
-    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291": {
+    "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2527,10 +2526,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Build/demo-dev-001-demoSynth",
+        "Description": "Pipeline step PipelineStack/undefinedCodePipeline/Build/undefinedSynth",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "demodev001demoundefinedArtifactKey0A9D1FD3",
             "Arn",
           ],
         },
@@ -2543,7 +2542,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD",
+            "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProjectRole955B5006",
             "Arn",
           ],
         },
@@ -2566,11 +2565,11 @@ exports[`Static Website Unit Tests Defaults 1`] = `
   },
   "artifacts": {
     "secondary-artifacts": {
-      "demo_dev_001_demoSynth_Output": {
+      "undefinedSynth_Output": {
         "base-directory": "packages/demo/cdk.out",
         "files": "**/*"
       },
-      "demo_dev_001_demoSynth__": {
+      "undefinedSynth__": {
         "base-directory": ".",
         "files": "**/*"
       }
@@ -2582,7 +2581,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD": {
+    "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProjectRole955B5006": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2629,7 +2628,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleDefaultPolicyEC673951": {
+    "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProjectRoleDefaultPolicyD5A10053": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2681,7 +2680,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       },
                       ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
                       {
-                        "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                        "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                       },
                     ],
                   ],
@@ -2696,7 +2695,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                       },
                       ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
                       {
-                        "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                        "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                       },
                       ":*",
                     ],
@@ -2723,7 +2722,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     },
                     ":codebuild:ap-south-1:1111111:report-group/",
                     {
-                      "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                      "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                     },
                     "-*",
                   ],
@@ -2747,7 +2746,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -2757,7 +2756,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -2778,7 +2777,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -2793,7 +2792,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -2801,16 +2800,16 @@ exports[`Static Website Unit Tests Defaults 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleDefaultPolicyEC673951",
+        "PolicyName": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProjectRoleDefaultPolicyD5A10053",
         "Roles": [
           {
-            "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD",
+            "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProjectRole955B5006",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "demodev001demodemodev001demoCodePipelineRole8BD813E1": {
+    "demodev001demoundefinedCodePipelineRoleA17C6788": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2857,7 +2856,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541": {
+    "demodev001demoundefinedCodePipelineRoleDefaultPolicy06BA135A": {
       "Metadata": {
         "cdk_nag": {
           "rules_to_suppress": [
@@ -2908,7 +2907,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "demodev001demoundefinedArtifactsBucket6FC34329",
                     "Arn",
                   ],
                 },
@@ -2918,7 +2917,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "demodev001demoundefinedArtifactsBucket6FC34329",
                           "Arn",
                         ],
                       },
@@ -2939,7 +2938,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "demodev001demoundefinedArtifactKey0A9D1FD3",
                   "Arn",
                 ],
               },
@@ -2973,10 +2972,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541",
+        "PolicyName": "demodev001demoundefinedCodePipelineRoleDefaultPolicy06BA135A",
         "Roles": [
           {
-            "Ref": "demodev001demodemodev001demoCodePipelineRole8BD813E1",
+            "Ref": "demodev001demoundefinedCodePipelineRoleA17C6788",
           },
         ],
       },

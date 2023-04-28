@@ -2,109 +2,6 @@
 
 exports[`ToolChain Stack 1`] = `
 {
-  "Mappings": {
-    "ServiceprincipalMap": {
-      "af-south-1": {
-        "states": "states.af-south-1.amazonaws.com",
-      },
-      "ap-east-1": {
-        "states": "states.ap-east-1.amazonaws.com",
-      },
-      "ap-northeast-1": {
-        "states": "states.ap-northeast-1.amazonaws.com",
-      },
-      "ap-northeast-2": {
-        "states": "states.ap-northeast-2.amazonaws.com",
-      },
-      "ap-northeast-3": {
-        "states": "states.ap-northeast-3.amazonaws.com",
-      },
-      "ap-south-1": {
-        "states": "states.ap-south-1.amazonaws.com",
-      },
-      "ap-south-2": {
-        "states": "states.ap-south-2.amazonaws.com",
-      },
-      "ap-southeast-1": {
-        "states": "states.ap-southeast-1.amazonaws.com",
-      },
-      "ap-southeast-2": {
-        "states": "states.ap-southeast-2.amazonaws.com",
-      },
-      "ap-southeast-3": {
-        "states": "states.ap-southeast-3.amazonaws.com",
-      },
-      "ca-central-1": {
-        "states": "states.ca-central-1.amazonaws.com",
-      },
-      "cn-north-1": {
-        "states": "states.cn-north-1.amazonaws.com",
-      },
-      "cn-northwest-1": {
-        "states": "states.cn-northwest-1.amazonaws.com",
-      },
-      "eu-central-1": {
-        "states": "states.eu-central-1.amazonaws.com",
-      },
-      "eu-central-2": {
-        "states": "states.eu-central-2.amazonaws.com",
-      },
-      "eu-north-1": {
-        "states": "states.eu-north-1.amazonaws.com",
-      },
-      "eu-south-1": {
-        "states": "states.eu-south-1.amazonaws.com",
-      },
-      "eu-south-2": {
-        "states": "states.eu-south-2.amazonaws.com",
-      },
-      "eu-west-1": {
-        "states": "states.eu-west-1.amazonaws.com",
-      },
-      "eu-west-2": {
-        "states": "states.eu-west-2.amazonaws.com",
-      },
-      "eu-west-3": {
-        "states": "states.eu-west-3.amazonaws.com",
-      },
-      "me-central-1": {
-        "states": "states.me-central-1.amazonaws.com",
-      },
-      "me-south-1": {
-        "states": "states.me-south-1.amazonaws.com",
-      },
-      "sa-east-1": {
-        "states": "states.sa-east-1.amazonaws.com",
-      },
-      "us-east-1": {
-        "states": "states.us-east-1.amazonaws.com",
-      },
-      "us-east-2": {
-        "states": "states.us-east-2.amazonaws.com",
-      },
-      "us-gov-east-1": {
-        "states": "states.us-gov-east-1.amazonaws.com",
-      },
-      "us-gov-west-1": {
-        "states": "states.us-gov-west-1.amazonaws.com",
-      },
-      "us-iso-east-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-iso-west-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-isob-east-1": {
-        "states": "states.amazonaws.com",
-      },
-      "us-west-1": {
-        "states": "states.us-west-1.amazonaws.com",
-      },
-      "us-west-2": {
-        "states": "states.us-west-2.amazonaws.com",
-      },
-    },
-  },
   "Metadata": {
     "cdk_nag": {
       "rules_to_suppress": [
@@ -131,30 +28,6 @@ exports[`ToolChain Stack 1`] = `
       ],
     },
   },
-  "Outputs": {
-    "nsainstallerToolchainImageDeploymentWithTagCustomResourceReport16742CDA": {
-      "Value": {
-        "Fn::Join": [
-          "",
-          [
-            {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198",
-                "Status",
-              ],
-            },
-            ", see the logs here: ",
-            {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198",
-                "LogsUrl",
-              ],
-            },
-          ],
-        ],
-      },
-    },
-  },
   "Parameters": {
     "BootstrapVersion": {
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -163,6 +36,241 @@ exports[`ToolChain Stack 1`] = `
     },
   },
   "Resources": {
+    "CodebuildprovisioningDD5C3418": {
+      "Properties": {
+        "Artifacts": {
+          "Type": "NO_ARTIFACTS",
+        },
+        "Cache": {
+          "Type": "NO_CACHE",
+        },
+        "EncryptionKey": "alias/aws/s3",
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
+          "Type": "ARM_CONTAINER",
+        },
+        "Name": "provisioning-project",
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "CodebuildprovisioningRoleBE0C1CD8",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "build": {
+      "commands": [
+        "cd /app",
+        "yarn ts-node bin/provision-deployment.ts"
+      ]
+    }
+  }
+}",
+          "Location": "https://github.com/rverma-nsl/nsl-saas-accelerator.git",
+          "ReportBuildStatus": true,
+          "Type": "GITHUB",
+        },
+        "SourceVersion": "refs/heads/main",
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "CodebuildprovisioningRoleBE0C1CD8": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CodebuildprovisioningRoleDefaultPolicy4D8B95F2": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "CodebuildprovisioningDD5C3418",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "CodebuildprovisioningDD5C3418",
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codebuild:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":report-group/",
+                    {
+                      "Ref": "CodebuildprovisioningDD5C3418",
+                    },
+                    "-*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":role/cdk-hnb659fds-deploy-role-",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      "-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":role/cdk-hnb659fds-file-publishing-role-",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      "-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":role/cdk-hnb659fds-image-publishing-role-",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      "-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "ec2:DescribeRegions",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CodebuildprovisioningRoleDefaultPolicy4D8B95F2",
+        "Roles": [
+          {
+            "Ref": "CodebuildprovisioningRoleBE0C1CD8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0": {
       "DependsOn": [
         "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65",
@@ -247,7 +355,7 @@ exports[`ToolChain Stack 1`] = `
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "toolchaintoolchainAccessLogsBucket3D4553E6",
+                "Ref": "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
               },
               " S3 bucket.",
             ],
@@ -288,119 +396,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "addtenant0D69D71D": {
-      "DependsOn": [
-        "addtenantServiceRoleDefaultPolicy69716BA2",
-        "addtenantServiceRoleEF3E952E",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "152db09bf48f107a47f92c73a267a38fdfc010a24bbc79cd45f51b74db4016ec.zip",
-        },
-        "Description": "src/ddb-stream/add-tenant.lambda.ts",
-        "Environment": {
-          "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "PROJECT_NAME": "provisioning-project",
-          },
-        },
-        "Handler": "index.handler",
-        "Role": {
-          "Fn::GetAtt": [
-            "addtenantServiceRoleEF3E952E",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs16.x",
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "addtenantDynamoDBEventSourcetoolchaindeploymenttable3225D94FEDD62B9E": {
-      "Properties": {
-        "BatchSize": 100,
-        "EventSourceArn": {
-          "Fn::GetAtt": [
-            "deploymenttableC3BF9083",
-            "StreamArn",
-          ],
-        },
-        "FunctionName": {
-          "Ref": "addtenant0D69D71D",
-        },
-        "StartingPosition": "LATEST",
-      },
-      "Type": "AWS::Lambda::EventSourceMapping",
-    },
-    "addtenantServiceRoleDefaultPolicy69716BA2": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "dynamodb:ListStreams",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "deploymenttableC3BF9083",
-                  "StreamArn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "addtenantServiceRoleDefaultPolicy69716BA2",
-        "Roles": [
-          {
-            "Ref": "addtenantServiceRoleEF3E952E",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "addtenantServiceRoleEF3E952E": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "deploymenttableC3BF9083": {
+    "DDBtabledeploymentE90B547A": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "AttributeDefinitions": [
@@ -432,76 +428,7 @@ exports[`ToolChain Stack 1`] = `
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Delete",
     },
-    "gitHubSaasDeployRole6F40BC74": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRoleWithWebIdentity",
-              "Condition": {
-                "StringLike": {
-                  "token.actions.githubusercontent.com:sub": "repo:rverma-nsl/nsl-saas-accelerator:*",
-                },
-              },
-              "Effect": "Allow",
-              "Principal": {
-                "Federated": {
-                  "Ref": "githubProviderBAD09C9C",
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "Description": "This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account",
-        "MaxSessionDuration": 3600,
-        "Policies": [
-          {
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Action": [
-                    "ecr:BatchGetImage",
-                    "ecr:BatchCheckLayerAvailability",
-                    "ecr:CompleteLayerUpload",
-                    "ecr:GetDownloadUrlForLayer",
-                    "ecr:InitiateLayerUpload",
-                    "ecr:PutImage",
-                    "ecr:UploadLayerPart",
-                    "ecr:GetAuthorizationToken",
-                  ],
-                  "Effect": "Allow",
-                  "Resource": "*",
-                },
-              ],
-              "Version": "2012-10-17",
-            },
-            "PolicyName": "githubAction",
-          },
-        ],
-        "RoleName": "gitHubSaasDeployRole",
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "githubProviderBAD09C9C": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "ClientIDList": [
-          "sts.amazonaws.com",
-        ],
-        "CodeHash": "ffa3d5f3876afed62c60735ced8dafb4db2ccbd70a8b2f6b0d9e6eaa5823d631",
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0",
-            "Arn",
-          ],
-        },
-        "Url": "https://token.actions.githubusercontent.com",
-      },
-      "Type": "Custom::AWSCDKOpenIdConnectProvider",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "nsainstallerEFA9386B": {
+    "EcrRegistryinstaller7DDDA444": {
       "DeletionPolicy": "Retain",
       "Properties": {
         "RepositoryName": "nsa-installer",
@@ -509,949 +436,29 @@ exports[`ToolChain Stack 1`] = `
       "Type": "AWS::ECR::Repository",
       "UpdateReplacePolicy": "Retain",
     },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisComplete83420ECB": {
+    "LambdaaddTenantB66D86B5": {
       "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRoleDefaultPolicy8495A6F1",
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRole4950E63D",
+        "LambdaaddTenantServiceRoleDefaultPolicy644D36E9",
+        "LambdaaddTenantServiceRole3A28C871",
       ],
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "1eabd374284db340b74179e3429008132f5b6b0b7b28d472d852807d7f5f9746.zip",
+          "S3Key": "152db09bf48f107a47f92c73a267a38fdfc010a24bbc79cd45f51b74db4016ec.zip",
         },
-        "Description": "AWS CDK resource provider framework - isComplete (toolchain/nsa-installer/ToolchainImageDeploymentWithTag/CRProvider)",
-        "Environment": {
-          "Variables": {
-            "USER_IS_COMPLETE_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                "Arn",
-              ],
-            },
-            "USER_ON_EVENT_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                "Arn",
-              ],
-            },
-          },
-        },
-        "Handler": "framework.isComplete",
-        "Role": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRole4950E63D",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRole4950E63D": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRoleDefaultPolicy8495A6F1": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRoleDefaultPolicy8495A6F1",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisCompleteServiceRole4950E63D",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEvent9B0AB414": {
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRoleDefaultPolicy27939D76",
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRole1086D7F6",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "1eabd374284db340b74179e3429008132f5b6b0b7b28d472d852807d7f5f9746.zip",
-        },
-        "Description": "AWS CDK resource provider framework - onEvent (toolchain/nsa-installer/ToolchainImageDeploymentWithTag/CRProvider)",
-        "Environment": {
-          "Variables": {
-            "USER_IS_COMPLETE_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                "Arn",
-              ],
-            },
-            "USER_ON_EVENT_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                "Arn",
-              ],
-            },
-            "WAITER_STATE_MACHINE_ARN": {
-              "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachine5E6A348A",
-            },
-          },
-        },
-        "Handler": "framework.onEvent",
-        "Role": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRole1086D7F6",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRole1086D7F6": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRoleDefaultPolicy27939D76": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "states:StartExecution",
-              "Effect": "Allow",
-              "Resource": {
-                "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachine5E6A348A",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRoleDefaultPolicy27939D76",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEventServiceRole1086D7F6",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeout02D2FF0D": {
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRoleDefaultPolicy84B3B94C",
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRole877A6811",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "1eabd374284db340b74179e3429008132f5b6b0b7b28d472d852807d7f5f9746.zip",
-        },
-        "Description": "AWS CDK resource provider framework - onTimeout (toolchain/nsa-installer/ToolchainImageDeploymentWithTag/CRProvider)",
-        "Environment": {
-          "Variables": {
-            "USER_IS_COMPLETE_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                "Arn",
-              ],
-            },
-            "USER_ON_EVENT_FUNCTION_ARN": {
-              "Fn::GetAtt": [
-                "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                "Arn",
-              ],
-            },
-          },
-        },
-        "Handler": "framework.onTimeout",
-        "Role": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRole877A6811",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-        "Timeout": 900,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRole877A6811": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRoleDefaultPolicy84B3B94C": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRoleDefaultPolicy84B3B94C",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeoutServiceRole877A6811",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachine5E6A348A": {
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleDefaultPolicy2BB77645",
-        "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleC9DEC903",
-      ],
-      "Properties": {
-        "DefinitionString": {
-          "Fn::Join": [
-            "",
-            [
-              "{"StartAt":"framework-isComplete-task","States":{"framework-isComplete-task":{"End":true,"Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":60,"BackoffRate":1}],"Catch":[{"ErrorEquals":["States.ALL"],"Next":"framework-onTimeout-task"}],"Type":"Task","Resource":"",
-              {
-                "Fn::GetAtt": [
-                  "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisComplete83420ECB",
-                  "Arn",
-                ],
-              },
-              ""},"framework-onTimeout-task":{"End":true,"Type":"Task","Resource":"",
-              {
-                "Fn::GetAtt": [
-                  "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeout02D2FF0D",
-                  "Arn",
-                ],
-              },
-              ""}}}",
-            ],
-          ],
-        },
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleC9DEC903",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::StepFunctions::StateMachine",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleC9DEC903": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": {
-                  "Fn::FindInMap": [
-                    "ServiceprincipalMap",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    "states",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleDefaultPolicy2BB77645": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisComplete83420ECB",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkisComplete83420ECB",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeout02D2FF0D",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonTimeout02D2FF0D",
-                          "Arn",
-                        ],
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleDefaultPolicy2BB77645",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagCRProviderwaiterstatemachineRoleC9DEC903",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagCustomResource1682666437367EEB23198": {
-      "DeletionPolicy": "Delete",
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleDefaultPolicyA7E77EEB",
-        "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRoleDefaultPolicyC29E74AA",
-      ],
-      "Properties": {
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagCRProviderframeworkonEvent9B0AB414",
-            "Arn",
-          ],
-        },
-        "projectName": {
-          "Ref": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-        },
-      },
-      "Type": "AWS::CloudFormation::CustomResource",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "NO_ARTIFACTS",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "EncryptionKey": "alias/aws/s3",
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:5.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": true,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployRole43EB33F2",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": {
-            "Fn::Join": [
-              "",
-              [
-                "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "aws ecr get-login-password --region ",
-                {
-                  "Ref": "AWS::Region",
-                },
-                " | docker login --username AWS --password-stdin ",
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".amazonaws.com",
-        "docker pull ",
-                {
-                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:96a2fcfa63ed5b7434d4881c20ca36ff4ddd5a9013ca6ce20860f42e09c94611",
-                },
-                "",
-        "docker tag ",
-                {
-                  "Fn::Sub": "\${AWS::AccountId}.dkr.ecr.\${AWS::Region}.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}:96a2fcfa63ed5b7434d4881c20ca36ff4ddd5a9013ca6ce20860f42e09c94611",
-                },
-                " ",
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-        "docker push ",
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-        "docker logout"
-      ]
-    }
-  }
-}",
-              ],
-            ],
-          },
-          "Type": "NO_SOURCE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployRole43EB33F2": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployRoleDefaultPolicyF95F7D9F": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "ecr:PutImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployRoleDefaultPolicyF95F7D9F",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployRole43EB33F2",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandler387BDEB7": {
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleDefaultPolicyA7E77EEB",
-        "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleA07A5C26",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "bb6b84d76f495faa264fb6f81b4894087be4e31882080f32ce5146de2dc7fd5d.zip",
-        },
+        "Description": "src/ddb-stream/add-tenant.lambda.ts",
         "Environment": {
           "Variables": {
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "PROJECT_NAME": "provisioning-project",
           },
         },
-        "Handler": "index.isCompleteHandler",
+        "Handler": "index.handler",
         "Role": {
           "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleA07A5C26",
+            "LambdaaddTenantServiceRole3A28C871",
             "Arn",
           ],
         },
@@ -1459,7 +466,23 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::Lambda::Function",
     },
-    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleA07A5C26": {
+    "LambdaaddTenantDynamoDBEventSourcetoolchainDDBtabledeployment499F38D995992F28": {
+      "Properties": {
+        "BatchSize": 100,
+        "EventSourceArn": {
+          "Fn::GetAtt": [
+            "DDBtabledeploymentE90B547A",
+            "StreamArn",
+          ],
+        },
+        "FunctionName": {
+          "Ref": "LambdaaddTenantB66D86B5",
+        },
+        "StartingPosition": "LATEST",
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "LambdaaddTenantServiceRole3A28C871": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1490,449 +513,42 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleDefaultPolicyA7E77EEB": {
+    "LambdaaddTenantServiceRoleDefaultPolicy644D36E9": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "codebuild:ListBuildsForProject",
-                "codebuild:BatchGetBuilds",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleDefaultPolicyA7E77EEB",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagisCompleteHandlerServiceRoleA07A5C26",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagonEventHandler768BDB43": {
-      "DependsOn": [
-        "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRoleDefaultPolicyC29E74AA",
-        "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRole2627D783",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "bb6b84d76f495faa264fb6f81b4894087be4e31882080f32ce5146de2dc7fd5d.zip",
-        },
-        "Environment": {
-          "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-          },
-        },
-        "Handler": "index.onEventhandler",
-        "Role": {
-          "Fn::GetAtt": [
-            "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRole2627D783",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs16.x",
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRole2627D783": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRoleDefaultPolicyC29E74AA": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "codebuild:StartBuild",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerToolchainImageDeploymentWithTagDockerImageDeployProject87FCFFEB",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRoleDefaultPolicyC29E74AA",
-        "Roles": [
-          {
-            "Ref": "nsainstallerToolchainImageDeploymentWithTagonEventHandlerServiceRole2627D783",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "provisioningproject655EF8AC": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "NO_ARTIFACTS",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "EncryptionKey": "alias/aws/s3",
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
-        },
-        "Name": "provisioning-project",
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "provisioningprojectRole66955F67",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "cd /app",
-        "yarn ts-node bin/provision-deployment.ts"
-      ]
-    }
-  }
-}",
-          "Location": "https://github.com/rverma-nsl/nsl-saas-accelerator.git",
-          "ReportBuildStatus": true,
-          "Type": "GITHUB",
-        },
-        "SourceVersion": "refs/heads/main",
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "provisioningprojectRole66955F67": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "provisioningprojectRoleDefaultPolicy84DFA3D7": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
+              "Action": "dynamodb:ListStreams",
               "Effect": "Allow",
               "Resource": "*",
             },
             {
               "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
               ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "provisioningproject655EF8AC",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "provisioningproject655EF8AC",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "provisioningproject655EF8AC",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-file-publishing-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-image-publishing-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "ec2:DescribeRegions",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "provisioningprojectRoleDefaultPolicy84DFA3D7",
-        "Roles": [
-          {
-            "Ref": "provisioningprojectRole66955F67",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "startpipelinepolicyD2D8BBE5": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "codebuild:StartBuild",
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "provisioningproject655EF8AC",
-                  "Arn",
+                  "DDBtabledeploymentE90B547A",
+                  "StreamArn",
                 ],
               },
             },
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "startpipelinepolicyD2D8BBE5",
+        "PolicyName": "LambdaaddTenantServiceRoleDefaultPolicy644D36E9",
         "Roles": [
           {
-            "Ref": "addtenantServiceRoleEF3E952E",
+            "Ref": "LambdaaddTenantServiceRole3A28C871",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchainCodeBuildActionRole99B0DD30": {
+    "PipelineinstallerCodeBuildActionRoleDE4B5DD2": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1969,7 +585,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "toolchainCodeBuildActionRoleDefaultPolicy33E84E8E": {
+    "PipelineinstallerCodeBuildActionRoleDefaultPolicy8B869FC4": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -1982,7 +598,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                  "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17",
                   "Arn",
                 ],
               },
@@ -1996,7 +612,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchainUpdatePipelineSelfMutation45E258FE",
+                  "PipelineinstallerUpdatePipelineSelfMutation551BD46C",
                   "Arn",
                 ],
               },
@@ -2010,7 +626,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                  "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817",
                   "Arn",
                 ],
               },
@@ -2018,16 +634,16 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "toolchainCodeBuildActionRoleDefaultPolicy33E84E8E",
+        "PolicyName": "PipelineinstallerCodeBuildActionRoleDefaultPolicy8B869FC4",
         "Roles": [
           {
-            "Ref": "toolchainCodeBuildActionRole99B0DD30",
+            "Ref": "PipelineinstallerCodeBuildActionRoleDE4B5DD2",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchainUpdatePipelineSelfMutation45E258FE": {
+    "PipelineinstallerUpdatePipelineSelfMutation551BD46C": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -2038,7 +654,7 @@ exports[`ToolChain Stack 1`] = `
         "Description": "Pipeline step toolchain/toolchainCodePipeline/UpdatePipeline/SelfMutate",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
+            "PipelineinstallertoolchainArtifactKey79B0D7BF",
             "Arn",
           ],
         },
@@ -2051,7 +667,7 @@ exports[`ToolChain Stack 1`] = `
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "toolchainUpdatePipelineSelfMutationRole685C2C99",
+            "PipelineinstallerUpdatePipelineSelfMutationRole4DA48935",
             "Arn",
           ],
         },
@@ -2085,7 +701,7 @@ exports[`ToolChain Stack 1`] = `
                                       ":",
                                       {
                                         "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
+                                          "EcrRegistryinstaller7DDDA444",
                                           "Arn",
                                         ],
                                       },
@@ -2102,7 +718,7 @@ exports[`ToolChain Stack 1`] = `
                                       ":",
                                       {
                                         "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
+                                          "EcrRegistryinstaller7DDDA444",
                                           "Arn",
                                         ],
                                       },
@@ -2116,7 +732,7 @@ exports[`ToolChain Stack 1`] = `
                               },
                               "/",
                               {
-                                "Ref": "nsainstallerEFA9386B",
+                                "Ref": "EcrRegistryinstaller7DDDA444",
                               },
                             ],
                           ],
@@ -2148,7 +764,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "toolchainUpdatePipelineSelfMutationRole685C2C99": {
+    "PipelineinstallerUpdatePipelineSelfMutationRole4DA48935": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -2165,7 +781,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "toolchainUpdatePipelineSelfMutationRoleDefaultPolicyBF84EDA0": {
+    "PipelineinstallerUpdatePipelineSelfMutationRoleDefaultPolicyF6E6BC55": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -2195,7 +811,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
+                        "Ref": "PipelineinstallerUpdatePipelineSelfMutation551BD46C",
                       },
                     ],
                   ],
@@ -2218,7 +834,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
+                        "Ref": "PipelineinstallerUpdatePipelineSelfMutation551BD46C",
                       },
                       ":*",
                     ],
@@ -2253,7 +869,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
+                      "Ref": "PipelineinstallerUpdatePipelineSelfMutation551BD46C",
                     },
                     "-*",
                   ],
@@ -2305,7 +921,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -2315,7 +931,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -2333,7 +949,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -2348,7 +964,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -2362,7 +978,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
+                  "EcrRegistryinstaller7DDDA444",
                   "Arn",
                 ],
               },
@@ -2375,16 +991,16 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "toolchainUpdatePipelineSelfMutationRoleDefaultPolicyBF84EDA0",
+        "PolicyName": "PipelineinstallerUpdatePipelineSelfMutationRoleDefaultPolicyF6E6BC55",
         "Roles": [
           {
-            "Ref": "toolchainUpdatePipelineSelfMutationRole685C2C99",
+            "Ref": "PipelineinstallerUpdatePipelineSelfMutationRole4DA48935",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchaintoolchainAccessLogsBucket3D4553E6": {
+    "PipelineinstallertoolchainAccessLogsBucket62FBF5A1": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "BucketEncryption": {
@@ -2419,14 +1035,14 @@ exports[`ToolChain Stack 1`] = `
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
     },
-    "toolchaintoolchainAccessLogsBucketAutoDeleteObjectsCustomResource21C7848C": {
+    "PipelineinstallertoolchainAccessLogsBucketAutoDeleteObjectsCustomResource0C7E03AC": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
-        "toolchaintoolchainAccessLogsBucketPolicy4A33CDFA",
+        "PipelineinstallertoolchainAccessLogsBucketPolicyC7B09D71",
       ],
       "Properties": {
         "BucketName": {
-          "Ref": "toolchaintoolchainAccessLogsBucket3D4553E6",
+          "Ref": "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -2438,10 +1054,10 @@ exports[`ToolChain Stack 1`] = `
       "Type": "Custom::S3AutoDeleteObjects",
       "UpdateReplacePolicy": "Delete",
     },
-    "toolchaintoolchainAccessLogsBucketPolicy4A33CDFA": {
+    "PipelineinstallertoolchainAccessLogsBucketPolicyC7B09D71": {
       "Properties": {
         "Bucket": {
-          "Ref": "toolchaintoolchainAccessLogsBucket3D4553E6",
+          "Ref": "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
         },
         "PolicyDocument": {
           "Statement": [
@@ -2459,7 +1075,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainAccessLogsBucket3D4553E6",
+                    "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
                     "Arn",
                   ],
                 },
@@ -2469,7 +1085,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainAccessLogsBucket3D4553E6",
+                          "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
                           "Arn",
                         ],
                       },
@@ -2497,7 +1113,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainAccessLogsBucket3D4553E6",
+                    "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
                     "Arn",
                   ],
                 },
@@ -2507,7 +1123,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainAccessLogsBucket3D4553E6",
+                          "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
                           "Arn",
                         ],
                       },
@@ -2523,7 +1139,7 @@ exports[`ToolChain Stack 1`] = `
                 "ArnLike": {
                   "aws:SourceArn": {
                     "Fn::GetAtt": [
-                      "toolchaintoolchainArtifactsBucket6310BBE4",
+                      "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                       "Arn",
                     ],
                   },
@@ -2544,7 +1160,7 @@ exports[`ToolChain Stack 1`] = `
                   [
                     {
                       "Fn::GetAtt": [
-                        "toolchaintoolchainAccessLogsBucket3D4553E6",
+                        "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
                         "Arn",
                       ],
                     },
@@ -2559,7 +1175,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "toolchaintoolchainArtifactKey0A4451B3": {
+    "PipelineinstallertoolchainArtifactKey79B0D7BF": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "EnableKeyRotation": true,
@@ -2595,19 +1211,19 @@ exports[`ToolChain Stack 1`] = `
       "Type": "AWS::KMS::Key",
       "UpdateReplacePolicy": "Delete",
     },
-    "toolchaintoolchainArtifactKeyAliasC75ECB9B": {
+    "PipelineinstallertoolchainArtifactKeyAliasCE7A693F": {
       "Properties": {
         "AliasName": "alias/pipeline/toolchain",
         "TargetKeyId": {
           "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
+            "PipelineinstallertoolchainArtifactKey79B0D7BF",
             "Arn",
           ],
         },
       },
       "Type": "AWS::KMS::Alias",
     },
-    "toolchaintoolchainArtifactsBucket6310BBE4": {
+    "PipelineinstallertoolchainArtifactsBucket152C3DB2": {
       "DeletionPolicy": "Delete",
       "Properties": {
         "BucketEncryption": {
@@ -2616,7 +1232,7 @@ exports[`ToolChain Stack 1`] = `
               "ServerSideEncryptionByDefault": {
                 "KMSMasterKeyID": {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactKey0A4451B3",
+                    "PipelineinstallertoolchainArtifactKey79B0D7BF",
                     "Arn",
                   ],
                 },
@@ -2627,7 +1243,7 @@ exports[`ToolChain Stack 1`] = `
         },
         "LoggingConfiguration": {
           "DestinationBucketName": {
-            "Ref": "toolchaintoolchainAccessLogsBucket3D4553E6",
+            "Ref": "PipelineinstallertoolchainAccessLogsBucket62FBF5A1",
           },
           "LogFilePrefix": "access-logs",
         },
@@ -2654,14 +1270,14 @@ exports[`ToolChain Stack 1`] = `
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Delete",
     },
-    "toolchaintoolchainArtifactsBucketAutoDeleteObjectsCustomResource4C8A5350": {
+    "PipelineinstallertoolchainArtifactsBucketAutoDeleteObjectsCustomResource8E2C3464": {
       "DeletionPolicy": "Delete",
       "DependsOn": [
-        "toolchaintoolchainArtifactsBucketPolicy679C403A",
+        "PipelineinstallertoolchainArtifactsBucketPolicy8C7B4C86",
       ],
       "Properties": {
         "BucketName": {
-          "Ref": "toolchaintoolchainArtifactsBucket6310BBE4",
+          "Ref": "PipelineinstallertoolchainArtifactsBucket152C3DB2",
         },
         "ServiceToken": {
           "Fn::GetAtt": [
@@ -2673,10 +1289,10 @@ exports[`ToolChain Stack 1`] = `
       "Type": "Custom::S3AutoDeleteObjects",
       "UpdateReplacePolicy": "Delete",
     },
-    "toolchaintoolchainArtifactsBucketPolicy679C403A": {
+    "PipelineinstallertoolchainArtifactsBucketPolicy8C7B4C86": {
       "Properties": {
         "Bucket": {
-          "Ref": "toolchaintoolchainArtifactsBucket6310BBE4",
+          "Ref": "PipelineinstallertoolchainArtifactsBucket152C3DB2",
         },
         "PolicyDocument": {
           "Statement": [
@@ -2694,7 +1310,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -2704,7 +1320,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -2732,7 +1348,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -2742,7 +1358,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -2758,24 +1374,24 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "toolchaintoolchainCodePipeline404C679F": {
+    "PipelineinstallertoolchainCodePipeline9E98EEFC": {
       "DependsOn": [
-        "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9",
-        "toolchaintoolchainCodePipelineRoleEE383373",
+        "PipelineinstallertoolchainCodePipelineRoleDefaultPolicyEDD00A40",
+        "PipelineinstallertoolchainCodePipelineRole4561FCDF",
       ],
       "Properties": {
         "ArtifactStore": {
           "EncryptionKey": {
             "Id": {
               "Fn::GetAtt": [
-                "toolchaintoolchainArtifactKey0A4451B3",
+                "PipelineinstallertoolchainArtifactKey79B0D7BF",
                 "Arn",
               ],
             },
             "Type": "KMS",
           },
           "Location": {
-            "Ref": "toolchaintoolchainArtifactsBucket6310BBE4",
+            "Ref": "PipelineinstallertoolchainArtifactsBucket152C3DB2",
           },
           "Type": "S3",
         },
@@ -2783,7 +1399,7 @@ exports[`ToolChain Stack 1`] = `
         "RestartExecutionOnUpdate": true,
         "RoleArn": {
           "Fn::GetAtt": [
-            "toolchaintoolchainCodePipelineRoleEE383373",
+            "PipelineinstallertoolchainCodePipelineRole4561FCDF",
             "Arn",
           ],
         },
@@ -2825,9 +1441,9 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"20fcc30324b63cb79bc631db8d260e2d3d2e3d8309e48714f27aba002f76f0f7"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"04111eb5ed5d9550e334cbe09ac6b678edd3c696e2e3aba14acd26a487c03fbd"}]",
                   "ProjectName": {
-                    "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                    "Ref": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17",
                   },
                 },
                 "InputArtifacts": [
@@ -2846,7 +1462,7 @@ exports[`ToolChain Stack 1`] = `
                 ],
                 "RoleArn": {
                   "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
+                    "PipelineinstallerCodeBuildActionRoleDE4B5DD2",
                     "Arn",
                   ],
                 },
@@ -2865,9 +1481,9 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"972442aba4e0a3da7898f49c53add76da496e66b5ebe0a6580469714f09e01cb"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"a71a5aceb61cfca873cf03c076f9201d34c813247fb8b4ee8013e063572828ba"}]",
                   "ProjectName": {
-                    "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
+                    "Ref": "PipelineinstallerUpdatePipelineSelfMutation551BD46C",
                   },
                 },
                 "InputArtifacts": [
@@ -2878,7 +1494,7 @@ exports[`ToolChain Stack 1`] = `
                 "Name": "SelfMutate",
                 "RoleArn": {
                   "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
+                    "PipelineinstallerCodeBuildActionRoleDE4B5DD2",
                     "Arn",
                   ],
                 },
@@ -2898,7 +1514,7 @@ exports[`ToolChain Stack 1`] = `
                 },
                 "Configuration": {
                   "ProjectName": {
-                    "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                    "Ref": "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817",
                   },
                 },
                 "InputArtifacts": [
@@ -2909,7 +1525,7 @@ exports[`ToolChain Stack 1`] = `
                 "Name": "update-deployments",
                 "RoleArn": {
                   "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
+                    "PipelineinstallerCodeBuildActionRoleDE4B5DD2",
                     "Arn",
                   ],
                 },
@@ -2922,7 +1538,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::CodePipeline::Pipeline",
     },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB": {
+    "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -2936,7 +1552,7 @@ exports[`ToolChain Stack 1`] = `
         "Description": "Pipeline step toolchain/toolchainCodePipeline/Build/toolchainSynth",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
+            "PipelineinstallertoolchainArtifactKey79B0D7BF",
             "Arn",
           ],
         },
@@ -2949,7 +1565,7 @@ exports[`ToolChain Stack 1`] = `
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336",
+            "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole328361E6",
             "Arn",
           ],
         },
@@ -2983,7 +1599,7 @@ exports[`ToolChain Stack 1`] = `
                                       ":",
                                       {
                                         "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
+                                          "EcrRegistryinstaller7DDDA444",
                                           "Arn",
                                         ],
                                       },
@@ -3000,7 +1616,7 @@ exports[`ToolChain Stack 1`] = `
                                       ":",
                                       {
                                         "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
+                                          "EcrRegistryinstaller7DDDA444",
                                           "Arn",
                                         ],
                                       },
@@ -3014,7 +1630,7 @@ exports[`ToolChain Stack 1`] = `
                               },
                               "/",
                               {
-                                "Ref": "nsainstallerEFA9386B",
+                                "Ref": "EcrRegistryinstaller7DDDA444",
                               },
                             ],
                           ],
@@ -3064,7 +1680,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336": {
+    "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole328361E6": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3081,7 +1697,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy0570F036": {
+    "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy428C28B6": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3111,7 +1727,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                        "Ref": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17",
                       },
                     ],
                   ],
@@ -3134,7 +1750,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                        "Ref": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17",
                       },
                       ":*",
                     ],
@@ -3169,7 +1785,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                      "Ref": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProject3953AE17",
                     },
                     "-*",
                   ],
@@ -3193,7 +1809,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -3203,7 +1819,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -3224,7 +1840,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -3239,7 +1855,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -3253,7 +1869,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
+                  "EcrRegistryinstaller7DDDA444",
                   "Arn",
                 ],
               },
@@ -3266,16 +1882,33 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy0570F036",
+        "PolicyName": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy428C28B6",
         "Roles": [
           {
-            "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336",
+            "Ref": "PipelineinstallertoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole328361E6",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9": {
+    "PipelineinstallertoolchainCodePipelineRole4561FCDF": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PipelineinstallertoolchainCodePipelineRoleDefaultPolicyEDD00A40": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -3296,7 +1929,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -3306,7 +1939,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -3327,7 +1960,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -3337,7 +1970,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchainCodeBuildActionRole99B0DD30",
+                  "PipelineinstallerCodeBuildActionRoleDE4B5DD2",
                   "Arn",
                 ],
               },
@@ -3345,33 +1978,16 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9",
+        "PolicyName": "PipelineinstallertoolchainCodePipelineRoleDefaultPolicyEDD00A40",
         "Roles": [
           {
-            "Ref": "toolchaintoolchainCodePipelineRoleEE383373",
+            "Ref": "PipelineinstallertoolchainCodePipelineRole4561FCDF",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchaintoolchainCodePipelineRoleEE383373": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09": {
+    "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -3382,68 +1998,20 @@ exports[`ToolChain Stack 1`] = `
         "Description": "Pipeline step toolchain/toolchainCodePipeline/UpdateDeployments/update-deployments",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
+            "PipelineinstallertoolchainArtifactKey79B0D7BF",
             "Arn",
           ],
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Fn::Select": [
-                    4,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".dkr.ecr.",
-                {
-                  "Fn::Select": [
-                    3,
-                    {
-                      "Fn::Split": [
-                        ":",
-                        {
-                          "Fn::GetAtt": [
-                            "nsainstallerEFA9386B",
-                            "Arn",
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Ref": "nsainstallerEFA9386B",
-                },
-                ":latest",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "updatedeploymentsrole044C7611",
+            "RoleupdateDeployments7AE0EAA2",
             "Arn",
           ],
         },
@@ -3465,7 +2033,84 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "updatedeploymentsrole044C7611": {
+    "PolicystartPipeline71181E94": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "codebuild:StartBuild",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "CodebuildprovisioningDD5C3418",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "PolicystartPipeline71181E94",
+        "Roles": [
+          {
+            "Ref": "LambdaaddTenantServiceRole3A28C871",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "RolegitHubEcrPushE33256F6": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringLike": {
+                  "token.actions.githubusercontent.com:sub": "repo:rverma-nsl/nsl-saas-accelerator:*",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": {
+                  "Ref": "oidcgithubProvider3DF8614A",
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Description": "This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account",
+        "MaxSessionDuration": 3600,
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "ecr:BatchGetImage",
+                    "ecr:BatchCheckLayerAvailability",
+                    "ecr:CompleteLayerUpload",
+                    "ecr:GetDownloadUrlForLayer",
+                    "ecr:InitiateLayerUpload",
+                    "ecr:PutImage",
+                    "ecr:UploadLayerPart",
+                    "ecr:GetAuthorizationToken",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "githubAction",
+          },
+        ],
+        "RoleName": "gitHubSaasDeployRole",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "RoleupdateDeployments7AE0EAA2": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -3539,7 +2184,7 @@ exports[`ToolChain Stack 1`] = `
                   "Resource": [
                     {
                       "Fn::GetAtt": [
-                        "deploymenttableC3BF9083",
+                        "DDBtabledeploymentE90B547A",
                         "Arn",
                       ],
                     },
@@ -3549,7 +2194,7 @@ exports[`ToolChain Stack 1`] = `
                         [
                           {
                             "Fn::GetAtt": [
-                              "deploymenttableC3BF9083",
+                              "DDBtabledeploymentE90B547A",
                               "Arn",
                             ],
                           },
@@ -3573,29 +2218,10 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "updatedeploymentsroleDefaultPolicyE6382A1D": {
+    "RoleupdateDeploymentsDefaultPolicy21F6B33D": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -3622,7 +2248,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                        "Ref": "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817",
                       },
                     ],
                   ],
@@ -3645,7 +2271,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                        "Ref": "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817",
                       },
                       ":*",
                     ],
@@ -3680,7 +2306,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                      "Ref": "PipelineinstallertoolchainCodePipelineUpdateDeploymentsupdatedeployments7E556817",
                     },
                     "-*",
                   ],
@@ -3697,7 +2323,7 @@ exports[`ToolChain Stack 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                     "Arn",
                   ],
                 },
@@ -3707,7 +2333,7 @@ exports[`ToolChain Stack 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "PipelineinstallertoolchainArtifactsBucket152C3DB2",
                           "Arn",
                         ],
                       },
@@ -3725,7 +2351,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -3740,7 +2366,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "PipelineinstallertoolchainArtifactKey79B0D7BF",
                   "Arn",
                 ],
               },
@@ -3748,14 +2374,32 @@ exports[`ToolChain Stack 1`] = `
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "updatedeploymentsroleDefaultPolicyE6382A1D",
+        "PolicyName": "RoleupdateDeploymentsDefaultPolicy21F6B33D",
         "Roles": [
           {
-            "Ref": "updatedeploymentsrole044C7611",
+            "Ref": "RoleupdateDeployments7AE0EAA2",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "oidcgithubProvider3DF8614A": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "ClientIDList": [
+          "sts.amazonaws.com",
+        ],
+        "CodeHash": "ffa3d5f3876afed62c60735ced8dafb4db2ccbd70a8b2f6b0d9e6eaa5823d631",
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0",
+            "Arn",
+          ],
+        },
+        "Url": "https://token.actions.githubusercontent.com",
+      },
+      "Type": "Custom::AWSCDKOpenIdConnectProvider",
+      "UpdateReplacePolicy": "Delete",
     },
   },
   "Rules": {
