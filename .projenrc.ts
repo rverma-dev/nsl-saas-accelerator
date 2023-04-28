@@ -6,8 +6,9 @@ import { TypeScriptProject } from 'projen/lib/typescript';
 
 const AWS_SDK_VERSION = '^3.316.0';
 const CDK_VERSION = '2.76.0';
-const CONSTRUCT_VERSION = '10.2.5';
+const CONSTRUCT_VERSION = '10.2.8';
 const JEST_VERSION = '^29.1.0';
+const PROJEN_VERSION = '^0.71.26';
 
 const root = new NxMonorepoProject({
   defaultReleaseBranch: 'main',
@@ -26,7 +27,7 @@ const root = new NxMonorepoProject({
       arrowParens: ArrowParens.AVOID,
     },
   },
-  gitignore: ['.idea', '.vscode'],
+  gitignore: ['.idea', '**/.npmrc'],
   stale: true,
   autoApproveUpgrades: true,
   autoApproveOptions: {
@@ -38,7 +39,6 @@ const root = new NxMonorepoProject({
   github: true,
   minNodeVersion: '18.0.0',
   typescriptVersion: '~5.0.4',
-  vscode: true,
   nxConfig: {
     cacheableOperations: ['compile', 'build', 'bundle', 'eslint', 'test', 'synth'],
     affectedBranch: 'main',
@@ -46,7 +46,7 @@ const root = new NxMonorepoProject({
   },
 });
 
-new TypeScriptProject({
+const common = new TypeScriptProject({
   parent: root,
   outdir: 'packages/common',
   deps: [],
@@ -62,7 +62,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   parent: root,
   outdir: 'packages/constructs',
   bundledDeps: [
-    '@nslhb/eks-blueprints@1.6.21',
+    '@aws-quickstart/eks-blueprints',
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     '@types/js-yaml@4.0.5',
@@ -70,6 +70,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
     'sync-request@6.1.0',
     '@types/fs-extra@11.0.1',
     '@types/semver@7.3.13',
+    '@pnpm/reviewing.dependencies-hierarchy',
   ],
   peerDeps: ['cdk-nag'],
   devDeps: ['@types/aws-lambda', 'aws-lambda'],
@@ -77,6 +78,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   name: '@nsa/construct',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
@@ -99,6 +101,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
   bin: {
     'pdk@pnpm-link-bundled-transitive-deps': './scripts/pnpm/link-bundled-transitive-deps.ts',
   },
+  projenVersion: PROJEN_VERSION,
 });
 
 const demo = new awscdk.AwsCdkTypeScriptApp({
@@ -109,20 +112,24 @@ const demo = new awscdk.AwsCdkTypeScriptApp({
     `@aws-prototyping-sdk/static-website`,
     '@nsa/common',
     '@nsa/construct',
+    `aws-cdk-lib@${CDK_VERSION}`,
   ],
   defaultReleaseBranch: 'main',
   name: '@nsa/demo',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
     jestVersion: JEST_VERSION,
   },
+  projenVersion: PROJEN_VERSION,
 });
+root.addImplicitDependency(demo, common);
 root.addImplicitDependency(demo, constructs);
 
-new awscdk.AwsCdkTypeScriptApp({
+const silo = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/silo',
   deps: [
@@ -139,14 +146,18 @@ new awscdk.AwsCdkTypeScriptApp({
   name: '@nsa/silo',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
     jestVersion: JEST_VERSION,
   },
+  projenVersion: PROJEN_VERSION,
 });
+root.addImplicitDependency(silo, common);
+root.addImplicitDependency(silo, constructs);
 
-new awscdk.AwsCdkTypeScriptApp({
+const pool = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/pool',
   deps: [
@@ -163,6 +174,7 @@ new awscdk.AwsCdkTypeScriptApp({
   name: '@nsa/pool',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
@@ -175,9 +187,12 @@ new awscdk.AwsCdkTypeScriptApp({
       sourcemap: true,
     },
   },
+  projenVersion: PROJEN_VERSION,
 });
+root.addImplicitDependency(pool, common);
+root.addImplicitDependency(pool, constructs);
 
-new awscdk.AwsCdkTypeScriptApp({
+const installer = new awscdk.AwsCdkTypeScriptApp({
   parent: root,
   outdir: 'packages/installer',
   deps: [
@@ -197,18 +212,26 @@ new awscdk.AwsCdkTypeScriptApp({
     'cdk-nag',
     'source-map-support',
     'vm2@3.9.17',
-    'cdk-docker-image-deployment@^0.0.234',
+    'cdk-docker-image-deployment',
   ],
   devDeps: ['aws-lambda'],
   defaultReleaseBranch: 'main',
   name: '@nsa/installer',
   packageManager: NodePackageManager.PNPM,
   cdkVersion: CDK_VERSION,
+  cdkVersionPinning: true,
   constructsVersion: CONSTRUCT_VERSION,
   minNodeVersion: root.minNodeVersion,
   jestOptions: {
     jestVersion: JEST_VERSION,
   },
+  projenVersion: PROJEN_VERSION,
 });
+
+root.addImplicitDependency(installer, common);
+root.addImplicitDependency(installer, constructs);
+root.addImplicitDependency(installer, demo);
+root.addImplicitDependency(installer, silo);
+root.addImplicitDependency(installer, pool);
 
 root.synth();

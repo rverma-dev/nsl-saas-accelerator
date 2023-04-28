@@ -50,7 +50,7 @@ export class ToolchainStack extends Stack {
     const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
 
     new imagedeploy.DockerImageDeployment(installerImage, 'ToolchainImageDeploymentWithTag', {
-      source: imagedeploy.Source.directory('packages/installer'),
+      source: imagedeploy.Source.directory('.'),
       destination: imagedeploy.Destination.ecr(installerImage, { tag: 'latest' }),
     });
 

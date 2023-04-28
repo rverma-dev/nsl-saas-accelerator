@@ -43,7 +43,7 @@
     "aws-cdk-lib": "2.76.0",
     "aws-lambda": "^1.0.7",
     "cdk-nag": "2.26.1",
-    "constructs": "10.2.4",
+    "constructs": "10.2.8",
     "esbuild": "^0.0.0",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.7",
@@ -56,30 +56,30 @@
     "jsii-docgen": "^0.0.0",
     "jsii-pacmak": "1.80.0",
     "npm-check-updates": "^16",
-    "projen": "^0.71.19",
+    "projen": "^0.71.26",
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "^2.76.0",
+    "aws-cdk-lib": "2.76.0",
     "cdk-nag": "^2.26.1",
-    "constructs": "^10.2.4"
+    "constructs": "^10.2.8"
   },
   "dependencies": {
+    "@aws-quickstart/eks-blueprints": "^1.7.0",
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
-    "@nslhb/eks-blueprints": "1.6.21",
     "@pnpm/reviewing.dependencies-hierarchy": "*",
     "@types/fs-extra": "11.0.1",
     "@types/js-yaml": "4.0.5",
     "@types/semver": "7.3.13",
     "js-yaml": "4.1.0",
-    "sync-request": "^6.1.0"
+    "sync-request": "6.1.0"
   },
   "bundledDependencies": [
+    "@aws-quickstart/eks-blueprints",
     "@aws-sdk/client-iam",
     "@aws-sdk/client-secrets-manager",
-    "@nslhb/eks-blueprints",
     "@pnpm/reviewing.dependencies-hierarchy",
     "@types/fs-extra",
     "@types/js-yaml",

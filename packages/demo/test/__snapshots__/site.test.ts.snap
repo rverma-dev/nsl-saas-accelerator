@@ -25,7 +25,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "demodev001demoAccessLogsBucketA2650B4F",
+                "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
               },
               " S3 bucket.",
             ],
@@ -66,638 +66,6 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "demodev001demoAccessLogsBucketA2650B4F": {
-      "DeletionPolicy": "Delete",
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256",
-              },
-            },
-          ],
-        },
-        "OwnershipControls": {
-          "Rules": [
-            {
-              "ObjectOwnership": "BucketOwnerEnforced",
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-        "Tags": [
-          {
-            "Key": "aws-cdk:auto-delete-objects",
-            "Value": "true",
-          },
-        ],
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "demodev001demoAccessLogsBucketAutoDeleteObjectsCustomResource58924E11": {
-      "DeletionPolicy": "Delete",
-      "DependsOn": [
-        "demodev001demoAccessLogsBucketPolicy1C30E4A9",
-      ],
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "BucketName": {
-          "Ref": "demodev001demoAccessLogsBucketA2650B4F",
-        },
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::S3AutoDeleteObjects",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "demodev001demoAccessLogsBucketPolicy1C30E4A9": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "Bucket": {
-          "Ref": "demodev001demoAccessLogsBucketA2650B4F",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoAccessLogsBucketA2650B4F",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoAccessLogsBucketA2650B4F",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-                    "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoAccessLogsBucketA2650B4F",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoAccessLogsBucketA2650B4F",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": "s3:PutObject",
-              "Condition": {
-                "ArnLike": {
-                  "aws:SourceArn": {
-                    "Fn::GetAtt": [
-                      "demodev001demoArtifactsBucket0E0E78F0",
-                      "Arn",
-                    ],
-                  },
-                },
-                "StringEquals": {
-                  "aws:SourceAccount": "1111111",
-                },
-              },
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "logging.s3.amazonaws.com",
-              },
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Fn::GetAtt": [
-                        "demodev001demoAccessLogsBucketA2650B4F",
-                        "Arn",
-                      ],
-                    },
-                    "/access-logs*",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "demodev001demoArtifactKey7A2782AD": {
-      "DeletionPolicy": "Delete",
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "EnableKeyRotation": true,
-        "KeyPolicy": {
-          "Statement": [
-            {
-              "Action": "kms:*",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::1111111:root",
-                    ],
-                  ],
-                },
-              },
-              "Resource": "*",
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
-                    ],
-                  ],
-                },
-              },
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::KMS::Key",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "demodev001demoArtifactsBucket0E0E78F0": {
-      "DeletionPolicy": "Delete",
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "KMSMasterKeyID": {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactKey7A2782AD",
-                    "Arn",
-                  ],
-                },
-                "SSEAlgorithm": "aws:kms",
-              },
-            },
-          ],
-        },
-        "LoggingConfiguration": {
-          "DestinationBucketName": {
-            "Ref": "demodev001demoAccessLogsBucketA2650B4F",
-          },
-          "LogFilePrefix": "access-logs",
-        },
-        "OwnershipControls": {
-          "Rules": [
-            {
-              "ObjectOwnership": "BucketOwnerEnforced",
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-        "Tags": [
-          {
-            "Key": "aws-cdk:auto-delete-objects",
-            "Value": "true",
-          },
-        ],
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "demodev001demoArtifactsBucketAutoDeleteObjectsCustomResourceA355070B": {
-      "DeletionPolicy": "Delete",
-      "DependsOn": [
-        "demodev001demoArtifactsBucketPolicyB7C48915",
-      ],
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "BucketName": {
-          "Ref": "demodev001demoArtifactsBucket0E0E78F0",
-        },
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::S3AutoDeleteObjects",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "demodev001demoArtifactsBucketPolicyB7C48915": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "Bucket": {
-          "Ref": "demodev001demoArtifactsBucket0E0E78F0",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-                    "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
-                    ],
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
     "demodev001demoAssetsFileAsset1DF8B78BA": {
       "Metadata": {
         "cdk_nag": {
@@ -736,10 +104,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset1",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset1",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -815,10 +183,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset2",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset2",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -894,10 +262,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset3",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset3",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -973,10 +341,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset4",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset4",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -1004,7 +372,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
     },
     "build": {
       "commands": [
-        "cdk-assets --path \\"assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.assets.json\\" --verbose publish \\"9100e1f25e3613f6f3b64a9296d685424ff6fed8f1be71e22df56e21c1c88d81:1111111-ap-south-1\\""
+        "cdk-assets --path \\"assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.assets.json\\" --verbose publish \\"ae425a54db1deda1936d2f7a541020d40ec5b16e8334c1c068761a8fafa0275f:1111111-ap-south-1\\""
       ]
     }
   }
@@ -1052,10 +420,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset5",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset5",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -1131,10 +499,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset6",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset6",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -1210,10 +578,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Assets/FileAsset7",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Assets/FileAsset7",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -1418,7 +786,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
                     "Arn",
                   ],
                 },
@@ -1428,7 +796,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
                           "Arn",
                         ],
                       },
@@ -1446,7 +814,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
                   "Arn",
                 ],
               },
@@ -1569,7 +937,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B",
+                  "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
                   "Arn",
                 ],
               },
@@ -1698,925 +1066,6 @@ exports[`Static Website Unit Tests Defaults 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "demodev001demoCodePipeline35100EBD": {
-      "DependsOn": [
-        "demodev001demoCodePipelineRoleDefaultPolicyFFACC3EF",
-        "demodev001demoCodePipelineRole3B159937",
-      ],
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "ArtifactStore": {
-          "EncryptionKey": {
-            "Id": {
-              "Fn::GetAtt": [
-                "demodev001demoArtifactKey7A2782AD",
-                "Arn",
-              ],
-            },
-            "Type": "KMS",
-          },
-          "Location": {
-            "Ref": "demodev001demoArtifactsBucket0E0E78F0",
-          },
-          "Type": "S3",
-        },
-        "RestartExecutionOnUpdate": true,
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "demodev001demoCodePipelineRole3B159937",
-            "Arn",
-          ],
-        },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "Branch": "main",
-                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
-                  "Owner": "rverma-nsl",
-                  "PollForSourceChanges": false,
-                  "Repo": "nsl-saas-accelerator",
-                },
-                "Name": "rverma-nsl_nsl-saas-accelerator",
-                "OutputArtifacts": [
-                  {
-                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
-                  },
-                ],
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"53cdaa247f2c31018a98e509cea73f4c5f5534da982080dc6cab105daa2719ea"}]",
-                  "ProjectName": {
-                    "Ref": "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
-                  },
-                ],
-                "Name": "Synth",
-                "OutputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                  {
-                    "Name": "Synth__",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"d481eb7e52fa70e98aa3e0e22b2f258bef28632bc13e90928d96c7e1479e3a2b"}]",
-                  "ProjectName": {
-                    "Ref": "demodev001demoUpdatePipelineSelfMutationD997FA4B",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "SelfMutate",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdatePipeline",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset1DF8B78BA",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset1",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset2E95F2C53",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset2",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset3C01EB9F6",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset3",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset4ACE1EFC0",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset4",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset559A02304",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset5",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset6E681667E",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset6",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "demodev001demoAssetsFileAsset72505EFE4",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "FileAsset7",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "demodev001demoCodeBuildActionRole01AACA65",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Assets",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "CloudFormation",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ActionMode": "CHANGE_SET_REPLACE",
-                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
-                  "ChangeSetName": "PipelineChange",
-                  "RoleArn": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "arn:",
-                        {
-                          "Ref": "AWS::Partition",
-                        },
-                        ":iam::1111111:role/cdk-hnb659fds-cfn-exec-role-1111111-ap-south-1",
-                      ],
-                    ],
-                  },
-                  "StackName": "Dev-test",
-                  "TemplatePath": "Synth_Output::assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.template.json",
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "Prepare",
-                "RoleArn": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
-                    ],
-                  ],
-                },
-                "RunOrder": 1,
-              },
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "CloudFormation",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ActionMode": "CHANGE_SET_EXECUTE",
-                  "ChangeSetName": "PipelineChange",
-                  "StackName": "Dev-test",
-                },
-                "Name": "Deploy",
-                "RoleArn": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
-                    ],
-                  ],
-                },
-                "RunOrder": 2,
-              },
-            ],
-            "Name": "Dev",
-          },
-        ],
-      },
-      "Type": "AWS::CodePipeline::Pipeline",
-    },
-    "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "Artifacts": {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step PipelineStack/CodePipeline/Build/Synth",
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:6.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": true,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "demodev001demoCodePipelineBuildSynthCdkBuildProjectRoleF1500B78",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "install": {
-      "commands": [
-        "npm install -g aws-cdk pnpm",
-        "pnpm install --frozen-lockfile"
-      ]
-    },
-    "build": {
-      "commands": [
-        "npx nx run-many --target=build --all"
-      ]
-    }
-  },
-  "artifacts": {
-    "secondary-artifacts": {
-      "Synth_Output": {
-        "base-directory": "packages/demo/cdk.out",
-        "files": "**/*"
-      },
-      "Synth__": {
-        "base-directory": ".",
-        "files": "**/*"
-      }
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "demodev001demoCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy6C1669ED": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
-                      {
-                        "Ref": "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
-                      {
-                        "Ref": "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:ap-south-1:1111111:report-group/",
-                    {
-                      "Ref": "demodev001demoCodePipelineBuildSynthCdkBuildProjectE3D1BE3B",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "demodev001demoCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy6C1669ED",
-        "Roles": [
-          {
-            "Ref": "demodev001demoCodePipelineBuildSynthCdkBuildProjectRoleF1500B78",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "demodev001demoCodePipelineBuildSynthCdkBuildProjectRoleF1500B78": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "demodev001demoCodePipelineRole3B159937": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "demodev001demoCodePipelineRoleDefaultPolicyFFACC3EF": {
-      "Metadata": {
-        "cdk_nag": {
-          "rules_to_suppress": [
-            {
-              "id": "AwsSolutions-IAM5",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsPrototyping-IAMNoWildcardPermissions",
-              "reason": "Wildcards are needed for dynamically created resources.",
-            },
-            {
-              "id": "AwsSolutions-CB4",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
-              "reason": "Encryption of Codebuild is not required.",
-            },
-            {
-              "id": "AwsSolutions-S1",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-            {
-              "id": "AwsPrototyping-S3BucketLoggingEnabled",
-              "reason": "Access Log buckets should not have s3 bucket logging",
-            },
-          ],
-        },
-      },
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "demodev001demoCodeBuildActionRole01AACA65",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
-                  ],
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "demodev001demoCodePipelineRoleDefaultPolicyFFACC3EF",
-        "Roles": [
-          {
-            "Ref": "demodev001demoCodePipelineRole3B159937",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
     "demodev001demoUpdatePipelineSelfMutationD997FA4B": {
       "Metadata": {
         "cdk_nag": {
@@ -2655,10 +1104,10 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step PipelineStack/CodePipeline/UpdatePipeline/SelfMutate",
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/UpdatePipeline/SelfMutate",
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "demodev001demoArtifactKey7A2782AD",
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
             "Arn",
           ],
         },
@@ -2878,7 +1327,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "demodev001demoArtifactsBucket0E0E78F0",
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
                     "Arn",
                   ],
                 },
@@ -2888,7 +1337,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                     [
                       {
                         "Fn::GetAtt": [
-                          "demodev001demoArtifactsBucket0E0E78F0",
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
                           "Arn",
                         ],
                       },
@@ -2906,7 +1355,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
                   "Arn",
                 ],
               },
@@ -2921,7 +1370,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "demodev001demoArtifactKey7A2782AD",
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
                   "Arn",
                 ],
               },
@@ -2933,6 +1382,1601 @@ exports[`Static Website Unit Tests Defaults 1`] = `
         "Roles": [
           {
             "Ref": "demodev001demoUpdatePipelineSelfMutationRole273EC5AA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "demodev001demodemodev001demoAccessLogsBucketAutoDeleteObjectsCustomResource2A3F5D74": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "demodev001demodemodev001demoAccessLogsBucketPolicy450CEBE0",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "BucketName": {
+          "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "demodev001demodemodev001demoAccessLogsBucketEAE80F84": {
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "demodev001demodemodev001demoAccessLogsBucketPolicy450CEBE0": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Bucket": {
+          "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "s3:PutObject",
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::GetAtt": [
+                      "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                      "Arn",
+                    ],
+                  },
+                },
+                "StringEquals": {
+                  "aws:SourceAccount": "1111111",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "logging.s3.amazonaws.com",
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+                        "Arn",
+                      ],
+                    },
+                    "/access-logs*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "demodev001demodemodev001demoArtifactKeyAlias3184D888": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AliasName": "alias/pipeline/demo-dev-001-demo",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "demodev001demodemodev001demoArtifactKeyF07B215F": {
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "EnableKeyRotation": true,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::1111111:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "demodev001demodemodev001demoArtifactsBucket292FC90E": {
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactKeyF07B215F",
+                    "Arn",
+                  ],
+                },
+                "SSEAlgorithm": "aws:kms",
+              },
+            },
+          ],
+        },
+        "LoggingConfiguration": {
+          "DestinationBucketName": {
+            "Ref": "demodev001demodemodev001demoAccessLogsBucketEAE80F84",
+          },
+          "LogFilePrefix": "access-logs",
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "demodev001demodemodev001demoArtifactsBucketAutoDeleteObjectsCustomResourceC0CBC346": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "demodev001demodemodev001demoArtifactsBucketPolicyB9010054",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "BucketName": {
+          "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "demodev001demodemodev001demoArtifactsBucketPolicyB9010054": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Bucket": {
+          "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
+                    ],
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "demodev001demodemodev001demoCodePipeline3F04E5BC": {
+      "DependsOn": [
+        "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541",
+        "demodev001demodemodev001demoCodePipelineRole8BD813E1",
+      ],
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "demodev001demodemodev001demoArtifactKeyF07B215F",
+                "Arn",
+              ],
+            },
+            "Type": "KMS",
+          },
+          "Location": {
+            "Ref": "demodev001demodemodev001demoArtifactsBucket292FC90E",
+          },
+          "Type": "S3",
+        },
+        "Name": "demo-dev-001-demo",
+        "RestartExecutionOnUpdate": true,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "demodev001demodemodev001demoCodePipelineRole8BD813E1",
+            "Arn",
+          ],
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "Branch": "main",
+                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
+                  "Owner": "rverma-nsl",
+                  "PollForSourceChanges": false,
+                  "Repo": "nsl-saas-accelerator",
+                },
+                "Name": "rverma-nsl_nsl-saas-accelerator",
+                "OutputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Source",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"f6f30c2ca8db6ee0902daf517f21af8c292f1fc21295926c2e93df08340bb358"}]",
+                  "ProjectName": {
+                    "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "Name": "demo-dev-001-demoSynth",
+                "OutputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                  {
+                    "Name": "demo_dev_001_demoSynth__",
+                  },
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Build",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"d481eb7e52fa70e98aa3e0e22b2f258bef28632bc13e90928d96c7e1479e3a2b"}]",
+                  "ProjectName": {
+                    "Ref": "demodev001demoUpdatePipelineSelfMutationD997FA4B",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "SelfMutate",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "UpdatePipeline",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset1DF8B78BA",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset1",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset2E95F2C53",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset2",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset3C01EB9F6",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset3",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset4ACE1EFC0",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset4",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset559A02304",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset5",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset6E681667E",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset6",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "demodev001demoAssetsFileAsset72505EFE4",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "FileAsset7",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "demodev001demoCodeBuildActionRole01AACA65",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Assets",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "ChangeSetName": "PipelineChange",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::1111111:role/cdk-hnb659fds-cfn-exec-role-1111111-ap-south-1",
+                      ],
+                    ],
+                  },
+                  "StackName": "Dev-test",
+                  "TemplatePath": "demo_dev_001_demoSynth_Output::assembly-PipelineStack-Dev/PipelineStackDevtestE7548B82.template.json",
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "demo_dev_001_demoSynth_Output",
+                  },
+                ],
+                "Name": "Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
+                    ],
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange",
+                  "StackName": "Dev-test",
+                },
+                "Name": "Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
+                    ],
+                  ],
+                },
+                "RunOrder": 2,
+              },
+            ],
+            "Name": "Dev",
+          },
+        ],
+      },
+      "Type": "AWS::CodePipeline::Pipeline",
+    },
+    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE",
+        },
+        "Cache": {
+          "Type": "NO_CACHE",
+        },
+        "Description": "Pipeline step PipelineStack/demo-dev-001-demoCodePipeline/Build/demo-dev-001-demoSynth",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "demodev001demodemodev001demoArtifactKeyF07B215F",
+            "Arn",
+          ],
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/standard:6.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": true,
+          "Type": "LINUX_CONTAINER",
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "install": {
+      "commands": [
+        "n 18",
+        "npm install -g pnpm",
+        "pnpm install --frozen-lockfile"
+      ]
+    },
+    "build": {
+      "commands": [
+        "npx nx run-many --target=build --all"
+      ]
+    }
+  },
+  "artifacts": {
+    "secondary-artifacts": {
+      "demo_dev_001_demoSynth_Output": {
+        "base-directory": "packages/demo/cdk.out",
+        "files": "**/*"
+      },
+      "demo_dev_001_demoSynth__": {
+        "base-directory": ".",
+        "files": "**/*"
+      }
+    }
+  }
+}",
+          "Type": "CODEPIPELINE",
+        },
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleDefaultPolicyEC673951": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:ap-south-1:1111111:log-group:/aws/codebuild/",
+                      {
+                        "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codebuild:ap-south-1:1111111:report-group/",
+                    {
+                      "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectEA2E1291",
+                    },
+                    "-*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleDefaultPolicyEC673951",
+        "Roles": [
+          {
+            "Ref": "demodev001demodemodev001demoCodePipelineBuilddemodev001demoSynthCdkBuildProjectRoleCAACFCAD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "demodev001demodemodev001demoCodePipelineRole8BD813E1": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541": {
+      "Metadata": {
+        "cdk_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsPrototyping-IAMNoWildcardPermissions",
+              "reason": "Wildcards are needed for dynamically created resources.",
+            },
+            {
+              "id": "AwsSolutions-CB4",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts",
+              "reason": "Encryption of Codebuild is not required.",
+            },
+            {
+              "id": "AwsSolutions-S1",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+            {
+              "id": "AwsPrototyping-S3BucketLoggingEnabled",
+              "reason": "Access Log buckets should not have s3 bucket logging",
+            },
+          ],
+        },
+      },
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "demodev001demodemodev001demoArtifactsBucket292FC90E",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "demodev001demodemodev001demoArtifactKeyF07B215F",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "demodev001demoCodeBuildActionRole01AACA65",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":iam::1111111:role/cdk-hnb659fds-deploy-role-1111111-ap-south-1",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "demodev001demodemodev001demoCodePipelineRoleDefaultPolicyFD916541",
+        "Roles": [
+          {
+            "Ref": "demodev001demodemodev001demoCodePipelineRole8BD813E1",
           },
         ],
       },

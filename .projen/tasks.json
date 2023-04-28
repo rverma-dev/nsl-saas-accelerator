@@ -159,14 +159,6 @@
         }
       ]
     },
-    "prepare": {
-      "name": "prepare",
-      "steps": [
-        {
-          "spawn": "workspace:bin:link"
-        }
-      ]
-    },
     "run-many": {
       "name": "run-many",
       "description": "Run task against multiple workspace projects",
@@ -229,14 +221,6 @@
         {
           "exec": "pnpm exec nx run-many --target=watch --output-style=stream --skip-nx-cache --nx-ignore-cycles --nx-bail",
           "receiveArgs": true
-        }
-      ]
-    },
-    "workspace:bin:link": {
-      "name": "workspace:bin:link",
-      "steps": [
-        {
-          "exec": "ln -s $PWD/packages/constructs/scripts/pnpm/link-bundled-transitive-deps.ts $(pnpm bin)/pdk@pnpm-link-bundled-transitive-deps &>/dev/null; exit 0;"
         }
       ]
     }

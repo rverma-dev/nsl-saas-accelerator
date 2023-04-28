@@ -1,4 +1,4 @@
-import { EksBlueprint, SecretsStoreAddOn } from '@nslhb/eks-blueprints';
+import { EksBlueprint, SecretsStoreAddOn } from '@aws-quickstart/eks-blueprints';
 import * as cdk from 'aws-cdk-lib';
 import { EksCluster } from '../src';
 import { FluxV2Addon } from '../src/aws-eks/addon';

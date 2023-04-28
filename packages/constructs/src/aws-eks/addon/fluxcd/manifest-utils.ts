@@ -1,4 +1,4 @@
-import { CsiSecretProps, LookupSecretsManagerSecretByName } from '@nslhb/eks-blueprints';
+import { CsiSecretProps, LookupSecretsManagerSecretByName } from '@aws-quickstart/eks-blueprints';
 
 /**
  * Creates CsiSecretProps that contains secret template for ssh/username/pwd credentials.

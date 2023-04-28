@@ -39,7 +39,7 @@
     },
     {
       "name": "constructs",
-      "version": "10.2.4",
+      "version": "10.2.8",
       "type": "build"
     },
     {
@@ -97,6 +97,7 @@
     },
     {
       "name": "projen",
+      "version": "^0.71.26",
       "type": "build"
     },
     {
@@ -109,6 +110,10 @@
       "type": "build"
     },
     {
+      "name": "@aws-quickstart/eks-blueprints",
+      "type": "bundled"
+    },
+    {
       "name": "@aws-sdk/client-iam",
       "version": "^3.316.0",
       "type": "bundled"
@@ -116,11 +121,6 @@
     {
       "name": "@aws-sdk/client-secrets-manager",
       "version": "^3.316.0",
-      "type": "bundled"
-    },
-    {
-      "name": "@nslhb/eks-blueprints",
-      "version": "1.6.21",
       "type": "bundled"
     },
     {
@@ -149,11 +149,12 @@
     },
     {
       "name": "sync-request",
+      "version": "6.1.0",
       "type": "bundled"
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.76.0",
+      "version": "2.76.0",
       "type": "peer"
     },
     {
@@ -162,7 +163,7 @@
     },
     {
       "name": "constructs",
-      "version": "^10.2.4",
+      "version": "^10.2.8",
       "type": "peer"
     }
   ],

@@ -191,19 +191,19 @@
           "exec": "pnpm update npm-check-updates"
         },
         {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml'"
+          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml,sync-request'"
         },
         {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml'"
+          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml,sync-request'"
         },
         {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml'"
+          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml,sync-request'"
         },
         {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml'"
+          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml,sync-request'"
         },
         {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@nslhb/eks-blueprints,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml'"
+          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='aws-cdk-lib,constructs,jsii,@types/fs-extra,@types/js-yaml,@types/semver,js-yaml,sync-request'"
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"
