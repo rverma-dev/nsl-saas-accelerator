@@ -1,13 +1,13 @@
 {
     "files.exclude": {
-        "**/node_modules": false,
-        "**/.projen": false,
-        "**/dist": false,
-        "**/lib": false,
-        "**/test-reports": false,
-        "**/coverage": false,
-        "**/cdk.out": false,
-        "**/.npmrc": false,
-        "**/assets": false
+        "**/node_modules": true,
+        "**/.projen": true,
+        "**/dist": true,
+        "**/lib": true,
+        "**/test-reports": true,
+        "**/coverage": true,
+        "**/cdk.out": true,
+        "**/.npmrc": true,
+        "**/assets": true
     }
 }
