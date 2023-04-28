@@ -63,6 +63,9 @@ export class ToolchainStack extends Stack {
       synth: {},
       dockerEnabledForSynth: true,
       dockerCredentials: [DockerCredential.ecr([installerImage])],
+      synthShellStepPartialProps: {
+        commands: ['npx nx run-many --targets=package,synth --all'],
+      },
       synthCodeBuildDefaults: {
         cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
