@@ -151,7 +151,7 @@ export class SaasPipeline extends Construct {
 
     const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
       input: githubInput,
-      installCommands: ['n 18', 'npm install -g pnpm', 'pnpm install --frozen-lockfile'],
+      installCommands: ['n 18', 'npm install -g pnpm esbuild', 'pnpm install --frozen-lockfile'],
       commands: commands && commands.length > 0 ? commands : ['npx nx run-many --target=build --all'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
