@@ -2157,7 +2157,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"ec65dfe1c0050104ee9379c018943787def798934b4c32a728c6b8294240724b"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"dbfd38d09ca20c610d74508df61fa08ecce90051d8ced534ccfde9a45d3e3a59"}]",
                   "ProjectName": {
                     "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   },
@@ -2553,7 +2553,7 @@ exports[`Static Website Unit Tests Defaults 1`] = `
     "install": {
       "commands": [
         "n 18",
-        "npm install -g pnpm",
+        "npm install -g pnpm esbuild",
         "pnpm install --frozen-lockfile"
       ]
     },

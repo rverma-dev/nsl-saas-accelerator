@@ -1536,7 +1536,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"20fcc30324b63cb79bc631db8d260e2d3d2e3d8309e48714f27aba002f76f0f7"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"7b856383af157b87d1ef80ef742f47aa0fa65357736b1ec290643d3caa51d064"}]",
                   "ProjectName": {
                     "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
                   },
@@ -1740,13 +1740,13 @@ exports[`ToolChain Stack 1`] = `
     "install": {
       "commands": [
         "n 18",
-        "npm install -g pnpm",
+        "npm install -g pnpm esbuild",
         "pnpm install --frozen-lockfile"
       ]
     },
     "build": {
       "commands": [
-        "npx nx run-many --target=build --all"
+        "npx nx run-many --targets=package,synth --all"
       ]
     }
   },
