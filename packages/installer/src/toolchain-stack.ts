@@ -73,6 +73,9 @@ export class ToolchainStack extends Stack {
       synth: {},
       dockerEnabledForSynth: true,
       dockerCredentials: [DockerCredential.ecr([installerImage])],
+      synthShellStepPartialProps: {
+        commands: ['pnpm build'],
+      },
       synthCodeBuildDefaults: {
         cache: Cache.bucket(cache, { prefix: '/codebuild/output/.pnpm-store' }),
         buildEnvironment: {

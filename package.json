@@ -23,30 +23,30 @@
   },
   "devDependencies": {
     "@aws-prototyping-sdk/nx-monorepo": "0.17.3",
-    "@nrwl/cli": "^15.9.2",
-    "@nrwl/nx-cloud": "^16.0.4",
-    "@nrwl/workspace": "^15.9.2",
-    "@types/node": "^18",
-    "@typescript-eslint/eslint-plugin": "^5",
-    "@typescript-eslint/parser": "^5",
-    "eslint": "^8",
+    "@nrwl/cli": "^15.9.3",
+    "@nrwl/nx-cloud": "^16.0.5",
+    "@nrwl/workspace": "^16.0.1",
+    "@types/node": "^18.16.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-node": "^0.3.7",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "npm-check-updates": "^16.10.9",
-    "nx": "^15.9.2",
+    "nx": "^16.0.1",
     "prettier": "^2.8.8",
-    "projen": "^0.71.28",
+    "projen": "^0.71.32",
     "syncpack": "^9.8.6",
     "ts-node": "^10.9.1",
     "typescript": "~5.0.4"
   },
   "dependencies": {
     "aws-cdk-lib": "2.76.0",
-    "cdk-nag": "^2.26.7",
-    "constructs": "^10.2.8"
+    "cdk-nag": "^2.26.9",
+    "constructs": "^10.2.10"
   },
   "pnpm": {
     "overrides": {
