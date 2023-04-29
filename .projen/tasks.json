@@ -26,7 +26,72 @@
     },
     "bundle": {
       "name": "bundle",
-      "description": "Prepare assets"
+      "description": "Prepare assets",
+      "steps": [
+        {
+          "spawn": "bundle:constructs/aws-codecommit/secret-gen.lambda"
+        },
+        {
+          "spawn": "bundle:installer/ddb-stream/add-tenant.lambda"
+        },
+        {
+          "spawn": "bundle:pool/lib/find-eks-custer.lambda"
+        }
+      ]
+    },
+    "bundle:constructs/aws-codecommit/secret-gen.lambda": {
+      "name": "bundle:constructs/aws-codecommit/secret-gen.lambda",
+      "description": "Create a JavaScript bundle from src/constructs/aws-codecommit/secret-gen.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/constructs/aws-codecommit/secret-gen.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/constructs/aws-codecommit/secret-gen.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
+        }
+      ]
+    },
+    "bundle:constructs/aws-codecommit/secret-gen.lambda:watch": {
+      "name": "bundle:constructs/aws-codecommit/secret-gen.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/constructs/aws-codecommit/secret-gen.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/constructs/aws-codecommit/secret-gen.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/constructs/aws-codecommit/secret-gen.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
+        }
+      ]
+    },
+    "bundle:installer/ddb-stream/add-tenant.lambda": {
+      "name": "bundle:installer/ddb-stream/add-tenant.lambda",
+      "description": "Create a JavaScript bundle from src/installer/ddb-stream/add-tenant.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/installer/ddb-stream/add-tenant.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/installer/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
+        }
+      ]
+    },
+    "bundle:installer/ddb-stream/add-tenant.lambda:watch": {
+      "name": "bundle:installer/ddb-stream/add-tenant.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/installer/ddb-stream/add-tenant.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/installer/ddb-stream/add-tenant.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/installer/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
+        }
+      ]
+    },
+    "bundle:pool/lib/find-eks-custer.lambda": {
+      "name": "bundle:pool/lib/find-eks-custer.lambda",
+      "description": "Create a JavaScript bundle from src/pool/lib/find-eks-custer.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/pool/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
+        }
+      ]
+    },
+    "bundle:pool/lib/find-eks-custer.lambda:watch": {
+      "name": "bundle:pool/lib/find-eks-custer.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/pool/lib/find-eks-custer.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/pool/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
+        }
+      ]
     },
     "clobber": {
       "name": "clobber",
@@ -154,10 +219,6 @@
         }
       ]
     },
-    "post-upgrade": {
-      "name": "post-upgrade",
-      "description": "Runs after upgrading dependencies"
-    },
     "pre-compile": {
       "name": "pre-compile",
       "description": "Prepare the project for compilation"
@@ -185,7 +246,7 @@
       "description": "Run tests",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "exec": "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot",
           "receiveArgs": true
         },
         {
@@ -199,45 +260,6 @@
       "steps": [
         {
           "exec": "jest --watch"
-        }
-      ]
-    },
-    "upgrade": {
-      "name": "upgrade",
-      "description": "upgrade dependencies",
-      "env": {
-        "CI": "0"
-      },
-      "steps": [
-        {
-          "exec": "yarn upgrade npm-check-updates"
-        },
-        {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor"
-        },
-        {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor"
-        },
-        {
-          "exec": "yarn install --check-files"
-        },
-        {
-          "exec": "yarn upgrade"
-        },
-        {
-          "exec": "npx projen"
-        },
-        {
-          "spawn": "post-upgrade"
         }
       ]
     },

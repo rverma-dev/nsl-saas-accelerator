@@ -4,6 +4,8 @@
 !/.projen/deps.json
 !/.projen/files.json
 !/.github/workflows/pull-request-lint.yml
+!/.github/workflows/auto-approve.yml
+!/.github/workflows/stale.yml
 !/package.json
 !/LICENSE
 !/.npmignore
@@ -36,8 +38,10 @@ junit.xml
 /coverage/
 !/.github/workflows/build.yml
 !/.mergify.yml
-!/.github/workflows/upgrade.yml
+!/.github/dependabot.yml
 !/.github/pull_request_template.md
+!/.prettierignore
+!/.prettierrc.json
 !/.npmrc
 !/test/
 !/tsconfig.json
@@ -51,3 +55,6 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
+!/src/constructs/aws-codecommit/secret-gen-function.ts
+!/src/installer/ddb-stream/add-tenant-function.ts
+!/src/pool/lib/find-eks-custer-function.ts
