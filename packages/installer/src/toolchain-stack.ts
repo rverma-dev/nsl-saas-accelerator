@@ -11,12 +11,12 @@ import {
 } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
+import * as ecr_assets from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
-import * as imagedeploy from 'cdk-docker-image-deployment';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
@@ -46,24 +46,13 @@ export class ToolchainStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const installerRepo = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
-    // const cache = new Bucket(this, 'nsa-installer-cache', {
-    //   versioned: false,
-    //   enforceSSL: true,
-    //   autoDeleteObjects: true,
-    //   removalPolicy: RemovalPolicy.DESTROY,
-    //   encryption: BucketEncryption.S3_MANAGED,
-    //   objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
-    //   publicReadAccess: false,
-    //   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-    // });
-
-    new imagedeploy.DockerImageDeployment(installerRepo, 'ToolchainImageDeploymentWithTag', {
-      source: imagedeploy.Source.directory('.'),
-      destination: imagedeploy.Destination.ecr(installerRepo, { tag: 'latest' }),
+    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', {
+      directory: '../../',
+      file: './packages/installer/Dockerfile',
     });
+
     // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
-    const buildImage = LinuxArmBuildImage.fromEcrRepository(installerRepo);
+    const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
 
     const pipeline = new SaasPipeline(this, 'toolchain', {
       cliVersion: CDK_VERSION,
@@ -73,7 +62,6 @@ export class ToolchainStack extends Stack {
       synth: {},
       dockerEnabledForSynth: true,
       dockerEnabledForSelfMutation: true,
-      dockerCredentials: [DockerCredential.ecr([installerRepo])],
       synthShellStepPartialProps: {
         commands: ['cd /app/packages/installer', 'npm run synth'],
       },
