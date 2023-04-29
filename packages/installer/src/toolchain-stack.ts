@@ -5,7 +5,6 @@ import {
   Cache,
   ComputeType,
   LinuxArmBuildImage,
-  LocalCacheMode,
   Project,
   Source,
 } from 'aws-cdk-lib/aws-codebuild';
@@ -15,6 +14,7 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
 // import * as imagedeploy from 'cdk-docker-image-deployment';
 import { NagSuppressions } from 'cdk-nag';
@@ -48,6 +48,16 @@ export class ToolchainStack extends Stack {
     });
 
     const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
+    const cache = new Bucket(this, 'nsa-installer-cache', {
+      versioned: false,
+      enforceSSL: true,
+      autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: BucketEncryption.S3_MANAGED,
+      objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
+      publicReadAccess: false,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    });
 
     // new imagedeploy.DockerImageDeployment(installerImage, 'ToolchainImageDeploymentWithTag', {
     //   source: imagedeploy.Source.directory('.'),
@@ -63,11 +73,8 @@ export class ToolchainStack extends Stack {
       synth: {},
       dockerEnabledForSynth: true,
       dockerCredentials: [DockerCredential.ecr([installerImage])],
-      synthShellStepPartialProps: {
-        commands: ['npx nx run-many --targets=package,synth --all'],
-      },
       synthCodeBuildDefaults: {
-        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
+        cache: Cache.bucket(cache, { prefix: '/codebuild/output/.pnpm-store' }),
         buildEnvironment: {
           computeType: ComputeType.SMALL,
           buildImage: buildImage,
