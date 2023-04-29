@@ -37,11 +37,12 @@ export class ToolchainStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.',});
+    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
 
     const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
 
     const pipeline = new SaasPipeline(this, 'toolchain', {
+      pipelineName: id,
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
@@ -50,7 +51,7 @@ export class ToolchainStack extends Stack {
       dockerEnabledForSynth: true,
       dockerEnabledForSelfMutation: true,
       synthShellStepPartialProps: {
-        commands: ['yarn synth:silent -y'],
+        commands: ['yarn config set cache-folder /app/.yarn/cache', 'yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
@@ -59,7 +60,6 @@ export class ToolchainStack extends Stack {
           privileged: true,
         },
       },
-      pipelineName: id,
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
           computeType: ComputeType.SMALL,
@@ -108,7 +108,10 @@ export class ToolchainStack extends Stack {
     pipeline.addWave('UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
-          commands: ['yarn ts-node src/installer/get-deployments.ts', 'yarn ts-node src/installer/update-deployments.ts'],
+          commands: [
+            'yarn ts-node src/installer/get-deployments.ts',
+            'yarn ts-node src/installer/update-deployments.ts',
+          ],
           buildEnvironment: {
             computeType: ComputeType.SMALL,
             buildImage: buildImage,

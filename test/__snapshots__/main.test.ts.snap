@@ -443,7 +443,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":1bc4ed5ff9b87d68adac5e111e54daf177152b4895d634c847cf1cb4cee33287",
+                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
               ],
             ],
           },
@@ -464,8 +464,7 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "build": {
       "commands": [
-        "cd /app",
-        "yarn ts-node bin/provision-deployment.ts"
+        "yarn ts-node src/installer/provision-deployment.ts"
       ]
     }
   }
@@ -782,7 +781,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
+                  "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
                   "Arn",
                 ],
               },
@@ -810,7 +809,7 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                  "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27",
                   "Arn",
                 ],
               },
@@ -827,7 +826,171 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "toolchainUpdatePipelineSelfMutation45E258FE": {
+    "toolchainCodePipeline5DEAF4FF": {
+      "DependsOn": [
+        "toolchainCodePipelineRoleDefaultPolicy99EA1696",
+        "toolchainCodePipelineRoleBA80C4AD",
+      ],
+      "Properties": {
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "toolchaintoolchainArtifactKey0A4451B3",
+                "Arn",
+              ],
+            },
+            "Type": "KMS",
+          },
+          "Location": {
+            "Ref": "toolchaintoolchainArtifactsBucket6310BBE4",
+          },
+          "Type": "S3",
+        },
+        "Name": "toolchain",
+        "RestartExecutionOnUpdate": true,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "toolchainCodePipelineRoleBA80C4AD",
+            "Arn",
+          ],
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "Branch": "main",
+                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
+                  "Owner": "rverma-nsl",
+                  "PollForSourceChanges": false,
+                  "Repo": "nsl-saas-accelerator",
+                },
+                "Name": "rverma-nsl_nsl-saas-accelerator",
+                "OutputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Source",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"10611b5519e7df56d83d62ec0d93080bb06d3f7632c6b88a26c34647b3d93127"}]",
+                  "ProjectName": {
+                    "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "Name": "toolchainSynth",
+                "OutputArtifacts": [
+                  {
+                    "Name": "toolchainSynth_Output",
+                  },
+                  {
+                    "Name": "toolchainSynth__",
+                  },
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "toolchainCodeBuildActionRole99B0DD30",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Build",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"a8f31135b0bfe3606fa7ef38ab4b7c8edf65508e5fbef410bb2608a74da07a64"}]",
+                  "ProjectName": {
+                    "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "toolchainSynth_Output",
+                  },
+                ],
+                "Name": "SelfMutate",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "toolchainCodeBuildActionRole99B0DD30",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "UpdatePipeline",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
+                  },
+                ],
+                "Name": "update-deployments",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "toolchainCodeBuildActionRole99B0DD30",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "UpdateDeployments",
+          },
+        ],
+      },
+      "Type": "AWS::CodePipeline::Pipeline",
+    },
+    "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3": {
       "Properties": {
         "Artifacts": {
           "Type": "CODEPIPELINE",
@@ -835,7 +998,7 @@ exports[`ToolChain Stack 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step toolchain/toolchainCodePipeline/UpdatePipeline/SelfMutate",
+        "Description": "Pipeline step toolchain/CodePipeline/Build/toolchainSynth",
         "EncryptionKey": {
           "Fn::GetAtt": [
             "toolchaintoolchainArtifactKey0A4451B3",
@@ -863,7 +1026,477 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":1bc4ed5ff9b87d68adac5e111e54daf177152b4895d634c847cf1cb4cee33287",
+                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "PrivilegedMode": true,
+          "Type": "ARM_CONTAINER",
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleBB387201",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "build": {
+      "commands": [
+        "yarn config set cache-folder /app/.yarn/cache",
+        "yarn synth:silent -y"
+      ]
+    }
+  },
+  "artifacts": {
+    "secondary-artifacts": {
+      "toolchainSynth_Output": {
+        "base-directory": "cdk.out",
+        "files": "**/*"
+      },
+      "toolchainSynth__": {
+        "base-directory": ".",
+        "files": "**/*"
+      }
+    }
+  }
+}",
+          "Type": "CODEPIPELINE",
+        },
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleBB387201": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicyF01BBEED": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codebuild:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":report-group/",
+                    {
+                      "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
+                    },
+                    "-*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicyF01BBEED",
+        "Roles": [
+          {
+            "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleBB387201",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "toolchainCodePipelineRoleBA80C4AD": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "toolchainCodePipelineRoleDefaultPolicy99EA1696": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "toolchaintoolchainArtifactsBucket6310BBE4",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "toolchaintoolchainArtifactsBucket6310BBE4",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "toolchaintoolchainArtifactKey0A4451B3",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "toolchainCodeBuildActionRole99B0DD30",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "toolchainCodePipelineRoleDefaultPolicy99EA1696",
+        "Roles": [
+          {
+            "Ref": "toolchainCodePipelineRoleBA80C4AD",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27": {
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE",
+        },
+        "Cache": {
+          "Type": "NO_CACHE",
+        },
+        "Description": "Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "toolchaintoolchainArtifactKey0A4451B3",
+            "Arn",
+          ],
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "PrivilegedMode": false,
+          "Type": "ARM_CONTAINER",
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "updatedeploymentsrole044C7611",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "build": {
+      "commands": [
+        "yarn ts-node src/installer/get-deployments.ts",
+        "yarn ts-node src/installer/update-deployments.ts"
+      ]
+    }
+  }
+}",
+          "Type": "CODEPIPELINE",
+        },
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "toolchainUpdatePipelineSelfMutation45E258FE": {
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE",
+        },
+        "Cache": {
+          "Type": "NO_CACHE",
+        },
+        "Description": "Pipeline step toolchain/CodePipeline/UpdatePipeline/SelfMutate",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "toolchaintoolchainArtifactKey0A4451B3",
+            "Arn",
+          ],
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
               ],
             ],
           },
@@ -1525,645 +2158,6 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "toolchaintoolchainCodePipeline404C679F": {
-      "DependsOn": [
-        "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9",
-        "toolchaintoolchainCodePipelineRoleEE383373",
-      ],
-      "Properties": {
-        "ArtifactStore": {
-          "EncryptionKey": {
-            "Id": {
-              "Fn::GetAtt": [
-                "toolchaintoolchainArtifactKey0A4451B3",
-                "Arn",
-              ],
-            },
-            "Type": "KMS",
-          },
-          "Location": {
-            "Ref": "toolchaintoolchainArtifactsBucket6310BBE4",
-          },
-          "Type": "S3",
-        },
-        "Name": "toolchain",
-        "RestartExecutionOnUpdate": true,
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "toolchaintoolchainCodePipelineRoleEE383373",
-            "Arn",
-          ],
-        },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "Branch": "main",
-                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
-                  "Owner": "rverma-nsl",
-                  "PollForSourceChanges": false,
-                  "Repo": "nsl-saas-accelerator",
-                },
-                "Name": "rverma-nsl_nsl-saas-accelerator",
-                "OutputArtifacts": [
-                  {
-                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
-                  },
-                ],
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"77a22d0ba9e3bbf9c3e5d2049a55e07813dc9be2c5a0ff1c51391e97d58e0539"}]",
-                  "ProjectName": {
-                    "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
-                  },
-                ],
-                "Name": "toolchainSynth",
-                "OutputArtifacts": [
-                  {
-                    "Name": "toolchainSynth_Output",
-                  },
-                  {
-                    "Name": "toolchainSynth__",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"f320ca5a4c99f58ba6774d2a935e90cb2c78d9dea1e7207f61c0b42391126e33"}]",
-                  "ProjectName": {
-                    "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "toolchainSynth_Output",
-                  },
-                ],
-                "Name": "SelfMutate",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdatePipeline",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "rverma_nsl_nsl_saas_accelerator_Source",
-                  },
-                ],
-                "Name": "update-deployments",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "toolchainCodeBuildActionRole99B0DD30",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdateDeployments",
-          },
-        ],
-      },
-      "Type": "AWS::CodePipeline::Pipeline",
-    },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step toolchain/toolchainCodePipeline/Build/toolchainSynth",
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":1bc4ed5ff9b87d68adac5e111e54daf177152b4895d634c847cf1cb4cee33287",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": true,
-          "Type": "ARM_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "install": {
-      "commands": [
-        "yarn config set cache-folder /app/.yarn/cache"
-      ]
-    },
-    "build": {
-      "commands": [
-        "yarn synth:silent -y"
-      ]
-    }
-  },
-  "artifacts": {
-    "secondary-artifacts": {
-      "toolchainSynth_Output": {
-        "base-directory": "cdk.out",
-        "files": "**/*"
-      },
-      "toolchainSynth__": {
-        "base-directory": ".",
-        "files": "**/*"
-      }
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy0570F036": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRoleDefaultPolicy0570F036",
-        "Roles": [
-          {
-            "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectRole0DFAE336",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "toolchaintoolchainArtifactsBucket6310BBE4",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "toolchaintoolchainArtifactsBucket6310BBE4",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "toolchaintoolchainArtifactKey0A4451B3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "toolchainCodeBuildActionRole99B0DD30",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "toolchaintoolchainCodePipelineRoleDefaultPolicyF54091F9",
-        "Roles": [
-          {
-            "Ref": "toolchaintoolchainCodePipelineRoleEE383373",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "toolchaintoolchainCodePipelineRoleEE383373": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step toolchain/toolchainCodePipeline/UpdateDeployments/update-deployments",
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "toolchaintoolchainArtifactKey0A4451B3",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":1bc4ed5ff9b87d68adac5e111e54daf177152b4895d634c847cf1cb4cee33287",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "updatedeploymentsrole044C7611",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "cd /app",
-        "yarn ts-node bin/get-deployments.ts",
-        "yarn ts-node bin/update-deployments.ts"
-      ]
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
     "updatedeploymentsrole044C7611": {
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -2338,7 +2332,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                        "Ref": "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27",
                       },
                     ],
                   ],
@@ -2361,7 +2355,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                        "Ref": "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27",
                       },
                       ":*",
                     ],
@@ -2396,7 +2390,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     ":report-group/",
                     {
-                      "Ref": "toolchaintoolchainCodePipelineUpdateDeploymentsupdatedeploymentsB96FAE09",
+                      "Ref": "toolchainCodePipelineUpdateDeploymentsupdatedeploymentsAA651C27",
                     },
                     "-*",
                   ],

@@ -139,12 +139,13 @@ export class SaasPipeline extends Construct {
       },
     );
 
-    const codePipeline = new Pipeline(this, `${props.pipelineName}CodePipeline`, {
+    const codePipeline = new Pipeline(this, `CodePipeline`, {
       pipelineName: props.pipelineName,
       enableKeyRotation: props.crossAccountKeys,
       restartExecutionOnUpdate: true,
       crossAccountKeys: props.crossAccountKeys,
       artifactBucket,
+      
     });
 
     // ignore input and primaryOutputDirectory
@@ -153,8 +154,8 @@ export class SaasPipeline extends Construct {
 
     const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
       input: githubInput,
-      installCommands: ['yarn config set cache-folder /app/.yarn/cache'],
-      commands: commands && commands.length > 0 ? commands : ['npx nx run-many --target=build --all'],
+      installCommands: [],
+      commands: commands && commands.length > 0 ? commands : ['yarn run synth:silent'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
     });

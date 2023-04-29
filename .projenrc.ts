@@ -46,6 +46,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '!.yarn/releases',
     '!.yarn/versions',
     '!.yarn/sdks',
+    'build_output',
   ],
   deps: [
     '@aws-quickstart/eks-blueprints',
