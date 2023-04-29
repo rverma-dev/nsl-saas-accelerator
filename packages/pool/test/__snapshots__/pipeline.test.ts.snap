@@ -1238,7 +1238,7 @@ exports[`Pool profile Unit Tests Defaults 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"aa98e545d60e25e66ee1f0769706e3527d6ba24d2e33a7e7dda03ac1cb9df9c0"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"5a177062ee016fe132dfa711a0a093d8716a34c052207dd89ac453f0f427d2d2"}]",
                   "ProjectName": {
                     "Ref": "CHdev001poolundefinedCodePipelineBuildundefinedSynthCdkBuildProject07CC6533",
                   },
@@ -1447,8 +1447,7 @@ exports[`Pool profile Unit Tests Defaults 1`] = `
     "install": {
       "commands": [
         "n 18",
-        "npm install -g pnpm esbuild",
-        "pnpm install --frozen-lockfile"
+        "npm install -g esbuild"
       ]
     },
     "build": {

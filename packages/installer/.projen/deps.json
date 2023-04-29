@@ -146,10 +146,6 @@
       "type": "runtime"
     },
     {
-      "name": "cdk-docker-image-deployment",
-      "type": "runtime"
-    },
-    {
       "name": "cdk-nag",
       "type": "runtime"
     },

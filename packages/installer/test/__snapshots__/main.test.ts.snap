@@ -120,7 +120,7 @@ exports[`ToolChain Stack 1`] = `
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "nsainstallercacheCB1193F3",
+                "Ref": "toolchaintoolchainAccessLogsBucket3D4553E6",
               },
               " S3 bucket.",
             ],
@@ -374,153 +374,6 @@ exports[`ToolChain Stack 1`] = `
       "Type": "Custom::AWSCDKOpenIdConnectProvider",
       "UpdateReplacePolicy": "Delete",
     },
-    "nsainstallerEFA9386B": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "RepositoryName": "nsa-installer",
-      },
-      "Type": "AWS::ECR::Repository",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "nsainstallercacheAutoDeleteObjectsCustomResource12CA12E3": {
-      "DeletionPolicy": "Delete",
-      "DependsOn": [
-        "nsainstallercachePolicy0CD293A2",
-      ],
-      "Properties": {
-        "BucketName": {
-          "Ref": "nsainstallercacheCB1193F3",
-        },
-        "ServiceToken": {
-          "Fn::GetAtt": [
-            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::S3AutoDeleteObjects",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "nsainstallercacheCB1193F3": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256",
-              },
-            },
-          ],
-        },
-        "OwnershipControls": {
-          "Rules": [
-            {
-              "ObjectOwnership": "BucketOwnerEnforced",
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-        "Tags": [
-          {
-            "Key": "aws-cdk:auto-delete-objects",
-            "Value": "true",
-          },
-        ],
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "nsainstallercachePolicy0CD293A2": {
-      "Properties": {
-        "Bucket": {
-          "Ref": "nsainstallercacheCB1193F3",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallercacheCB1193F3",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallercacheCB1193F3",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-              ],
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
-                    "Arn",
-                  ],
-                },
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallercacheCB1193F3",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallercacheCB1193F3",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
     "provisioningproject655EF8AC": {
       "Properties": {
         "Artifacts": {
@@ -532,8 +385,30 @@ exports[`ToolChain Stack 1`] = `
         "EncryptionKey": "alias/aws/s3",
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":e70438dc63b6d898fa96e7aebded804a75b9fa98839ece95fd3f6332671edf71",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
@@ -585,6 +460,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -894,9 +805,31 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":e70438dc63b6d898fa96e7aebded804a75b9fa98839ece95fd3f6332671edf71",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "PrivilegedMode": true,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
@@ -906,78 +839,9 @@ exports[`ToolChain Stack 1`] = `
           ],
         },
         "Source": {
-          "BuildSpec": {
-            "Fn::Join": [
-              "",
-              [
-                "{
+          "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\"",
-                {
-                  "Fn::Select": [
-                    0,
-                    {
-                      "Fn::Split": [
-                        "/",
-                        {
-                          "Fn::Join": [
-                            "",
-                            [
-                              {
-                                "Fn::Select": [
-                                  4,
-                                  {
-                                    "Fn::Split": [
-                                      ":",
-                                      {
-                                        "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
-                                          "Arn",
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                              ".dkr.ecr.",
-                              {
-                                "Fn::Select": [
-                                  3,
-                                  {
-                                    "Fn::Split": [
-                                      ":",
-                                      {
-                                        "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
-                                          "Arn",
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                              ".",
-                              {
-                                "Ref": "AWS::URLSuffix",
-                              },
-                              "/",
-                              {
-                                "Ref": "nsainstallerEFA9386B",
-                              },
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                "\\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-creds.json"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g aws-cdk@2.72.0"
@@ -990,9 +854,6 @@ exports[`ToolChain Stack 1`] = `
     }
   }
 }",
-              ],
-            ],
-          },
           "Type": "CODEPIPELINE",
         },
       },
@@ -1019,6 +880,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -1202,25 +1099,6 @@ exports[`ToolChain Stack 1`] = `
                   "Arn",
                 ],
               },
-            },
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
             },
           ],
           "Version": "2012-10-17",
@@ -1675,7 +1553,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"c812715beaa7d0cd59466a8151b105e88ff6d0393aa6944f44ccb7862e60ebbe"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"6446aaad235736ad0148fe15e43b57bb9b25624294d2ab01f9a317c0f52787e1"}]",
                   "ProjectName": {
                     "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
                   },
@@ -1715,7 +1593,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"972442aba4e0a3da7898f49c53add76da496e66b5ebe0a6580469714f09e01cb"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"0f7f2875293284e96cc20b77cc8ec74270e2bc3f30d35cd046726f3f7254a2d8"}]",
                   "ProjectName": {
                     "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
                   },
@@ -1778,18 +1656,10 @@ exports[`ToolChain Stack 1`] = `
           "Type": "CODEPIPELINE",
         },
         "Cache": {
-          "Location": {
-            "Fn::Join": [
-              "/",
-              [
-                {
-                  "Ref": "nsainstallercacheCB1193F3",
-                },
-                "/codebuild/output/.pnpm-store",
-              ],
-            ],
-          },
-          "Type": "S3",
+          "Modes": [
+            "LOCAL_DOCKER_LAYER_CACHE",
+          ],
+          "Type": "LOCAL",
         },
         "Description": "Pipeline step toolchain/toolchainCodePipeline/Build/toolchainSynth",
         "EncryptionKey": {
@@ -1800,8 +1670,30 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":e70438dc63b6d898fa96e7aebded804a75b9fa98839ece95fd3f6332671edf71",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
           "PrivilegedMode": true,
           "Type": "ARM_CONTAINER",
         },
@@ -1812,88 +1704,19 @@ exports[`ToolChain Stack 1`] = `
           ],
         },
         "Source": {
-          "BuildSpec": {
-            "Fn::Join": [
-              "",
-              [
-                "{
+          "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\"",
-                {
-                  "Fn::Select": [
-                    0,
-                    {
-                      "Fn::Split": [
-                        "/",
-                        {
-                          "Fn::Join": [
-                            "",
-                            [
-                              {
-                                "Fn::Select": [
-                                  4,
-                                  {
-                                    "Fn::Split": [
-                                      ":",
-                                      {
-                                        "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
-                                          "Arn",
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                              ".dkr.ecr.",
-                              {
-                                "Fn::Select": [
-                                  3,
-                                  {
-                                    "Fn::Split": [
-                                      ":",
-                                      {
-                                        "Fn::GetAtt": [
-                                          "nsainstallerEFA9386B",
-                                          "Arn",
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                              ".",
-                              {
-                                "Ref": "AWS::URLSuffix",
-                              },
-                              "/",
-                              {
-                                "Ref": "nsainstallerEFA9386B",
-                              },
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                "\\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-creds.json"
-      ]
-    },
     "install": {
       "commands": [
         "n 18",
-        "npm install -g pnpm esbuild",
-        "pnpm install --frozen-lockfile"
+        "npm install -g esbuild"
       ]
     },
     "build": {
       "commands": [
-        "pnpm build"
+        "cd /app/packages/installer",
+        "npm run synth"
       ]
     }
   },
@@ -1901,22 +1724,15 @@ exports[`ToolChain Stack 1`] = `
     "secondary-artifacts": {
       "toolchainSynth_Output": {
         "base-directory": "packages/installer/cdk.out",
-        "files": [
-          "**/*"
-        ]
+        "files": "**/*"
       },
       "toolchainSynth__": {
         "base-directory": ".",
-        "files": [
-          "**/*"
-        ]
+        "files": "**/*"
       }
     }
   }
 }",
-              ],
-            ],
-          },
           "Type": "CODEPIPELINE",
         },
       },
@@ -1945,40 +1761,39 @@ exports[`ToolChain Stack 1`] = `
           "Statement": [
             {
               "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
               ],
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "nsainstallercacheCB1193F3",
-                    "Arn",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
                   ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "nsainstallercacheCB1193F3",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
             },
             {
               "Action": [
@@ -2139,25 +1954,6 @@ exports[`ToolChain Stack 1`] = `
                 ],
               },
             },
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "nsainstallerEFA9386B",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
           ],
           "Version": "2012-10-17",
         },
@@ -2283,8 +2079,30 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":e70438dc63b6d898fa96e7aebded804a75b9fa98839ece95fd3f6332671edf71",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
@@ -2424,6 +2242,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",

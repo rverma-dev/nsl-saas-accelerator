@@ -215,7 +215,6 @@ const installer = new awscdk.AwsCdkTypeScriptApp({
     'cdk-nag',
     'source-map-support',
     'vm2@3.9.17',
-    'cdk-docker-image-deployment',
   ],
   devDeps: ['aws-lambda'],
   defaultReleaseBranch: 'main',
