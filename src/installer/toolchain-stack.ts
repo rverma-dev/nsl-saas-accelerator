@@ -1,4 +1,3 @@
-import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
   CDK_VERSION,
@@ -26,6 +25,7 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
