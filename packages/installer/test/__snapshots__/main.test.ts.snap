@@ -171,7 +171,7 @@ exports[`ToolChain Stack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "152db09bf48f107a47f92c73a267a38fdfc010a24bbc79cd45f51b74db4016ec.zip",
+          "S3Key": "0ada878e4f7819e6c05d57d4242836d5d1a3d26358ad1c36d54ee2f72f0e47a1.zip",
         },
         "Description": "src/ddb-stream/add-tenant.lambda.ts",
         "Environment": {
@@ -187,7 +187,7 @@ exports[`ToolChain Stack 1`] = `
             "Arn",
           ],
         },
-        "Runtime": "nodejs16.x",
+        "Runtime": "nodejs18.x",
       },
       "Type": "AWS::Lambda::Function",
     },

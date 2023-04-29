@@ -229,6 +229,13 @@ const installer = new awscdk.AwsCdkTypeScriptApp({
     jestVersion: JEST_VERSION,
   },
   projenVersion: PROJEN_VERSION,
+  lambdaOptions: {
+    runtime: awscdk.LambdaRuntime.NODEJS_18_X,
+    bundlingOptions: {
+      externals: ['aws-sdk'],
+      sourcemap: true,
+    },
+  },
 });
 
 root.addImplicitDependency(installer, common);

@@ -5,6 +5,7 @@ import {
   Cache,
   ComputeType,
   LinuxArmBuildImage,
+  LocalCacheMode,
   Project,
   Source,
 } from 'aws-cdk-lib/aws-codebuild';
@@ -14,9 +15,8 @@ import * as iam from 'aws-cdk-lib/aws-iam';
 import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
-import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import { CodeBuildStep, DockerCredential } from 'aws-cdk-lib/pipelines';
-// import * as imagedeploy from 'cdk-docker-image-deployment';
+import * as imagedeploy from 'cdk-docker-image-deployment';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
@@ -31,7 +31,6 @@ import {
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
-    const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const deploymentTable = new Table(this, 'deployment-table', {
       tableName: DEPLOYMENT_TABLE_NAME,
       partitionKey: {
@@ -47,23 +46,24 @@ export class ToolchainStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const installerImage = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
-    const cache = new Bucket(this, 'nsa-installer-cache', {
-      versioned: false,
-      enforceSSL: true,
-      autoDeleteObjects: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-      encryption: BucketEncryption.S3_MANAGED,
-      objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
-      publicReadAccess: false,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-    });
-
-    // new imagedeploy.DockerImageDeployment(installerImage, 'ToolchainImageDeploymentWithTag', {
-    //   source: imagedeploy.Source.directory('.'),
-    //   destination: imagedeploy.Destination.ecr(installerImage, { tag: 'latest' }),
+    const installerRepo = new Repository(this, 'nsa-installer', { repositoryName: 'nsa-installer' });
+    // const cache = new Bucket(this, 'nsa-installer-cache', {
+    //   versioned: false,
+    //   enforceSSL: true,
+    //   autoDeleteObjects: true,
+    //   removalPolicy: RemovalPolicy.DESTROY,
+    //   encryption: BucketEncryption.S3_MANAGED,
+    //   objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
+    //   publicReadAccess: false,
+    //   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     // });
-    // toolchain-cicdpipelineCodePipelineBuildSynthCdkBui-KFUE71RSXOVR
+
+    new imagedeploy.DockerImageDeployment(installerRepo, 'ToolchainImageDeploymentWithTag', {
+      source: imagedeploy.Source.directory('.'),
+      destination: imagedeploy.Destination.ecr(installerRepo, { tag: 'latest' }),
+    });
+    // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
+    const buildImage = LinuxArmBuildImage.fromEcrRepository(installerRepo);
 
     const pipeline = new SaasPipeline(this, 'toolchain', {
       cliVersion: CDK_VERSION,
@@ -72,12 +72,13 @@ export class ToolchainStack extends Stack {
       crossAccountKeys: true,
       synth: {},
       dockerEnabledForSynth: true,
-      dockerCredentials: [DockerCredential.ecr([installerImage])],
+      dockerEnabledForSelfMutation: true,
+      dockerCredentials: [DockerCredential.ecr([installerRepo])],
       synthShellStepPartialProps: {
-        commands: ['pnpm build'],
+        commands: ['cd /app/packages/installer', 'npm run synth'],
       },
       synthCodeBuildDefaults: {
-        cache: Cache.bucket(cache, { prefix: '/codebuild/output/.pnpm-store' }),
+        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
           computeType: ComputeType.SMALL,
           buildImage: buildImage,

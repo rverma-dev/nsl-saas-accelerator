@@ -35,7 +35,7 @@
       "description": "Create a JavaScript bundle from src/ddb-stream/add-tenant.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/ddb-stream/add-tenant.lambda.ts --target=\"node16\" --platform=\"node\" --outfile=\"assets/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk"
+          "exec": "esbuild --bundle src/ddb-stream/add-tenant.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
         }
       ]
     },
@@ -44,7 +44,7 @@
       "description": "Continuously update the JavaScript bundle from src/ddb-stream/add-tenant.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/ddb-stream/add-tenant.lambda.ts --target=\"node16\" --platform=\"node\" --outfile=\"assets/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --watch"
+          "exec": "esbuild --bundle src/ddb-stream/add-tenant.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/ddb-stream/add-tenant.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
         }
       ]
     },
