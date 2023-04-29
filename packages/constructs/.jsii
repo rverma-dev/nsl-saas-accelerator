@@ -13,7 +13,7 @@
     "@aws-quickstart/eks-blueprints": "^1.7.0",
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
-    "@pnpm/reviewing.dependencies-hierarchy": "*",
+    "@pnpm/reviewing.dependencies-hierarchy": "^2.0.3",
     "@types/fs-extra": "11.0.1",
     "@types/js-yaml": "4.0.5",
     "@types/semver": "7.3.13",
@@ -4098,5 +4098,5 @@
     }
   },
   "version": "0.0.0",
-  "fingerprint": "Ntf0g+p4Dt4lIH2hI7O9Hx8F/JdHAHvc33EUtpThgSA="
+  "fingerprint": "q2QUTiEZtzwv+D3+M++k6ISJIT980ezfT5e64uS6wZk="
 }

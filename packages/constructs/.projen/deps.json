@@ -125,6 +125,7 @@
     },
     {
       "name": "@pnpm/reviewing.dependencies-hierarchy",
+      "version": "^2.0.3",
       "type": "bundled"
     },
     {

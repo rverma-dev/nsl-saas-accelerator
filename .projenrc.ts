@@ -73,7 +73,7 @@ const constructs = new awscdk.AwsCdkConstructLibrary({
     'sync-request@6.1.0',
     '@types/fs-extra@11.0.1',
     '@types/semver@7.3.13',
-    '@pnpm/reviewing.dependencies-hierarchy',
+    '@pnpm/reviewing.dependencies-hierarchy@^2.0.3',
   ],
   peerDeps: ['cdk-nag'],
   devDeps: ['@types/aws-lambda', 'aws-lambda'],
