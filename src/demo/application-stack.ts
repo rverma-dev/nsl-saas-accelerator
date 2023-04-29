@@ -8,7 +8,7 @@ export class ApplicationStack extends Stack {
     super(scope, id, props);
 
     new StaticWebsite(this, `${deploymentType}-${deploymentId}-StaticWebsite`, {
-      websiteContentPath: path.join(__dirname, '../static'),
+      websiteContentPath: path.join(__dirname, '../../static'),
       runtimeOptions: {
         jsonPayload: {
           region: Stack.of(this).region,

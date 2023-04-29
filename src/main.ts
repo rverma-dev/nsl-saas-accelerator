@@ -64,6 +64,7 @@ if (!deploymentType) {
     account: process.env.CDK_DEFAULT_ACCOUNT!,
     region: process.env.CDK_DEFAULT_REGION!,
   };
+  console.log(`Synthesizing stack for ${deploymentType} in ${tenantProps.account}/${tenantProps.region}`);
   new WorkloadPipelineStack(app, 'PipelineStack', tenantProps);
 }
 

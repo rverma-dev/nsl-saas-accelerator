@@ -6,6 +6,5 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY .yarn ./.yarn
 COPY .pnp.cjs .yarnrc.yml package.json yarn.lock* ./
 RUN yarn install --immutable
-RUN npm install -g esbuild
 
 CMD ["/bin/bash"]

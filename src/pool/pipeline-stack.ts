@@ -1,8 +1,8 @@
-import { Construct } from 'constructs';
-import { REPOSITORY_NAME, REPOSITORY_OWNER } from './configuration';
-import { DeploymentRecord } from '../../common';
-import { SaasPipeline } from '../../constructs';
+import { DeploymentRecord } from '../common';
+import { SaasPipeline } from '../constructs';
 import { Stack } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
@@ -10,15 +10,15 @@ interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainAssetBucket?: string;
 }
 
-export class WorkloadPipelineStack extends Stack {
+export class PipelineStack extends Stack {
   readonly pipeline: SaasPipeline;
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
-    this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-demo`, {
-      primarySynthDirectory: 'cdk.out',
-      repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
-      publishAssetsInParallel: true,
+    this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-pool`, {
+      primarySynthDirectory: 'packages/pool/cdk.out',
+      repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
+      publishAssetsInParallel: false,
       crossAccountKeys: true,
       synth: {},
       dockerEnabledForSynth: true,
@@ -26,8 +26,8 @@ export class WorkloadPipelineStack extends Stack {
       existingArtifactBucket: props.toolchainAssetBucket,
       existingAccessLogBucket: props.toolchainLogBucket,
     });
-    // const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
-    // this.pipeline.addStage(devStage);
+    const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
+    this.pipeline.addWave('application').addStage(devStage);
     this.pipeline.buildPipeline(); // Needed for CDK Nag
   }
 }

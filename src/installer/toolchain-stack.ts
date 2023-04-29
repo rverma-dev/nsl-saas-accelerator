@@ -8,15 +8,7 @@ import {
 } from './lib/configuration';
 import { SaasPipeline } from '../constructs';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
-import {
-  BuildSpec,
-  Cache,
-  ComputeType,
-  LinuxArmBuildImage,
-  LocalCacheMode,
-  Project,
-  Source,
-} from 'aws-cdk-lib/aws-codebuild';
+import { BuildSpec, ComputeType, LinuxArmBuildImage, Project, Source } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import * as ecr_assets from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -45,26 +37,23 @@ export class ToolchainStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', {
-      directory: '.',
-    });
+    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.',});
 
     // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
 
     const pipeline = new SaasPipeline(this, 'toolchain', {
       cliVersion: CDK_VERSION,
-      primarySynthDirectory: 'packages/installer/cdk.out',
+      primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       crossAccountKeys: true,
       synth: {},
       dockerEnabledForSynth: true,
       dockerEnabledForSelfMutation: true,
       synthShellStepPartialProps: {
-        commands: ['cd /app', 'yarn synth:silent'],
+        commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
-        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
         buildEnvironment: {
           computeType: ComputeType.SMALL,
           buildImage: buildImage,

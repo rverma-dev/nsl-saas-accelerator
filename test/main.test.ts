@@ -1,6 +1,6 @@
 import { TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
-import { WorkloadPipelineStack } from '../src/installer/lib/pipeline-stack';
 import { ToolchainStack } from '../src/installer/toolchain-stack';
+import { WorkloadPipelineStack } from '../src/installer/workload-pipeline-stack';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { Template } from 'aws-cdk-lib/assertions';
 
@@ -47,6 +47,20 @@ test('Workload SILO Stack', () => {
     type: 'silo',
     tier: 'small',
     account: TOOLCHAIN_ENV.account,
+    region: TOOLCHAIN_ENV.region,
+  });
+  const template = Template.fromStack(stack);
+  expect(template.toJSON()).toMatchSnapshot();
+});
+
+test('Local Workload SILO Stack', () => {
+  const app = PDKNag.app();
+  const stack = new WorkloadPipelineStack(app, 'workload', {
+    tenantId: 'demo',
+    id: 'dev-001',
+    type: 'demo',
+    tier: 'small',
+    account: 'local',
     region: TOOLCHAIN_ENV.region,
   });
   const template = Template.fromStack(stack);

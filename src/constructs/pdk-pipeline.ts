@@ -153,7 +153,7 @@ export class SaasPipeline extends Construct {
 
     const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
       input: githubInput,
-      installCommands: [],
+      installCommands: ['yarn config set cache-folder /app/.yarn/cache'],
       commands: commands && commands.length > 0 ? commands : ['npx nx run-many --target=build --all'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
