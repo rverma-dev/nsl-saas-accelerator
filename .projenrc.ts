@@ -1,4 +1,4 @@
-import { awscdk, ProjectType } from 'projen';
+import { awscdk } from 'projen';
 import { ArrowParens, NodePackageManager, TrailingComma } from 'projen/lib/javascript';
 
 const AWS_SDK_VERSION = '^3.316.0';

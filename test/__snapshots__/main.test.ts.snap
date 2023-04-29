@@ -171,7 +171,7 @@ exports[`ToolChain Stack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "31e187a1225b49fd37734af3710ae0dcf967a1a802dc62676fff6c0b0cabe844.zip",
+          "S3Key": "b6e23aaced87de27dbdf2932647f57ce3b9e1ceeb5c7d9c3069170e138c91b8d.zip",
         },
         "Description": "src/installer/ddb-stream/add-tenant.lambda.ts",
         "Environment": {
@@ -404,7 +404,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":daac2baf52b18e11ddba852328d648c52e6df65c71d97758d466f159f0b64809",
+                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
               ],
             ],
           },
@@ -824,7 +824,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":daac2baf52b18e11ddba852328d648c52e6df65c71d97758d466f159f0b64809",
+                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
               ],
             ],
           },
@@ -1553,7 +1553,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"002d5dcaaf0fea39e8092d3908b6402156a2b7a90a20a65a730b02ff0cd349a2"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"919eaebee5d692581c96f26e0c0e02c1524e986e2d41d21330a6cf2a305dc1bb"}]",
                   "ProjectName": {
                     "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
                   },
@@ -1593,7 +1593,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"aa74d7d1a2c54786257c136fecbe79e60fbe920db06eb29613d6af94615b5f0e"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"21b59b2b9210ec6e6d929daf3493a7fb873519a63c682018beb53d688c5dda1b"}]",
                   "ProjectName": {
                     "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
                   },
@@ -1689,7 +1689,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":daac2baf52b18e11ddba852328d648c52e6df65c71d97758d466f159f0b64809",
+                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
               ],
             ],
           },
@@ -2098,7 +2098,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":daac2baf52b18e11ddba852328d648c52e6df65c71d97758d466f159f0b64809",
+                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
               ],
             ],
           },

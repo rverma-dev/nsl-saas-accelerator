@@ -32,6 +32,12 @@ jspm_packages/
 *.tgz
 .yarn-integrity
 .cache
+.idea
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 !/.projenrc.js
 /test-reports/
 junit.xml
