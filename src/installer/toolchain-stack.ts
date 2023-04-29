@@ -39,7 +39,6 @@ export class ToolchainStack extends Stack {
 
     const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.',});
 
-    // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
 
     const pipeline = new SaasPipeline(this, 'toolchain', {
@@ -109,7 +108,7 @@ export class ToolchainStack extends Stack {
     pipeline.addWave('UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
-          commands: ['cd /app', 'yarn ts-node bin/get-deployments.ts', 'yarn ts-node bin/update-deployments.ts'],
+          commands: ['yarn ts-node src/installer/get-deployments.ts', 'yarn ts-node src/installer/update-deployments.ts'],
           buildEnvironment: {
             computeType: ComputeType.SMALL,
             buildImage: buildImage,
@@ -135,7 +134,7 @@ export class ToolchainStack extends Stack {
         version: '0.2',
         phases: {
           build: {
-            commands: ['cd /app', 'yarn ts-node bin/provision-deployment.ts'],
+            commands: ['yarn ts-node src/installer/provision-deployment.ts'],
           },
         },
       }),
