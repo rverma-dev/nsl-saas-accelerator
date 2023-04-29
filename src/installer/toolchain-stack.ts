@@ -1,3 +1,4 @@
+import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
   CDK_VERSION,
@@ -25,7 +26,6 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -55,7 +55,7 @@ export class ToolchainStack extends Stack {
     const pipeline = new SaasPipeline(this, 'toolchain', {
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'packages/installer/cdk.out',
-      repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
+      repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       crossAccountKeys: true,
       synth: {},
       dockerEnabledForSynth: true,

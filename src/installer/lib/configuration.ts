@@ -5,7 +5,7 @@ export const REPOSITORY_SECRET = 'saas-provisoner'; // CodeCommit repository nam
 
 export const GITHUB_DOMAIN = 'token.actions.githubusercontent.com';
 
-export const CDK_VERSION = '2.72.0'; // Used to set CodePipeline CLI version
+export const CDK_VERSION = '2.76.0'; // Used to set CodePipeline CLI version
 
 // For production use, specifying exact account and region here is recommended
 export const TOOLCHAIN_ENV = {

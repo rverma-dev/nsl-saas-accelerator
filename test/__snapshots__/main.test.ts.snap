@@ -171,7 +171,7 @@ exports[`ToolChain Stack 1`] = `
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "b6e23aaced87de27dbdf2932647f57ce3b9e1ceeb5c7d9c3069170e138c91b8d.zip",
+          "S3Key": "31e187a1225b49fd37734af3710ae0dcf967a1a802dc62676fff6c0b0cabe844.zip",
         },
         "Description": "src/installer/ddb-stream/add-tenant.lambda.ts",
         "Environment": {
@@ -404,7 +404,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
+                ":885fd1299f837f102036286f00044c76f1617aaf7d9d4083cd88485a5a9eafee",
               ],
             ],
           },
@@ -824,7 +824,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
+                ":885fd1299f837f102036286f00044c76f1617aaf7d9d4083cd88485a5a9eafee",
               ],
             ],
           },
@@ -844,7 +844,7 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "npm install -g aws-cdk@2.72.0"
+        "npm install -g aws-cdk@2.76.0"
       ]
     },
     "build": {
@@ -1553,7 +1553,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"919eaebee5d692581c96f26e0c0e02c1524e986e2d41d21330a6cf2a305dc1bb"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"6e8ed4cae65b4ff6d878c58037e2e54d68a8954ff1ac60e967eb9153ebc47793"}]",
                   "ProjectName": {
                     "Ref": "toolchaintoolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF61664DB",
                   },
@@ -1593,7 +1593,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"21b59b2b9210ec6e6d929daf3493a7fb873519a63c682018beb53d688c5dda1b"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"e0dedd2545078bc3009f764e426a099ddb557709e7fbc66496bed3a567ab8a98"}]",
                   "ProjectName": {
                     "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
                   },
@@ -1689,7 +1689,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
+                ":885fd1299f837f102036286f00044c76f1617aaf7d9d4083cd88485a5a9eafee",
               ],
             ],
           },
@@ -1707,16 +1707,10 @@ exports[`ToolChain Stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "install": {
-      "commands": [
-        "n 18",
-        "npm install -g esbuild"
-      ]
-    },
     "build": {
       "commands": [
-        "cd /app/packages/installer",
-        "npm run synth"
+        "cd /app",
+        "yarn synth:silent"
       ]
     }
   },
@@ -2098,7 +2092,7 @@ exports[`ToolChain Stack 1`] = `
                 {
                   "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
                 },
-                ":541d5f8162a4c7905e4b31e962cdde61bfdc92cebdda79d777463d0b4fb61494",
+                ":885fd1299f837f102036286f00044c76f1617aaf7d9d4083cd88485a5a9eafee",
               ],
             ],
           },
@@ -3745,7 +3739,7 @@ exports[`Workload DEMO Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b2dc067f3dfc4b1de66a56ad94f7b6d22ce33dad40040a6b6c1f88a54a38456c"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b14c79b35e1fcd27d487326081c604668d9527e1265570d47502e3cf7ed7c02d"}]",
                   "ProjectName": {
                     "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   },
@@ -3873,12 +3867,6 @@ exports[`Workload DEMO Stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "install": {
-      "commands": [
-        "n 18",
-        "npm install -g esbuild"
-      ]
-    },
     "build": {
       "commands": [
         "npx nx run-many --target=build --all"
@@ -5617,7 +5605,7 @@ exports[`Workload POOL Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b2dc067f3dfc4b1de66a56ad94f7b6d22ce33dad40040a6b6c1f88a54a38456c"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b14c79b35e1fcd27d487326081c604668d9527e1265570d47502e3cf7ed7c02d"}]",
                   "ProjectName": {
                     "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   },
@@ -5745,12 +5733,6 @@ exports[`Workload POOL Stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "install": {
-      "commands": [
-        "n 18",
-        "npm install -g esbuild"
-      ]
-    },
     "build": {
       "commands": [
         "npx nx run-many --target=build --all"
@@ -7489,7 +7471,7 @@ exports[`Workload SILO Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b2dc067f3dfc4b1de66a56ad94f7b6d22ce33dad40040a6b6c1f88a54a38456c"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"b14c79b35e1fcd27d487326081c604668d9527e1265570d47502e3cf7ed7c02d"}]",
                   "ProjectName": {
                     "Ref": "demodev001demoundefinedCodePipelineBuildundefinedSynthCdkBuildProject2A01E037",
                   },
@@ -7617,12 +7599,6 @@ exports[`Workload SILO Stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "install": {
-      "commands": [
-        "n 18",
-        "npm install -g esbuild"
-      ]
-    },
     "build": {
       "commands": [
         "npx nx run-many --target=build --all"

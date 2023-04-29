@@ -1,8 +1,8 @@
+import { Construct } from 'constructs';
 import { REPOSITORY_NAME, REPOSITORY_OWNER } from './configuration';
 import { DeploymentRecord } from '../../common';
 import { SaasPipeline } from '../../constructs';
 import { Stack } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
