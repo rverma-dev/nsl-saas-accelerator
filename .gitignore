@@ -38,6 +38,7 @@ jspm_packages/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+!.yarn/sdks
 !/.projenrc.js
 /test-reports/
 junit.xml

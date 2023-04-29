@@ -38,7 +38,15 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     dirs: [],
     ignorePatterns: ['*.js', '*.d.ts', 'node_modules/', '*.generated.ts', 'coverage', '*.gen-function.ts'],
   },
-  gitignore: ['.idea', '.yarn/*', '!.yarn/patches', '!.yarn/plugins', '!.yarn/releases', '!.yarn/versions'],
+  gitignore: [
+    '.idea',
+    '.yarn/*',
+    '!.yarn/patches',
+    '!.yarn/plugins',
+    '!.yarn/releases',
+    '!.yarn/versions',
+    '!.yarn/sdks',
+  ],
   deps: [
     '@aws-quickstart/eks-blueprints',
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
