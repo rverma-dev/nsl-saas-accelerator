@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import * as path from 'path';
-import { Deployment, DeploymentRecord, isValidTier } from '@nsa/common';
+import { Deployment, DeploymentRecord, isValidTier } from '../../common';
 
 // Read deployment configuration data from disk
 export function readConfig(jsonFile: string): Array<Deployment> {

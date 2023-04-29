@@ -1,7 +1,7 @@
 import path from 'path';
+import { Construct } from 'constructs';
 import { StaticWebsite } from '@aws-prototyping-sdk/static-website';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, deploymentType: string, deploymentId: string, props?: StackProps) {

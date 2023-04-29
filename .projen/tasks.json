@@ -35,7 +35,7 @@
           "spawn": "bundle:installer/ddb-stream/add-tenant.lambda"
         },
         {
-          "spawn": "bundle:pool/lib/find-eks-custer.lambda"
+          "spawn": "bundle:pool/eks/find-custer.lambda"
         }
       ]
     },
@@ -75,21 +75,21 @@
         }
       ]
     },
-    "bundle:pool/lib/find-eks-custer.lambda": {
-      "name": "bundle:pool/lib/find-eks-custer.lambda",
-      "description": "Create a JavaScript bundle from src/pool/lib/find-eks-custer.lambda.ts",
+    "bundle:pool/eks/find-custer.lambda": {
+      "name": "bundle:pool/eks/find-custer.lambda",
+      "description": "Create a JavaScript bundle from src/pool/eks/find-custer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/pool/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
+          "exec": "esbuild --bundle src/pool/eks/find-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/eks/find-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap"
         }
       ]
     },
-    "bundle:pool/lib/find-eks-custer.lambda:watch": {
-      "name": "bundle:pool/lib/find-eks-custer.lambda:watch",
-      "description": "Continuously update the JavaScript bundle from src/pool/lib/find-eks-custer.lambda.ts",
+    "bundle:pool/eks/find-custer.lambda:watch": {
+      "name": "bundle:pool/eks/find-custer.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/pool/eks/find-custer.lambda.ts",
       "steps": [
         {
-          "exec": "esbuild --bundle src/pool/lib/find-eks-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/lib/find-eks-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
+          "exec": "esbuild --bundle src/pool/eks/find-custer.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/pool/eks/find-custer.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:aws-sdk --sourcemap --watch"
         }
       ]
     },
@@ -184,7 +184,7 @@
       "description": "Runs eslint against the codebase",
       "steps": [
         {
-          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src test build-tools projenrc .projenrc.ts"
+          "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern test build-tools projenrc .projenrc.ts"
         }
       ]
     },
@@ -193,7 +193,7 @@
       "description": "Install project dependencies and update lockfile (non-frozen)",
       "steps": [
         {
-          "exec": "yarn install --check-files"
+          "exec": "yarn install"
         }
       ]
     },
@@ -202,7 +202,7 @@
       "description": "Install project dependencies using frozen lockfile",
       "steps": [
         {
-          "exec": "yarn install --check-files --frozen-lockfile"
+          "exec": "yarn install --immutable"
         }
       ]
     },

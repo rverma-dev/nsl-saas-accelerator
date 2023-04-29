@@ -1,6 +1,6 @@
-import * as cdk from 'aws-cdk-lib';
 import { snapShotTest } from './snapshot-test';
-import { CreateGitopsSecretResource } from '../src';
+import { CreateGitopsSecretResource } from '../src/constructs';
+import * as cdk from 'aws-cdk-lib';
 
 const testNamePrefix = 'Construct(GitopsStack): ';
 

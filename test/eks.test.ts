@@ -1,7 +1,7 @@
 import { EksBlueprint, SecretsStoreAddOn } from '@aws-quickstart/eks-blueprints';
+import { EksCluster } from '../src/constructs';
+import { FluxV2Addon } from '../src/constructs/aws-eks/addon';
 import * as cdk from 'aws-cdk-lib';
-import { EksCluster } from '../src';
-import { FluxV2Addon } from '../src/aws-eks/addon';
 
 const flux = new FluxV2Addon({
   credentialsType: 'USERNAME',

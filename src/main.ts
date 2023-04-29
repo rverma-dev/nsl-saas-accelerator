@@ -1,15 +1,11 @@
-import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
-import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
-import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { getPipelineName } from './common';
 import { TOOLCHAIN_ENV } from './installer/lib/configuration';
 import { ToolchainStack } from './installer/toolchain-stack';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from './installer/workload-pipeline-stack';
+import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
+import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 
-const app = PDKNag.app({
-  failOnError: false,
-});
-new CdkGraph(app);
+const app = PDKNag.app();
 /*
  * This is the main CDK application for the sample solution.
  *
@@ -31,6 +27,7 @@ new CdkGraph(app);
  *                          : this deployment are deployed to
  *         component_region : the AWS Region, as above
  *         deployment_size  : the size of deployment
+ * Mode C: Synthesize a specific pipeline directly for local testing
  */
 
 const tenantID = <string>app.node.tryGetContext('tenant_id');
@@ -45,7 +42,7 @@ if (!deploymentType) {
   new ToolchainStack(app, 'toolchain', {
     env: TOOLCHAIN_ENV,
   });
-} else {
+} else if (componentAccount != 'local') {
   // Mode B: synthetize the workload pipeline stack
   const workloadProps: WorkloadPipelineProps = {
     id: deploymentId,
@@ -58,18 +55,17 @@ if (!deploymentType) {
   const stackName = getPipelineName(workloadProps);
   console.log(`Synthesizing stack for ${stackName}in ${componentAccount}/${componentRegion}`);
   new WorkloadPipelineStack(app, stackName, { ...workloadProps, env: TOOLCHAIN_ENV });
+} else {
+  const tenantProps = {
+    id: deploymentId,
+    tenantId: tenantID,
+    type: deploymentType,
+    tier: deploymentTier,
+    account: process.env.CDK_DEFAULT_ACCOUNT!,
+    region: process.env.CDK_DEFAULT_REGION!,
+  };
+  new WorkloadPipelineStack(app, 'PipelineStack', tenantProps);
 }
 
-
-const app = PDKNag.app();
-const tenantProps = {
-  tenantId: 'demo',
-  id: 'dev-001',
-  type: 'silo',
-  tier: 'small',
-  account: process.env.CDK_DEFAULT_ACCOUNT!,
-  region: process.env.CDK_DEFAULT_REGION!,
-};
-
-new PipelineStack(app, 'PipelineStack', tenantProps);
+new CdkGraph(app);
 app.synth();

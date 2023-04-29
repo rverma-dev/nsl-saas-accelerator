@@ -1,8 +1,8 @@
+import { TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
+import { WorkloadPipelineStack } from '../src/installer/lib/pipeline-stack';
+import { ToolchainStack } from '../src/installer/toolchain-stack';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 import { Template } from 'aws-cdk-lib/assertions';
-import { TOOLCHAIN_ENV } from '../src/lib/configuration';
-import { ToolchainStack } from '../src/toolchain-stack';
-import { WorkloadPipelineStack } from '../src/workload-pipeline-stack';
 
 test('ToolChain Stack', () => {
   const app = PDKNag.app();

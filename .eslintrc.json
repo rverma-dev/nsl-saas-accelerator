@@ -42,6 +42,7 @@
     "node_modules/",
     "*.generated.ts",
     "coverage",
+    "*.gen-function.ts",
     "!.projenrc.ts",
     "!projenrc/**/*.ts"
   ],
@@ -60,7 +61,7 @@
           "**/build-tools/**",
           "src/constructs/aws-codecommit/secret-gen.lambda.ts",
           "src/installer/ddb-stream/add-tenant.lambda.ts",
-          "src/pool/lib/find-eks-custer.lambda.ts",
+          "src/pool/eks/find-custer.lambda.ts",
           ".projenrc.ts",
           "projenrc/**/*.ts"
         ],

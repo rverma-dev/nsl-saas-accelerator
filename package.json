@@ -8,8 +8,8 @@
     "bundle:constructs/aws-codecommit/secret-gen.lambda:watch": "npx projen bundle:constructs/aws-codecommit/secret-gen.lambda:watch",
     "bundle:installer/ddb-stream/add-tenant.lambda": "npx projen bundle:installer/ddb-stream/add-tenant.lambda",
     "bundle:installer/ddb-stream/add-tenant.lambda:watch": "npx projen bundle:installer/ddb-stream/add-tenant.lambda:watch",
-    "bundle:pool/lib/find-eks-custer.lambda": "npx projen bundle:pool/lib/find-eks-custer.lambda",
-    "bundle:pool/lib/find-eks-custer.lambda:watch": "npx projen bundle:pool/lib/find-eks-custer.lambda:watch",
+    "bundle:pool/eks/find-custer.lambda": "npx projen bundle:pool/eks/find-custer.lambda",
+    "bundle:pool/eks/find-custer.lambda:watch": "npx projen bundle:pool/eks/find-custer.lambda:watch",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
     "default": "npx projen default",
@@ -63,6 +63,7 @@
     "@aws-sdk/client-ec2": "^3.316.0",
     "@aws-sdk/client-iam": "^3.316.0",
     "@aws-sdk/client-secrets-manager": "^3.316.0",
+    "@types/js-yaml": "^4.0.5",
     "aws-cdk-lib": "2.76.0",
     "cdk-nag": "^2.26.9",
     "constructs": "^10.0.5",
@@ -77,6 +78,7 @@
   "license": "Apache-2.0",
   "version": "0.0.0",
   "jest": {
+    "detectOpenHandles": true,
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)"

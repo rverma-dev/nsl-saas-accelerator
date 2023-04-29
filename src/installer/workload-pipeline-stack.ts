@@ -1,9 +1,6 @@
-import { DeploymentRecord, getPipelineName } from '@nsa/common';
-import * as demo from '@nsa/demo/src/pipeline-stack';
-import * as pool from '@nsa/pool/src/pipeline-stack';
-import * as silo from '@nsa/silo/src/pipeline-stack';
-import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { DeploymentRecord, getPipelineName } from '../common';
+import { Stack, StackProps } from 'aws-cdk-lib';
 
 export interface WorkloadPipelineProps extends StackProps, DeploymentRecord {}
 
@@ -21,7 +18,7 @@ export class WorkloadPipelineStack extends Stack {
     const pipelineName = getPipelineName(props);
     switch (props.type) {
       case 'demo':
-        new demo.PipelineStack(this, pipelineName, {
+        new WorkloadPipelineStack(this, pipelineName, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,
@@ -31,7 +28,7 @@ export class WorkloadPipelineStack extends Stack {
         });
         break;
       case 'silo':
-        new silo.PipelineStack(this, pipelineName, {
+        new WorkloadPipelineStack(this, pipelineName, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,
@@ -41,7 +38,7 @@ export class WorkloadPipelineStack extends Stack {
         });
         break;
       case 'pool':
-        new pool.PipelineStack(this, pipelineName, {
+        new WorkloadPipelineStack(this, pipelineName, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,

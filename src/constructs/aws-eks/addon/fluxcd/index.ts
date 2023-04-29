@@ -1,10 +1,10 @@
 import { ClusterAddOn, ClusterInfo, SecretProviderClass, utils } from '@aws-quickstart/eks-blueprints';
-import { aws_eks as eks } from 'aws-cdk-lib';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import * as yaml from 'js-yaml';
 import * as request from 'sync-request';
 import { createSecretRef } from './manifest-utils';
+import { aws_eks as eks } from 'aws-cdk-lib';
+import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class FluxV2Props {
   readonly fluxVersion?: string;

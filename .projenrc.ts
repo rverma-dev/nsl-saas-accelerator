@@ -1,5 +1,5 @@
-import { awscdk } from 'projen';
-import { TrailingComma, ArrowParens } from 'projen/lib/javascript';
+import { awscdk, ProjectType } from 'projen';
+import { ArrowParens, NodePackageManager, TrailingComma } from 'projen/lib/javascript';
 
 const AWS_SDK_VERSION = '^3.316.0';
 const CDK_VERSION = '2.76.0';
@@ -33,6 +33,12 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   github: true,
   minNodeVersion: '18.0.0',
   typescriptVersion: '~5.0.4',
+  packageManager: NodePackageManager.YARN2,
+  eslintOptions: {
+    dirs: [],
+    ignorePatterns: ['*.js', '*.d.ts', 'node_modules/', '*.generated.ts', 'coverage', '*.gen-function.ts'],
+  },
+  gitignore: ['.idea', '.yarn/*', '!.yarn/patches', '!.yarn/plugins', '!.yarn/releases', '!.yarn/versions'],
   deps: [
     '@aws-quickstart/eks-blueprints',
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
@@ -45,7 +51,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     `@aws-prototyping-sdk/pdk-nag`,
     `@aws-prototyping-sdk/cdk-graph`,
     '@aws-prototyping-sdk/static-website',
-    '@types/js-yaml',
+    '@types/js-yaml@^4.0.5',
     'cdk-nag',
     'js-yaml@4.1.0',
     'sync-request@6.1.0',
@@ -59,6 +65,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     bundlingOptions: {
       externals: ['aws-sdk'],
       sourcemap: true,
+    },
+  },
+  jestOptions: {
+    jestConfig: {
+      detectOpenHandles: true,
     },
   },
 });

@@ -21,7 +21,7 @@
     "LICENSE",
     "src/constructs/aws-codecommit/secret-gen-function.ts",
     "src/installer/ddb-stream/add-tenant-function.ts",
-    "src/pool/lib/find-eks-custer-function.ts",
+    "src/pool/eks/find-custer-function.ts",
     "tsconfig.dev.json",
     "tsconfig.json"
   ],

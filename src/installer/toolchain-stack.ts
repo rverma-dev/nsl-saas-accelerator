@@ -1,4 +1,13 @@
-import { SaasPipeline } from '@nsa/construct';
+import { Construct } from 'constructs';
+import { AddTenantFunction } from './ddb-stream/add-tenant-function';
+import {
+  CDK_VERSION,
+  DEPLOYMENT_TABLE_NAME,
+  GITHUB_DOMAIN,
+  REPOSITORY_NAME,
+  REPOSITORY_OWNER,
+} from './lib/configuration';
+import { SaasPipeline } from '../constructs';
 import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import {
   BuildSpec,
@@ -17,15 +26,6 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
-import { AddTenantFunction } from './ddb-stream/add-tenant-function';
-import {
-  CDK_VERSION,
-  DEPLOYMENT_TABLE_NAME,
-  GITHUB_DOMAIN,
-  REPOSITORY_NAME,
-  REPOSITORY_OWNER,
-} from './lib/configuration';
 
 export class ToolchainStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -46,8 +46,7 @@ export class ToolchainStack extends Stack {
     });
 
     const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', {
-      directory: '../../',
-      file: './packages/installer/Dockerfile',
+      directory: '.',
     });
 
     // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');

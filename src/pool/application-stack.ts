@@ -1,7 +1,7 @@
+import { Construct } from 'constructs';
 import { aws_dynamodb, Stack, StackProps } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 import { AttributeType, BillingMode } from 'aws-cdk-lib/aws-dynamodb';
-import { Construct } from 'constructs';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {

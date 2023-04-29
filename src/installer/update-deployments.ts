@@ -1,6 +1,6 @@
-import { Deployment, getPipelineName } from '@nsa/common';
 import { startPipelineExecution, waitPipelineExecution } from './lib/apitools';
 import { readConfig } from './lib/configtools';
+import { Deployment, getPipelineName } from '../common';
 
 /*
  * update-deployments implements the control flow and logic of how updates are

@@ -24,7 +24,7 @@
 /package.json linguist-generated
 /src/constructs/aws-codecommit/secret-gen-function.ts linguist-generated
 /src/installer/ddb-stream/add-tenant-function.ts linguist-generated
-/src/pool/lib/find-eks-custer-function.ts linguist-generated
+/src/pool/eks/find-custer-function.ts linguist-generated
 /tsconfig.dev.json linguist-generated
 /tsconfig.json linguist-generated
 /yarn.lock linguist-generated

@@ -22,7 +22,8 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
         throw e;
       }
     case 'Delete':
-      try {} catch (e) {
+      try {
+      } catch (e) {
         console.error(e);
         throw e;
       }

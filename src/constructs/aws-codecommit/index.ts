@@ -1,7 +1,7 @@
-import * as cdk from 'aws-cdk-lib';
-import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { SecretGenFunction } from './secret-gen-function';
+import * as cdk from 'aws-cdk-lib';
+import { RemovalPolicy } from 'aws-cdk-lib';
 
 export interface CreateGitopsSecretProps {
   /**

@@ -1,11 +1,11 @@
 import * as blueprints from '@aws-quickstart/eks-blueprints';
+import { Construct } from 'constructs';
+import * as addons from './addon';
 import { Stack } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as eks from 'aws-cdk-lib/aws-eks';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
-import * as addons from './addon';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.large')];
 

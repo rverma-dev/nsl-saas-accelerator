@@ -1,7 +1,8 @@
-import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { REPOSITORY_NAME, REPOSITORY_OWNER } from './configuration';
 import { DeploymentRecord } from '../../common';
 import { SaasPipeline } from '../../constructs';
+import { Stack } from 'aws-cdk-lib';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
@@ -9,14 +10,14 @@ interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainAssetBucket?: string;
 }
 
-export class PipelineStack extends Stack {
+export class WorkloadPipelineStack extends Stack {
   readonly pipeline: SaasPipeline;
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
     this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-demo`, {
       primarySynthDirectory: 'cdk.out',
-      repositoryName: this.node.tryGetContext('repositoryName') || 'rverma-nsl/nsl-saas-accelerator',
+      repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       publishAssetsInParallel: true,
       crossAccountKeys: true,
       synth: {},

@@ -1,6 +1,6 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { EksCluster } from '../constructs';
+import { Stack, StackProps } from 'aws-cdk-lib';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
