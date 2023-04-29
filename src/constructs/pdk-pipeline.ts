@@ -1,4 +1,3 @@
-import { Construct } from 'constructs';
 import { Aspects, RemovalPolicy, SecretValue, Stage } from 'aws-cdk-lib';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
@@ -6,6 +5,7 @@ import { Key } from 'aws-cdk-lib/aws-kms';
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 const DEFAULT_BRANCH_NAME = 'main';
 const REPOSITORY_SECRET = 'saas-provisoner';
@@ -153,7 +153,7 @@ export class SaasPipeline extends Construct {
 
     const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
       input: githubInput,
-      installCommands: ['n 18', 'npm install -g esbuild'],
+      installCommands: [],
       commands: commands && commands.length > 0 ? commands : ['npx nx run-many --target=build --all'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
