@@ -8,8 +8,9 @@ import {
 } from './lib/configuration';
 import { SaasPipeline } from '../constructs';
 import * as cdk from 'aws-cdk-lib';
-import { BuildSpec, ComputeType, LinuxArmBuildImage, Project, Source } from 'aws-cdk-lib/aws-codebuild';
+import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
@@ -34,33 +35,37 @@ export class ToolchainStack extends cdk.Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    // const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
-    // const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
+    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
+    const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     // image asset is taking to long to be provisioned by codebuild
-    const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
+    // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
-      pipelineName: id,
+      pipelineName: 'toolchain',
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       crossAccountKeys: true,
+      selfMutation: false,
       synth: {},
-      dockerEnabledForSynth: false,
+      dockerEnabledForSynth: true,
       dockerEnabledForSelfMutation: false,
+      codeBuildDefaults: {
+        cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
+      },
       synthShellStepPartialProps: {
-        installCommands: ['n 18', 'yarn install --immutable'],
+        installCommands: ['yarn config set cacheFolder=/app/.yarn/cache'],
         commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: ComputeType.SMALL,
+          computeType: codebuild.ComputeType.SMALL,
           buildImage: buildImage,
           privileged: false,
         },
       },
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: ComputeType.SMALL,
+          computeType: codebuild.ComputeType.SMALL,
           buildImage: buildImage,
         },
       },
@@ -110,7 +115,7 @@ export class ToolchainStack extends cdk.Stack {
             'yarn ts-node src/installer/update-deployments.ts',
           ],
           buildEnvironment: {
-            computeType: ComputeType.SMALL,
+            computeType: codebuild.ComputeType.SMALL,
             buildImage: buildImage,
           },
           role: updateDeploymentsRole,
@@ -119,18 +124,18 @@ export class ToolchainStack extends cdk.Stack {
     });
 
     // CodeBuild Project for Provisioning Build Job
-    const project = new Project(this, 'provisioning-project', {
+    const project = new codebuild.Project(this, 'provisioning-project', {
       projectName: 'provisioning-project',
-      source: Source.gitHub({
+      source: codebuild.Source.gitHub({
         owner: REPOSITORY_OWNER,
         repo: REPOSITORY_NAME,
         branchOrRef: 'refs/heads/main',
       }),
       environment: {
-        computeType: ComputeType.SMALL,
+        computeType: codebuild.ComputeType.SMALL,
         buildImage: buildImage,
       },
-      buildSpec: BuildSpec.fromObject({
+      buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
           build: {

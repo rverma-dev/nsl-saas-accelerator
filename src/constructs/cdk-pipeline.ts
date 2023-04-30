@@ -1,6 +1,5 @@
-import { Aspects, RemovalPolicy, SecretValue, Stage } from 'aws-cdk-lib';
+import { Aspects, RemovalPolicy, Stage } from 'aws-cdk-lib';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
-import { GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import * as pipelines from 'aws-cdk-lib/pipelines';
@@ -8,7 +7,8 @@ import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
 const DEFAULT_BRANCH_NAME = 'main';
-const REPOSITORY_SECRET = 'saas-provisoner';
+const CONNECTION =
+  'arn:aws:codestar-connections:ap-south-1:415505189627:connection/03ad38fd-c299-4b2b-9058-c1a9ae5a2cc6'; // Created using the AWS console
 
 /**
  * Properties to configure the CDKPipeline.
@@ -36,7 +36,7 @@ export interface SaasPipelineProps extends pipelines.CodePipelineProps {
   readonly synthShellStepPartialProps?: pipelines.ShellStepProps;
 
   /**
-   * Output directory for cdk synthesized artifacts i.e: packages/infra/cdk.out, 
+   * Output directory for cdk synthesized artifacts i.e: packages/infra/cdk.out,
    * defined mostly for monorepos
    * @default cdk.out
    */
@@ -117,24 +117,14 @@ export class SaasPipeline extends Construct {
           serverAccessLogsBucket: accessLogsBucket,
         });
 
-    const githubInput = pipelines.CodePipelineSource.gitHub(
+    const githubInput = pipelines.CodePipelineSource.connection(
       props.repositoryName,
       props.defaultBranchName || DEFAULT_BRANCH_NAME,
       {
-        trigger: GitHubTrigger.NONE,
-        authentication: SecretValue.secretsManager(REPOSITORY_SECRET, {
-          jsonField: 'github_token',
-        }),
+        triggerOnPush: false,
+        connectionArn: CONNECTION,
       },
     );
-
-    const codePipeline = new Pipeline(this, `CodePipeline`, {
-      pipelineName: props.pipelineName,
-      enableKeyRotation: props.crossAccountKeys,
-      restartExecutionOnUpdate: true,
-      crossAccountKeys: props.crossAccountKeys,
-      artifactBucket,
-    });
 
     // ignore input and primaryOutputDirectory
     const { input, primaryOutputDirectory, commands, installCommands, ...synthShellStepPartialProps } =
@@ -142,13 +132,30 @@ export class SaasPipeline extends Construct {
 
     const synthShellStep = new pipelines.ShellStep('Synth', {
       input: githubInput,
-      installCommands: installCommands && installCommands.length > 0 ? installCommands : ['yarn install --immutable'],
+      installCommands:
+        installCommands && installCommands.length > 0
+          ? installCommands
+          : [
+              'n 18',
+              'corepack enable',
+              'corepack prepare yarn@stable --activate',
+              'yarn set version stable',
+              'yarn install --immutable',
+            ],
       commands: commands && commands.length > 0 ? commands : ['yarn synth:silent -y'],
       primaryOutputDirectory: props.primarySynthDirectory || 'cdk.out',
       ...(synthShellStepPartialProps || {}),
     });
 
     synthShellStep.addOutputDirectory('.');
+
+    const codePipeline = new Pipeline(this, `CodePipeline`, {
+      pipelineName: props.pipelineName,
+      crossAccountKeys: props.crossAccountKeys,
+      enableKeyRotation: props.crossAccountKeys,
+      restartExecutionOnUpdate: true,
+      artifactBucket,
+    });
 
     const codePipelineProps: pipelines.CodePipelineProps = {
       codePipeline,
@@ -158,7 +165,7 @@ export class SaasPipeline extends Construct {
       pipelineName: undefined,
     };
 
-    this.codePipeline = new pipelines.CodePipeline(this, id, codePipelineProps);
+    this.codePipeline = new pipelines.CodePipeline(this, props.pipelineName || id, codePipelineProps);
   }
 
   /**
