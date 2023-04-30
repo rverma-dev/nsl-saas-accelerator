@@ -142,8 +142,10 @@ export class ToolchainStack extends cdk.Stack {
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
+          install: {
+            commands: INSTALL_COMMANDS,
+          },
           build: {
-            installCommands: INSTALL_COMMANDS,
             commands: ['yarn ts-node src/installer/provision-deployment.ts'],
           },
         },
