@@ -86,6 +86,7 @@ export class ToolchainStack extends cdk.Stack {
               resources: [
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-silo-pipeline',
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-pool-pipeline',
+                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-demo-pipeline',
               ],
               effect: iam.Effect.ALLOW,
             }),
