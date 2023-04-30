@@ -787,101 +787,6 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "installpipelineCodeBuildActionRoleDAEE8FD0": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Condition": {
-                "Bool": {
-                  "aws:ViaAWSService": "codepipeline.amazonaws.com",
-                },
-              },
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
-                    ],
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "installpipelineCodeBuildActionRoleDefaultPolicy26059317": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "installpipelineCodePipelineBuildSynthCdkBuildProject95EF92A3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "installpipelineUpdatePipelineSelfMutation2A2CD002",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "installpipelineCodePipelineUpdateDeploymentsupdatedeploymentsF54DFE5E",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "installpipelineCodeBuildActionRoleDefaultPolicy26059317",
-        "Roles": [
-          {
-            "Ref": "installpipelineCodeBuildActionRoleDAEE8FD0",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
     "installpipelineCodePipeline1DB150A2": {
       "DependsOn": [
         "installpipelineCodePipelineRoleDefaultPolicy2CE1856D",
@@ -917,16 +822,15 @@ exports[`ToolChain Stack 1`] = `
               {
                 "ActionTypeId": {
                   "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
+                  "Owner": "AWS",
+                  "Provider": "CodeStarSourceConnection",
                   "Version": "1",
                 },
                 "Configuration": {
-                  "Branch": "main",
-                  "OAuthToken": "{{resolve:secretsmanager:saas-provisoner:SecretString:github_token::}}",
-                  "Owner": "rverma-nsl",
-                  "PollForSourceChanges": false,
-                  "Repo": "nsl-saas-accelerator",
+                  "BranchName": "main",
+                  "ConnectionArn": "arn:aws:codestar-connections:ap-south-1:415505189627:connection/03ad38fd-c299-4b2b-9058-c1a9ae5a2cc6",
+                  "DetectChanges": false,
+                  "FullRepositoryId": "rverma-nsl/nsl-saas-accelerator",
                 },
                 "Name": "rverma-nsl_nsl-saas-accelerator",
                 "OutputArtifacts": [
@@ -934,6 +838,12 @@ exports[`ToolChain Stack 1`] = `
                     "Name": "rverma_nsl_nsl_saas_accelerator_Source",
                   },
                 ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRole8E7CC609",
+                    "Arn",
+                  ],
+                },
                 "RunOrder": 1,
               },
             ],
@@ -949,7 +859,6 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"875f3e07c72147d81dbe0aab691426e094c9e5ab52ef8f397ae6c5019107d874"}]",
                   "ProjectName": {
                     "Ref": "installpipelineCodePipelineBuildSynthCdkBuildProject95EF92A3",
                   },
@@ -970,7 +879,7 @@ exports[`ToolChain Stack 1`] = `
                 ],
                 "RoleArn": {
                   "Fn::GetAtt": [
-                    "installpipelineCodeBuildActionRoleDAEE8FD0",
+                    "installpipelinetoolchainCodeBuildActionRole2A97E1CD",
                     "Arn",
                   ],
                 },
@@ -978,38 +887,6 @@ exports[`ToolChain Stack 1`] = `
               },
             ],
             "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"679680f6c8a6ff04b1cdfdaa276f58bfd582e45c128a454b5f3e1e872475efca"}]",
-                  "ProjectName": {
-                    "Ref": "installpipelineUpdatePipelineSelfMutation2A2CD002",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "Synth_Output",
-                  },
-                ],
-                "Name": "SelfMutate",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "installpipelineCodeBuildActionRoleDAEE8FD0",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "UpdatePipeline",
           },
           {
             "Actions": [
@@ -1033,7 +910,7 @@ exports[`ToolChain Stack 1`] = `
                 "Name": "update-deployments",
                 "RoleArn": {
                   "Fn::GetAtt": [
-                    "installpipelineCodeBuildActionRoleDAEE8FD0",
+                    "installpipelinetoolchainCodeBuildActionRole2A97E1CD",
                     "Arn",
                   ],
                 },
@@ -1052,7 +929,10 @@ exports[`ToolChain Stack 1`] = `
           "Type": "CODEPIPELINE",
         },
         "Cache": {
-          "Type": "NO_CACHE",
+          "Modes": [
+            "LOCAL_DOCKER_LAYER_CACHE",
+          ],
+          "Type": "LOCAL",
         },
         "Description": "Pipeline step toolchain/CodePipeline/Build/Synth",
         "EncryptionKey": {
@@ -1063,9 +943,31 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":7576e4d13f1b06bd795e1daec26fc27a46849c68a8822be624c86783545b2542",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "PrivilegedMode": true,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
@@ -1080,8 +982,7 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18",
-        "yarn install --immutable"
+        "yarn config set cacheFolder=/app/.yarn/cache"
       ]
     },
     "build": {
@@ -1129,6 +1030,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -1379,7 +1316,17 @@ exports[`ToolChain Stack 1`] = `
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "installpipelineCodeBuildActionRoleDAEE8FD0",
+                  "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRole8E7CC609",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "installpipelinetoolchainCodeBuildActionRole2A97E1CD",
                   "Arn",
                 ],
               },
@@ -1396,101 +1343,7 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
-    "installpipelineCodePipelineUpdateDeploymentsupdatedeploymentsF54DFE5E": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments",
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "installpipelineArtifactKey26F37951",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "updatedeploymentsrole044C7611",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "yarn ts-node src/installer/get-deployments.ts",
-        "yarn ts-node src/installer/update-deployments.ts"
-      ]
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "installpipelineUpdatePipelineSelfMutation2A2CD002": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "CODEPIPELINE",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "Description": "Pipeline step toolchain/CodePipeline/UpdatePipeline/SelfMutate",
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "installpipelineArtifactKey26F37951",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "ARM_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "installpipelineUpdatePipelineSelfMutationRole2162E659",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "install": {
-      "commands": [
-        "npm install -g aws-cdk@2.76.0"
-      ]
-    },
-    "build": {
-      "commands": [
-        "cdk -a . deploy toolchain --require-approval=never --verbose"
-      ]
-    }
-  }
-}",
-          "Type": "CODEPIPELINE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "installpipelineUpdatePipelineSelfMutationRole2162E659": {
+    "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRole8E7CC609": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1498,7 +1351,22 @@ exports[`ToolChain Stack 1`] = `
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": {
-                "Service": "codebuild.amazonaws.com",
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
               },
             },
           ],
@@ -1507,141 +1375,27 @@ exports[`ToolChain Stack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "installpipelineUpdatePipelineSelfMutationRoleDefaultPolicyB8116BF4": {
+    "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleDefaultPolicy29AD1EF5": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
+              "Action": "codestar-connections:UseConnection",
               "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "installpipelineUpdatePipelineSelfMutation2A2CD002",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "installpipelineUpdatePipelineSelfMutation2A2CD002",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "installpipelineUpdatePipelineSelfMutation2A2CD002",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Condition": {
-                "ForAnyValue:StringEquals": {
-                  "iam:ResourceTag/aws-cdk:bootstrap-role": [
-                    "image-publishing",
-                    "file-publishing",
-                    "deploy",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:*:iam::",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":role/*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "cloudformation:DescribeStacks",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
-            {
-              "Action": "s3:ListBucket",
-              "Effect": "Allow",
-              "Resource": "*",
+              "Resource": "arn:aws:codestar-connections:ap-south-1:415505189627:connection/03ad38fd-c299-4b2b-9058-c1a9ae5a2cc6",
             },
             {
               "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
               ],
               "Effect": "Allow",
               "Resource": [
@@ -1671,18 +1425,6 @@ exports[`ToolChain Stack 1`] = `
               "Action": [
                 "kms:Decrypt",
                 "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "installpipelineArtifactKey26F37951",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
                 "kms:Encrypt",
                 "kms:ReEncrypt*",
                 "kms:GenerateDataKey*",
@@ -1695,13 +1437,185 @@ exports[`ToolChain Stack 1`] = `
                 ],
               },
             },
+            {
+              "Action": [
+                "s3:PutObjectAcl",
+                "s3:PutObjectVersionAcl",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "installpipelineArtifactsBucketBEF15C5E",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "installpipelineUpdatePipelineSelfMutationRoleDefaultPolicyB8116BF4",
+        "PolicyName": "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleDefaultPolicy29AD1EF5",
         "Roles": [
           {
-            "Ref": "installpipelineUpdatePipelineSelfMutationRole2162E659",
+            "Ref": "installpipelineCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRole8E7CC609",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "installpipelineCodePipelineUpdateDeploymentsupdatedeploymentsF54DFE5E": {
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE",
+        },
+        "Cache": {
+          "Modes": [
+            "LOCAL_DOCKER_LAYER_CACHE",
+          ],
+          "Type": "LOCAL",
+        },
+        "Description": "Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments",
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "installpipelineArtifactKey26F37951",
+            "Arn",
+          ],
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":7576e4d13f1b06bd795e1daec26fc27a46849c68a8822be624c86783545b2542",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "PrivilegedMode": false,
+          "Type": "ARM_CONTAINER",
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "updatedeploymentsrole044C7611",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "build": {
+      "commands": [
+        "yarn ts-node src/installer/get-deployments.ts",
+        "yarn ts-node src/installer/update-deployments.ts"
+      ]
+    }
+  }
+}",
+          "Type": "CODEPIPELINE",
+        },
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "installpipelinetoolchainCodeBuildActionRole2A97E1CD": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "Bool": {
+                  "aws:ViaAWSService": "codepipeline.amazonaws.com",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "installpipelinetoolchainCodeBuildActionRoleDefaultPolicyD3DD34BD": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "installpipelineCodePipelineBuildSynthCdkBuildProject95EF92A3",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "installpipelineCodePipelineUpdateDeploymentsupdatedeploymentsF54DFE5E",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "installpipelinetoolchainCodeBuildActionRoleDefaultPolicyD3DD34BD",
+        "Roles": [
+          {
+            "Ref": "installpipelinetoolchainCodeBuildActionRole2A97E1CD",
           },
         ],
       },
@@ -1718,8 +1632,30 @@ exports[`ToolChain Stack 1`] = `
         "EncryptionKey": "alias/aws/s3",
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
-          "ImagePullCredentialsType": "CODEBUILD",
+          "Image": {
+            "Fn::Join": [
+              "",
+              [
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ".dkr.ecr.",
+                {
+                  "Ref": "AWS::Region",
+                },
+                ".",
+                {
+                  "Ref": "AWS::URLSuffix",
+                },
+                "/",
+                {
+                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                },
+                ":7576e4d13f1b06bd795e1daec26fc27a46849c68a8822be624c86783545b2542",
+              ],
+            ],
+          },
+          "ImagePullCredentialsType": "SERVICE_ROLE",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
@@ -1770,6 +1706,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -2079,6 +2051,42 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":repository/",
+                    {
+                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
             {
               "Action": [
                 "logs:CreateLogGroup",
