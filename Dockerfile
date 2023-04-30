@@ -8,5 +8,5 @@ COPY .pnp.cjs .yarnrc.yml package.json yarn.lock* ./
 RUN yarn install
 
 FROM node:18-slim AS runner
-COPY --from=base /root/.yarn /root/.yarn
+COPY --from=deps /root/.yarn /root/.yarn
 CMD ["/bin/bash"]
