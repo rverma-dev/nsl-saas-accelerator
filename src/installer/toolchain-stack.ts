@@ -49,7 +49,6 @@ export class ToolchainStack extends cdk.Stack {
       selfMutation: true,
       synth: {},
       dockerEnabledForSynth: true,
-      dockerEnabledForSelfMutation: true,
       codeBuildDefaults: {
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
@@ -67,8 +66,8 @@ export class ToolchainStack extends cdk.Stack {
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
           computeType: codebuild.ComputeType.SMALL,
-          buildImage: buildImage,
         },
+        cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
     });
     const updateDeploymentsRole = new iam.Role(this, 'update-deployments-role', {
