@@ -243,6 +243,8 @@ export class ToolchainStack extends cdk.Stack {
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
 
+    new cdk.CfnOutput(this, 'build-image', { value: buildImage.imageId, exportName: 'buildImage' });
+
     NagSuppressions.addStackSuppressions(
       this,
       [

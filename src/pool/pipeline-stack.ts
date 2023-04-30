@@ -8,6 +8,7 @@ interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
   readonly toolchainAssetBucket?: string;
   readonly repositoryName: string;
+  readonly toolchainImage: string;
 }
 
 export class PipelineStack extends Stack {
@@ -16,6 +17,7 @@ export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
     this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-pool`, {
+      pipelineName: props.id,
       primarySynthDirectory: 'cdk.out',
       repositoryName: props.repositoryName,
       crossAccountKeys: true,

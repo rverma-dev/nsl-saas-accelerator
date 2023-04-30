@@ -42,7 +42,7 @@ if (!deploymentType) {
   new ToolchainStack(app, 'saas-accelerator', {
     env: TOOLCHAIN_ENV,
   });
-} else if (componentAccount != 'local') {
+} else {
   // Mode B: synthetize the workload pipeline stack
   const workloadProps: WorkloadPipelineProps = {
     id: deploymentId,
@@ -53,19 +53,8 @@ if (!deploymentType) {
     account: componentAccount,
   };
   const stackName = getPipelineName(workloadProps);
-  console.log(`Synthesizing stack for ${stackName}in ${componentAccount}/${componentRegion}`);
-  new WorkloadPipelineStack(app, stackName, { ...workloadProps, env: TOOLCHAIN_ENV });
-} else {
-  const tenantProps = {
-    id: deploymentId,
-    tenantId: tenantID,
-    type: deploymentType,
-    tier: deploymentTier,
-    account: process.env.CDK_DEFAULT_ACCOUNT!,
-    region: process.env.CDK_DEFAULT_REGION!,
-  };
-  console.log(`Synthesizing stack for ${deploymentType} in ${tenantProps.account}/${tenantProps.region}`);
-  new WorkloadPipelineStack(app, 'PipelineStack', tenantProps);
+  console.log(`Synthesizing stack for ${stackName} in ${componentAccount}/${componentRegion}`);
+  new WorkloadPipelineStack(app, stackName, { ...workloadProps });
 }
 
 new CdkGraph(app);
