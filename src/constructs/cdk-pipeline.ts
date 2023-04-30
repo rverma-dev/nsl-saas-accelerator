@@ -21,19 +21,14 @@ const REPOSITORY_SECRET = 'saas-provisoner';
  * synthShellStepPartialProps.commands is marked as a required field, however
  * if you pass in [] the default commands of this construct will be retained.
  */
-export interface CDKPipelineProps extends pipelines.CodePipelineProps {
+export interface SaasPipelineProps extends pipelines.CodePipelineProps {
   /**
    * Name of the CodeCommit repository to create.
    */
   readonly repositoryName: string;
 
   /**
-   * Output directory for cdk synthesized artifacts i.e: packages/infra/cdk.out.
-   */
-  readonly primarySynthDirectory: string;
-
-  /**
-   * PDKPipeline by default assumes a NX Monorepo structure for it's codebase and
+   * Pipeline initally created by default assumes a NX Monorepo structure for it's codebase and
    * uses sane defaults for the install and run commands. To override these defaults
    * and/or provide additional inputs, specify env settings, etc you can provide
    * a partial ShellStepProps.
@@ -41,16 +36,22 @@ export interface CDKPipelineProps extends pipelines.CodePipelineProps {
   readonly synthShellStepPartialProps?: pipelines.ShellStepProps;
 
   /**
+   * Output directory for cdk synthesized artifacts i.e: packages/infra/cdk.out, 
+   * defined mostly for monorepos
+   * @default cdk.out
+   */
+  readonly primarySynthDirectory?: string;
+
+  /**
    * Branch to trigger the pipeline execution.
    *
-   * @default mainline
+   * @default main
    */
   readonly defaultBranchName?: string;
 
   /**
    * Alias to use for existing KMS Key when crossAccount.
    *
-   * @default mainline
    */
   readonly existingKMSKeyAlias?: string;
 
@@ -71,16 +72,12 @@ export interface CDKPipelineProps extends pipelines.CodePipelineProps {
    * However for cross account access its better to create bucket per tenant
    */
   readonly existingArtifactBucket?: string;
-
-  /**
-   * Determine if pipeline is for toolchain or workload
-   */
-  readonly isToolChain?: string;
 }
+
 export class SaasPipeline extends Construct {
   readonly codePipeline: pipelines.CodePipeline;
 
-  public constructor(scope: Construct, id: string, props: CDKPipelineProps) {
+  public constructor(scope: Construct, id: string, props: SaasPipelineProps) {
     super(scope, id);
 
     this.node.setContext('@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy', true);
@@ -94,23 +91,23 @@ export class SaasPipeline extends Construct {
     };
 
     const accessLogsBucket = props.existingAccessLogBucket
-      ? Bucket.fromBucketName(this, `${props.pipelineName}AccessLogsBucket`, props.existingAccessLogBucket)
-      : new Bucket(this, `${props.pipelineName}AccessLogsBucket`, {
+      ? Bucket.fromBucketName(this, 'AccessLogsBucket', props.existingAccessLogBucket)
+      : new Bucket(this, 'AccessLogsBucket', {
           ...commonBucketProps,
           versioned: false,
           encryption: BucketEncryption.S3_MANAGED,
         });
 
     const artifactBucket = props.existingArtifactBucket
-      ? Bucket.fromBucketName(this, `${props.pipelineName}ArtifactsBucket`, props.existingArtifactBucket)
-      : new Bucket(this, `${props.pipelineName}ArtifactsBucket`, {
+      ? Bucket.fromBucketName(this, 'ArtifactsBucket', props.existingArtifactBucket)
+      : new Bucket(this, 'ArtifactsBucket', {
           ...commonBucketProps,
           encryption: props.crossAccountKeys ? BucketEncryption.KMS : BucketEncryption.S3_MANAGED,
           encryptionKey:
             props.crossAccountKeys && props.existingKMSKeyAlias
-              ? Key.fromLookup(this, `${props.pipelineName}ArtifactKey`, { aliasName: props.existingKMSKeyAlias })
+              ? Key.fromLookup(this, 'ArtifactKey', { aliasName: props.existingKMSKeyAlias })
               : props.crossAccountKeys
-              ? new Key(this, `${props.pipelineName}ArtifactKey`, {
+              ? new Key(this, 'ArtifactKey', {
                   enableKeyRotation: true,
                   removalPolicy: RemovalPolicy.DESTROY,
                   alias: `pipeline/${props.pipelineName}`,
@@ -143,11 +140,11 @@ export class SaasPipeline extends Construct {
     const { input, primaryOutputDirectory, commands, installCommands, ...synthShellStepPartialProps } =
       props.synthShellStepPartialProps || {};
 
-    const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
+    const synthShellStep = new pipelines.ShellStep('Synth', {
       input: githubInput,
       installCommands: installCommands && installCommands.length > 0 ? installCommands : ['yarn install --immutable'],
       commands: commands && commands.length > 0 ? commands : ['yarn synth:silent -y'],
-      primaryOutputDirectory: props.primarySynthDirectory,
+      primaryOutputDirectory: props.primarySynthDirectory || 'cdk.out',
       ...(synthShellStepPartialProps || {}),
     });
 

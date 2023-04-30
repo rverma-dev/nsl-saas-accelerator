@@ -38,7 +38,7 @@ export class ToolchainStack extends cdk.Stack {
     // const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     // image asset is taking to long to be provisioned by codebuild
     const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
-    const pipeline = new SaasPipeline(this, 'toolchain', {
+    const pipeline = new SaasPipeline(this, 'install-pipeline', {
       pipelineName: id,
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
@@ -164,7 +164,7 @@ export class ToolchainStack extends cdk.Stack {
     );
 
     // Lambda Function for DynamoDB Streams
-    const streamTenant = new AddTenantFunction(this, 'add-tenant', {
+    const streamTenant = new AddTenantFunction(this, 'add-tenant-function', {
       environment: {
         PROJECT_NAME: 'provisioning-project',
       },
@@ -190,7 +190,7 @@ export class ToolchainStack extends cdk.Stack {
       }),
     );
 
-    const ghProvider = new iam.OpenIdConnectProvider(this, 'githubProvider', {
+    const ghProvider = new iam.OpenIdConnectProvider(this, 'github-oidc-provider', {
       url: `https://${GITHUB_DOMAIN}`,
       clientIds: ['sts.amazonaws.com'],
     });
@@ -220,7 +220,7 @@ export class ToolchainStack extends cdk.Stack {
       ],
     });
 
-    new iam.Role(this, 'gitHubSaasDeployRole', {
+    new iam.Role(this, 'gitHub-ecrpush-role', {
       assumedBy: new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions),
       roleName: 'gitHubSaasDeployRole',
       description: 'This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account',

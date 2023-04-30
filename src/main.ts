@@ -39,7 +39,7 @@ const componentRegion = <string>app.node.tryGetContext('component_region');
 
 if (!deploymentType) {
   // Mode A: synthesize the main toolchain stack
-  new ToolchainStack(app, 'toolchain', {
+  new ToolchainStack(app, 'saas-accelerator', {
     env: TOOLCHAIN_ENV,
   });
 } else if (componentAccount != 'local') {
