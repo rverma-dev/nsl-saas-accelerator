@@ -6,7 +6,6 @@ import { Construct } from 'constructs';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
-  readonly toolchainLogBucket?: string;
   readonly toolchainAssetBucket?: string;
   readonly repositoryName: string;
 }
@@ -24,7 +23,6 @@ export class PipelineStack extends Stack {
       dockerEnabledForSynth: true,
       existingKMSKeyAlias: props.toolchainKms,
       existingArtifactBucket: props.toolchainAssetBucket,
-      existingAccessLogBucket: props.toolchainLogBucket,
     });
     const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
     this.pipeline.addWave([devStage], 'application');

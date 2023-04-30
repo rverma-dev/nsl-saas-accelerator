@@ -1,12 +1,11 @@
+import { ApplicationStage } from './application-stage';
 import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
 import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
-  readonly toolchainLogBucket?: string;
   readonly toolchainAssetBucket?: string;
   readonly repositoryName: string;
 }
@@ -22,10 +21,8 @@ export class PipelineStack extends Stack {
       repositoryName: props.repositoryName,
       crossAccountKeys: true,
       synth: {},
-      dockerEnabledForSynth: true,
       existingKMSKeyAlias: props.toolchainKms,
       existingArtifactBucket: props.toolchainAssetBucket,
-      existingAccessLogBucket: props.toolchainLogBucket,
     });
     const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
     this.pipeline.addStage(devStage);
