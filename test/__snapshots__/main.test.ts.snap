@@ -424,30 +424,8 @@ exports[`ToolChain Stack 1`] = `
         "EncryptionKey": "alias/aws/s3",
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
@@ -498,42 +476,6 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -893,7 +835,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"10611b5519e7df56d83d62ec0d93080bb06d3f7632c6b88a26c34647b3d93127"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"283af1b1bf6b5b8aedf76fdbbcc59acffd583477c203f0eabe00827de22ef895"}]",
                   "ProjectName": {
                     "Ref": "toolchainCodePipelineBuildtoolchainSynthCdkBuildProjectF2D708A3",
                   },
@@ -933,7 +875,7 @@ exports[`ToolChain Stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"a8f31135b0bfe3606fa7ef38ab4b7c8edf65508e5fbef410bb2608a74da07a64"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"679680f6c8a6ff04b1cdfdaa276f58bfd582e45c128a454b5f3e1e872475efca"}]",
                   "ProjectName": {
                     "Ref": "toolchainUpdatePipelineSelfMutation45E258FE",
                   },
@@ -1007,31 +949,9 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": true,
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
@@ -1044,9 +964,14 @@ exports[`ToolChain Stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
+    "install": {
+      "commands": [
+        "n 18",
+        "yarn install --immutable"
+      ]
+    },
     "build": {
       "commands": [
-        "yarn config set cache-folder /app/.yarn/cache",
         "yarn synth:silent -y"
       ]
     }
@@ -1090,42 +1015,6 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -1410,30 +1299,8 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
@@ -1477,31 +1344,9 @@ exports[`ToolChain Stack 1`] = `
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": {
-            "Fn::Join": [
-              "",
-              [
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ".dkr.ecr.",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ".",
-                {
-                  "Ref": "AWS::URLSuffix",
-                },
-                "/",
-                {
-                  "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                },
-                ":74e9457bbacf387459f91eabb6399e3c74bce305fbb0d5e2952b3351532c1460",
-              ],
-            ],
-          },
-          "ImagePullCredentialsType": "SERVICE_ROLE",
-          "PrivilegedMode": true,
+          "Image": "aws/codebuild/amazonlinux2-aarch64-standard:3.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
           "Type": "ARM_CONTAINER",
         },
         "ServiceRole": {
@@ -1552,42 +1397,6 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",
@@ -2270,42 +2079,6 @@ exports[`ToolChain Stack 1`] = `
       "Properties": {
         "PolicyDocument": {
           "Statement": [
-            {
-              "Action": [
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":ecr:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":repository/",
-                    {
-                      "Fn::Sub": "cdk-hnb659fds-container-assets-\${AWS::AccountId}-\${AWS::Region}",
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": "ecr:GetAuthorizationToken",
-              "Effect": "Allow",
-              "Resource": "*",
-            },
             {
               "Action": [
                 "logs:CreateLogGroup",

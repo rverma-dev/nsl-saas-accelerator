@@ -7,20 +7,18 @@ import {
   REPOSITORY_OWNER,
 } from './lib/configuration';
 import { SaasPipeline } from '../constructs';
-import { DefaultStackSynthesizer, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
 import { BuildSpec, ComputeType, LinuxArmBuildImage, Project, Source } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
-import * as ecr_assets from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { Effect, Policy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
 
-export class ToolchainStack extends Stack {
-  constructor(scope: Construct, id: string, props: StackProps) {
+export class ToolchainStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
     const deploymentTable = new Table(this, 'deployment-table', {
       tableName: DEPLOYMENT_TABLE_NAME,
@@ -34,13 +32,12 @@ export class ToolchainStack extends Stack {
       },
       stream: StreamViewType.NEW_AND_OLD_IMAGES,
       billingMode: BillingMode.PAY_PER_REQUEST,
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-
-    const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
-
-    const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
-
+    // const image = new ecr_assets.DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
+    // const buildImage = LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
+    // image asset is taking to long to be provisioned by codebuild
+    const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const pipeline = new SaasPipeline(this, 'toolchain', {
       pipelineName: id,
       cliVersion: CDK_VERSION,
@@ -48,16 +45,17 @@ export class ToolchainStack extends Stack {
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       crossAccountKeys: true,
       synth: {},
-      dockerEnabledForSynth: true,
-      dockerEnabledForSelfMutation: true,
+      dockerEnabledForSynth: false,
+      dockerEnabledForSelfMutation: false,
       synthShellStepPartialProps: {
-        commands: ['yarn config set cache-folder /app/.yarn/cache', 'yarn synth:silent -y'],
+        installCommands: ['n 18', 'yarn install --immutable'],
+        commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
           computeType: ComputeType.SMALL,
           buildImage: buildImage,
-          privileged: true,
+          privileged: false,
         },
       },
       selfMutationCodeBuildDefaults: {
@@ -67,13 +65,12 @@ export class ToolchainStack extends Stack {
         },
       },
     });
-
-    const updateDeploymentsRole = new Role(this, 'update-deployments-role', {
-      assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
+    const updateDeploymentsRole = new iam.Role(this, 'update-deployments-role', {
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
       inlinePolicies: {
-        'deployment-policy': new PolicyDocument({
+        'deployment-policy': new iam.PolicyDocument({
           statements: [
-            new PolicyStatement({
+            new iam.PolicyStatement({
               actions: [
                 'codepipeline:StartPipelineExecution',
                 'codepipeline:GetPipelineExecution',
@@ -83,21 +80,21 @@ export class ToolchainStack extends Stack {
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-silo-pipeline',
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-pool-pipeline',
               ],
-              effect: Effect.ALLOW,
+              effect: iam.Effect.ALLOW,
             }),
-            new PolicyStatement({
+            new iam.PolicyStatement({
               actions: ['cloudformation:ListStacks'],
-              effect: Effect.ALLOW,
+              effect: iam.Effect.ALLOW,
               resources: ['*'],
             }),
-            new PolicyStatement({
+            new iam.PolicyStatement({
               actions: ['dynamodb:Query', 'dynamodb:Scan'],
-              effect: Effect.ALLOW,
+              effect: iam.Effect.ALLOW,
               resources: [deploymentTable.tableArn, deploymentTable.tableArn + '/index/*'],
             }),
-            new PolicyStatement({
+            new iam.PolicyStatement({
               actions: ['ec2:DescribeRegions'],
-              effect: Effect.ALLOW,
+              effect: iam.Effect.ALLOW,
               resources: ['*'],
             }),
           ],
@@ -105,7 +102,7 @@ export class ToolchainStack extends Stack {
       },
     });
 
-    pipeline.addWave('UpdateDeployments', {
+    pipeline.addWave([], 'UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
           commands: [
@@ -145,23 +142,23 @@ export class ToolchainStack extends Stack {
 
     // Allow provision project to use CDK bootstrap roles. These are required when provision project runs CDK deploy
     project.addToRolePolicy(
-      new PolicyStatement({
+      new iam.PolicyStatement({
         actions: ['sts:AssumeRole'],
         resources: [
-          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${this.account}-${this.region}`,
-          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${this.account}-${this.region}`,
-          `arn:aws:iam::${this.account}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${this.account}-${this.region}`,
+          `arn:aws:iam::${this.account}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${this.account}-${this.region}`,
+          `arn:aws:iam::${this.account}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${this.account}-${this.region}`,
+          `arn:aws:iam::${this.account}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${this.account}-${this.region}`,
         ],
-        effect: Effect.ALLOW,
+        effect: iam.Effect.ALLOW,
       }),
     );
 
     // Allow provision project to get AWS regions.
     // This is required for deployment information validation.
     project.addToRolePolicy(
-      new PolicyStatement({
+      new iam.PolicyStatement({
         actions: ['ec2:DescribeRegions'],
-        effect: Effect.ALLOW,
+        effect: iam.Effect.ALLOW,
         resources: ['*'],
       }),
     );
@@ -174,11 +171,11 @@ export class ToolchainStack extends Stack {
     });
 
     streamTenant.role?.attachInlinePolicy(
-      new Policy(this, 'start-pipeline-policy', {
-        document: new PolicyDocument({
+      new iam.Policy(this, 'start-pipeline-policy', {
+        document: new iam.PolicyDocument({
           statements: [
-            new PolicyStatement({
-              effect: Effect.ALLOW,
+            new iam.PolicyStatement({
+              effect: iam.Effect.ALLOW,
               resources: [project.projectArn],
               actions: ['codebuild:StartBuild'],
             }),
@@ -204,10 +201,10 @@ export class ToolchainStack extends Stack {
       },
     };
 
-    const githubActionPolicy = new PolicyDocument({
+    const githubActionPolicy = new iam.PolicyDocument({
       statements: [
-        new PolicyStatement({
-          effect: Effect.ALLOW,
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
           resources: ['*'],
           actions: [
             'ecr:BatchGetImage',
@@ -227,7 +224,7 @@ export class ToolchainStack extends Stack {
       assumedBy: new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions),
       roleName: 'gitHubSaasDeployRole',
       description: 'This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account',
-      maxSessionDuration: Duration.hours(1),
+      maxSessionDuration: cdk.Duration.hours(1),
       inlinePolicies: {
         githubAction: githubActionPolicy,
       },

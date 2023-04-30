@@ -11,7 +11,7 @@ const DEFAULT_BRANCH_NAME = 'main';
 const REPOSITORY_SECRET = 'saas-provisoner';
 
 /**
- * Properties to configure the PDKPipeline.
+ * Properties to configure the CDKPipeline.
  *
  * Note: Due to limitations with JSII and generic support it should be noted that
  * the synth, synthShellStepPartialProps.input and
@@ -21,7 +21,7 @@ const REPOSITORY_SECRET = 'saas-provisoner';
  * synthShellStepPartialProps.commands is marked as a required field, however
  * if you pass in [] the default commands of this construct will be retained.
  */
-export interface PDKPipelineProps extends pipelines.CodePipelineProps {
+export interface CDKPipelineProps extends pipelines.CodePipelineProps {
   /**
    * Name of the CodeCommit repository to create.
    */
@@ -77,39 +77,34 @@ export interface PDKPipelineProps extends pipelines.CodePipelineProps {
    */
   readonly isToolChain?: string;
 }
-
-/**
- * An extension to CodePipeline which configures sane defaults for a NX Monorepo
- * codebase. In addition to this, it also creates a CodeCommit repository with
- * automated PR builds and approvals.
- */
 export class SaasPipeline extends Construct {
   readonly codePipeline: pipelines.CodePipeline;
 
-  public constructor(scope: Construct, id: string, props: PDKPipelineProps) {
+  public constructor(scope: Construct, id: string, props: CDKPipelineProps) {
     super(scope, id);
 
     this.node.setContext('@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy', true);
+    const commonBucketProps = {
+      enforceSSL: true,
+      autoDeleteObjects: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+      objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
+      publicReadAccess: false,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    };
 
     const accessLogsBucket = props.existingAccessLogBucket
       ? Bucket.fromBucketName(this, `${props.pipelineName}AccessLogsBucket`, props.existingAccessLogBucket)
       : new Bucket(this, `${props.pipelineName}AccessLogsBucket`, {
+          ...commonBucketProps,
           versioned: false,
-          enforceSSL: true,
-          autoDeleteObjects: true,
-          removalPolicy: RemovalPolicy.DESTROY,
           encryption: BucketEncryption.S3_MANAGED,
-          objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
-          publicReadAccess: false,
-          blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
         });
 
     const artifactBucket = props.existingArtifactBucket
       ? Bucket.fromBucketName(this, `${props.pipelineName}ArtifactsBucket`, props.existingArtifactBucket)
       : new Bucket(this, `${props.pipelineName}ArtifactsBucket`, {
-          enforceSSL: true,
-          autoDeleteObjects: true,
-          removalPolicy: RemovalPolicy.DESTROY,
+          ...commonBucketProps,
           encryption: props.crossAccountKeys ? BucketEncryption.KMS : BucketEncryption.S3_MANAGED,
           encryptionKey:
             props.crossAccountKeys && props.existingKMSKeyAlias
@@ -121,9 +116,6 @@ export class SaasPipeline extends Construct {
                   alias: `pipeline/${props.pipelineName}`,
                 })
               : undefined,
-          objectOwnership: ObjectOwnership.BUCKET_OWNER_ENFORCED,
-          publicReadAccess: false,
-          blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
           serverAccessLogsPrefix: 'access-logs',
           serverAccessLogsBucket: accessLogsBucket,
         });
@@ -145,17 +137,16 @@ export class SaasPipeline extends Construct {
       restartExecutionOnUpdate: true,
       crossAccountKeys: props.crossAccountKeys,
       artifactBucket,
-      
     });
 
     // ignore input and primaryOutputDirectory
-    const { input, primaryOutputDirectory, commands, ...synthShellStepPartialProps } =
+    const { input, primaryOutputDirectory, commands, installCommands, ...synthShellStepPartialProps } =
       props.synthShellStepPartialProps || {};
 
     const synthShellStep = new pipelines.ShellStep(`${props.pipelineName}Synth`, {
       input: githubInput,
-      installCommands: [],
-      commands: commands && commands.length > 0 ? commands : ['yarn run synth:silent'],
+      installCommands: installCommands && installCommands.length > 0 ? installCommands : ['yarn install --immutable'],
+      commands: commands && commands.length > 0 ? commands : ['yarn synth:silent -y'],
       primaryOutputDirectory: props.primarySynthDirectory,
       ...(synthShellStepPartialProps || {}),
     });
@@ -182,8 +173,13 @@ export class SaasPipeline extends Construct {
     return this.codePipeline.addStage(stage, options);
   }
 
-  addWave(wave: string, options?: pipelines.WaveOptions): pipelines.Wave {
-    return this.codePipeline.addWave(wave, options);
+  addWave(stages: Stage[], waveName: string, options?: pipelines.WaveOptions): pipelines.Wave {
+    const wave = this.codePipeline.addWave(waveName, options);
+    stages.forEach(stage => {
+      Aspects.of(stage.node.root).all.forEach(aspect => Aspects.of(stage).add(aspect));
+      wave.addStage(stage);
+    });
+    return wave;
   }
 
   buildPipeline() {

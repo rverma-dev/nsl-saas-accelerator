@@ -1,8 +1,8 @@
+import { ApplicationStage } from './application-stage';
 import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
 import { Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
@@ -27,7 +27,7 @@ export class PipelineStack extends Stack {
       existingAccessLogBucket: props.toolchainLogBucket,
     });
     const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
-    this.pipeline.addWave('application').addStage(devStage);
+    this.pipeline.addWave([devStage], 'application');
     this.pipeline.buildPipeline(); // Needed for CDK Nag
   }
 }
