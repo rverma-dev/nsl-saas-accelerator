@@ -1,3 +1,4 @@
+import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
   CDK_VERSION,
@@ -9,6 +10,7 @@ import {
 import { SaasPipeline } from '../constructs';
 import * as cdk from 'aws-cdk-lib';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
+import { LinuxArmBuildImage } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -16,8 +18,6 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
-import { LinuxArmBuildImage } from "aws-cdk-lib/aws-codebuild";
 
 export class ToolchainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -38,7 +38,7 @@ export class ToolchainStack extends cdk.Stack {
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
-    const INSTALL_COMMANDS = ['yarn install --immutable'];
+    const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
       pipelineName: 'toolchain',
