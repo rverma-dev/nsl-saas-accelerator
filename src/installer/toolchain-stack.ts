@@ -67,6 +67,7 @@ export class ToolchainStack extends cdk.Stack {
         buildEnvironment: {
           computeType: codebuild.ComputeType.SMALL,
           buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),
+          privileged: true,
         },
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
