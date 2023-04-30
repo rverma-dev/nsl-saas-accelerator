@@ -37,6 +37,10 @@ export class ToolchainStack extends cdk.Stack {
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
+    const INSTALL_COMMANDS = [
+      'yarn config set cacheFolder /app/.yarn/cache',
+      'yarn install --immutable --check-cache --inline-builds',
+    ];
     // image asset is taking to long to be provisioned by codebuild
     // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
@@ -45,15 +49,15 @@ export class ToolchainStack extends cdk.Stack {
       primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       crossAccountKeys: true,
-      selfMutation: false,
+      selfMutation: true,
       synth: {},
       dockerEnabledForSynth: true,
-      dockerEnabledForSelfMutation: false,
+      dockerEnabledForSelfMutation: true,
       codeBuildDefaults: {
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
       synthShellStepPartialProps: {
-        installCommands: ['yarn config set cacheFolder=/app/.yarn/cache'],
+        installCommands: INSTALL_COMMANDS,
         commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
@@ -110,6 +114,7 @@ export class ToolchainStack extends cdk.Stack {
     pipeline.addWave([], 'UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
+          installCommands: INSTALL_COMMANDS,
           commands: [
             'yarn ts-node src/installer/get-deployments.ts',
             'yarn ts-node src/installer/update-deployments.ts',
@@ -130,6 +135,7 @@ export class ToolchainStack extends cdk.Stack {
         owner: REPOSITORY_OWNER,
         repo: REPOSITORY_NAME,
         branchOrRef: 'refs/heads/main',
+        cloneDepth: 1,
       }),
       environment: {
         computeType: codebuild.ComputeType.SMALL,
@@ -139,6 +145,7 @@ export class ToolchainStack extends cdk.Stack {
         version: '0.2',
         phases: {
           build: {
+            installCommands: INSTALL_COMMANDS,
             commands: ['yarn ts-node src/installer/provision-deployment.ts'],
           },
         },
