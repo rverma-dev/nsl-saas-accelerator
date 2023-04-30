@@ -37,10 +37,7 @@ export class ToolchainStack extends cdk.Stack {
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
-    const INSTALL_COMMANDS = [
-      'yarn config set cacheFolder /app/.yarn/cache',
-      'yarn install --immutable --check-cache --inline-builds',
-    ];
+    const INSTALL_COMMANDS = ['yarn install --immutable --check-cache --inline-builds'];
     // image asset is taking to long to be provisioned by codebuild
     // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
