@@ -5,6 +5,8 @@ import { SaasPipeline } from '../constructs';
 import { CDK_VERSION } from '../installer/lib/configuration';
 import { Stack } from 'aws-cdk-lib';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
+import { DockerCredential } from 'aws-cdk-lib/pipelines';
+import { Repository } from 'aws-cdk-lib/aws-ecr';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
@@ -19,18 +21,27 @@ export class PipelineStack extends Stack {
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
+
     const buildImage = codebuild.LinuxArmBuildImage.fromCodeBuildImageId(props.toolchainImage);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     const SYNTH_PARAMS = ` -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
 
-    this.pipeline = new SaasPipeline(this, `${props.tenantId}-${props.id}-demo`, {
-      pipelineName: props.id,
+    // Parse the toolchain image URL to get the repository name and region
+    const imageUrl = props.toolchainImage;
+    const imageParts = imageUrl.split('/');
+    const repositoryName = imageParts[imageParts.length - 2];
+    // Get the Amazon ECR instance for the repository
+    const ecrRepo = Repository.fromRepositoryName(this, 'CDKDockerAsset', repositoryName);
+
+    this.pipeline = new SaasPipeline(this, 'install-pipeline', {
+      pipelineName: id,
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
       repositoryName: props.repositoryName,
       crossAccountKeys: true,
       synth: {},
       selfMutation: true,
+      dockerCredentials: [DockerCredential.ecr([ecrRepo])],
       codeBuildDefaults: {
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
