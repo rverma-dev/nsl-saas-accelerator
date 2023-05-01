@@ -1,4 +1,4 @@
-import { TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
+import { ASSET_PARAMETER, TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
 import { ToolchainStack } from '../src/installer/toolchain-stack';
 import { WorkloadPipelineStack } from '../src/installer/workload-pipeline-stack';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
@@ -13,6 +13,7 @@ test('ToolChain Stack', () => {
 
 test('Workload DEMO Stack', () => {
   const app = PDKNag.app();
+  app.node.setContext(ASSET_PARAMETER, 'latest');
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
@@ -21,12 +22,13 @@ test('Workload DEMO Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack.testStack);
+  const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
 });
 
 test('Workload POOL Stack', () => {
   const app = PDKNag.app();
+  app.node.setContext(ASSET_PARAMETER, 'latest');
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
@@ -35,12 +37,13 @@ test('Workload POOL Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack.testStack);
+  const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
 });
 
 test('Workload SILO Stack', () => {
   const app = PDKNag.app();
+  app.node.setContext(ASSET_PARAMETER, 'latest');
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
@@ -49,6 +52,6 @@ test('Workload SILO Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack.testStack);
+  const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
 });

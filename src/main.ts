@@ -1,4 +1,5 @@
 import { getPipelineName } from './common';
+import { ApplicationStack } from './demo/application-stack';
 import { TOOLCHAIN_ENV } from './installer/lib/configuration';
 import { ToolchainStack } from './installer/toolchain-stack';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from './installer/workload-pipeline-stack';
@@ -27,7 +28,7 @@ const app = PDKNag.app();
  *                          : this deployment are deployed to
  *         component_region : the AWS Region, as above
  *         deployment_size  : the size of deployment
- * Mode C: Synthesize a specific pipeline directly for local testing
+ * Mode C: Synthesize a specific Application directly for local testing
  */
 
 const tenantID = <string>app.node.tryGetContext('tenant_id');
@@ -42,7 +43,7 @@ if (!deploymentType) {
   new ToolchainStack(app, 'saas-accelerator', {
     env: TOOLCHAIN_ENV,
   });
-} else {
+} else if (componentRegion != 'local') {
   // Mode B: synthetize the workload pipeline stack
   const workloadProps: WorkloadPipelineProps = {
     id: deploymentId,
@@ -55,6 +56,8 @@ if (!deploymentType) {
   const stackName = getPipelineName(workloadProps);
   console.log(`Synthesizing stack for ${stackName} in ${componentAccount}/${componentRegion}`);
   new WorkloadPipelineStack(app, stackName, { ...workloadProps });
+} else {
+  new ApplicationStack(app, `${tenantID}-site`, deploymentType, deploymentId, { env: TOOLCHAIN_ENV });
 }
 
 new CdkGraph(app);

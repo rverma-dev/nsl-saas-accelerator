@@ -1,5 +1,6 @@
 import { Construct } from 'constructs';
 import { Aspects, CfnOutput, RemovalPolicy, Stage } from 'aws-cdk-lib';
+import { Cache, ComputeType, LinuxArmBuildImage, LocalCacheMode } from 'aws-cdk-lib/aws-codebuild';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
@@ -159,6 +160,13 @@ export class SaasPipeline extends Construct {
       crossAccountKeys: undefined,
       synth: synthShellStep,
       pipelineName: undefined,
+      codeBuildDefaults: {
+        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
+        buildEnvironment: {
+          computeType: ComputeType.SMALL,
+          buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),
+        },
+      },
     };
 
     this.codePipeline = new pipelines.CodePipeline(this, props.pipelineName || id, codePipelineProps);

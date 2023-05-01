@@ -40,6 +40,7 @@ jspm_packages/
 !.yarn/versions
 !.yarn/sdks
 build_output
+cdk.context.json
 !/.projenrc.js
 /test-reports/
 junit.xml

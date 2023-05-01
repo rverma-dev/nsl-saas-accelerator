@@ -10,16 +10,14 @@ import {
 import { SaasPipeline } from '../constructs';
 import * as cdk from 'aws-cdk-lib';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
-import { LinuxArmBuildImage } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-// import * as ecrdeploy from 'cdk-ecr-deployment';
-import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 export class ToolchainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -40,8 +38,8 @@ export class ToolchainStack extends cdk.Stack {
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
     // new ecrdeploy.ECRDeployment(this, 'DeployDockerImage1', {
-      // src: new ecrdeploy.DockerImageName(image.imageUri),
-      // dest: new ecrdeploy.DockerImageName(image.imageUri, 'latest'),
+    // src: new ecrdeploy.DockerImageName(image.imageUri),
+    // dest: new ecrdeploy.DockerImageName(image.imageUri, 'latest'),
     // });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
@@ -55,24 +53,17 @@ export class ToolchainStack extends cdk.Stack {
       selfMutation: true,
       synth: {},
       dockerEnabledForSynth: true,
-      codeBuildDefaults: {
-        cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
-      },
       synthShellStepPartialProps: {
         installCommands: INSTALL_COMMANDS,
         commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: codebuild.ComputeType.SMALL,
           buildImage: buildImage,
-          privileged: false,
         },
       },
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: codebuild.ComputeType.SMALL,
-          buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),
           privileged: true,
         },
         cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
