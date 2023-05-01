@@ -14,7 +14,6 @@ export class WorkloadPipelineStack {
     const toolChainProps = {
       toolchainKms: 'pipeline/toolchain',
       toolchainAssetBucket: Fn.importValue('toolchainBucket').toString() || 'toolchain-bucket',
-      toolchainImage: `e807bfbcf34bd2dc28f71e57ff634fd03e701f7c274496cc631af6fdb3807cd8`,
       repositoryName: `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
     };
     switch (props.type) {
@@ -56,3 +55,4 @@ export class WorkloadPipelineStack {
     }
   }
 }
+

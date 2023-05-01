@@ -1,30 +1,31 @@
 import { Construct } from 'constructs';
-// import { ApplicationStage } from './application-stage';
 import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
-import { CDK_VERSION, ASSET_ECR } from '../installer/lib/configuration';
+import { CDK_VERSION, ASSET_ECR, ASSET_PARAMETER } from '../installer/lib/configuration';
 import { Stack } from 'aws-cdk-lib';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { DockerCredential } from 'aws-cdk-lib/pipelines';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { ApplicationStage } from './application-stage';
 
 interface WorkloadPipelineProps extends DeploymentRecord {
   readonly toolchainKms?: string;
   readonly toolchainAssetBucket?: string;
   readonly repositoryName: string;
-  readonly toolchainImage: string;
 }
 
 export class PipelineStack extends Stack {
   readonly pipeline: SaasPipeline;
-  // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
 
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     super(scope, id, { env: { account: props.account, region: props.region } });
 
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     const SYNTH_PARAMS = ` -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
-    const imageTag = props.toolchainImage;
+    
+    // TODO: Fix these references, should be in installer only
+    const imageTag = StringParameter.valueFromLookup(this, ASSET_PARAMETER);
     const ecrRepo = Repository.fromRepositoryName(this, 'CDKDockerAsset', ASSET_ECR);
     const buildImage = codebuild.LinuxArmBuildImage.fromCodeBuildImageId(`${ASSET_ECR}:${imageTag}`);
 
@@ -54,8 +55,8 @@ export class PipelineStack extends Stack {
       existingArtifactBucket: props.toolchainAssetBucket,
       dockerEnabledForSynth: true,
     });
-    // const devStage = new ApplicationStage(this, 'Dev', { env: { account: props.account, region: props.region } });
-    // this.pipeline.addStage(devStage);
+    const devStage = new ApplicationStage(this, 'S3Site', { env: { account: props.account, region: props.region } });
+    this.pipeline.addStage(devStage);
     this.pipeline.buildPipeline(); // Needed for CDK Nag
   }
 }
