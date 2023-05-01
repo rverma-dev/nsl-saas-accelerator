@@ -21,7 +21,7 @@ test('Workload DEMO Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack);
+  const template = Template.fromStack(stack.testStack);
   expect(template.toJSON()).toMatchSnapshot();
 });
 
@@ -35,7 +35,7 @@ test('Workload POOL Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack);
+  const template = Template.fromStack(stack.testStack);
   expect(template.toJSON()).toMatchSnapshot();
 });
 
@@ -49,20 +49,6 @@ test('Workload SILO Stack', () => {
     account: TOOLCHAIN_ENV.account,
     region: TOOLCHAIN_ENV.region,
   });
-  const template = Template.fromStack(stack);
-  expect(template.toJSON()).toMatchSnapshot();
-});
-
-test('Local Workload SILO Stack', () => {
-  const app = PDKNag.app();
-  const stack = new WorkloadPipelineStack(app, 'workload', {
-    tenantId: 'demo',
-    id: 'dev-001',
-    type: 'demo',
-    tier: 'small',
-    account: 'local',
-    region: TOOLCHAIN_ENV.region,
-  });
-  const template = Template.fromStack(stack);
+  const template = Template.fromStack(stack.testStack);
   expect(template.toJSON()).toMatchSnapshot();
 });

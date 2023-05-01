@@ -18,6 +18,8 @@ import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
+// import * as ecrdeploy from 'cdk-ecr-deployment';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 export class ToolchainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -37,6 +39,10 @@ export class ToolchainStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
+    // new ecrdeploy.ECRDeployment(this, 'DeployDockerImage1', {
+      // src: new ecrdeploy.DockerImageName(image.imageUri),
+      // dest: new ecrdeploy.DockerImageName(image.imageUri, 'latest'),
+    // });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
@@ -245,6 +251,7 @@ export class ToolchainStack extends cdk.Stack {
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
 
     new cdk.CfnOutput(this, 'build-image', { value: buildImage.imageId, exportName: 'buildImage' });
+    new StringParameter(this, 'AssetTag', { parameterName: '/toolchain/asset-tag', stringValue: image.imageTag });
 
     NagSuppressions.addStackSuppressions(
       this,

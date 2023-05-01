@@ -4,23 +4,22 @@ import { DeploymentRecord } from '../common';
 import * as demo from '../demo/pipeline-stack';
 import * as pool from '../pool/pipeline-stack';
 import * as silo from '../silo/pipeline-stack';
-import { Fn } from 'aws-cdk-lib';
+import { Fn, Stack } from 'aws-cdk-lib';
 
 export interface WorkloadPipelineProps extends DeploymentRecord {}
 
 export class WorkloadPipelineStack {
+  readonly testStack: Stack;
   constructor(scope: Construct, id: string, props: WorkloadPipelineProps) {
     const toolChainProps = {
       toolchainKms: 'pipeline/toolchain',
       toolchainAssetBucket: Fn.importValue('toolchainBucket').toString() || 'toolchain-bucket',
-      toolchainImage:
-        Fn.importValue('buildImage').toString() ||
-        '415505189627.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-415505189627-ap-south-1:latest',
+      toolchainImage: `e807bfbcf34bd2dc28f71e57ff634fd03e701f7c274496cc631af6fdb3807cd8`,
       repositoryName: `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
     };
     switch (props.type) {
       case 'demo':
-        new demo.PipelineStack(scope, id, {
+        this.testStack = new demo.PipelineStack(scope, id, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,
@@ -31,7 +30,7 @@ export class WorkloadPipelineStack {
         });
         break;
       case 'silo':
-        new silo.PipelineStack(scope, id, {
+        this.testStack = new silo.PipelineStack(scope, id, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,
@@ -42,7 +41,7 @@ export class WorkloadPipelineStack {
         });
         break;
       case 'pool':
-        new pool.PipelineStack(scope, id, {
+        this.testStack = new pool.PipelineStack(scope, id, {
           tenantId: props.tenantId!,
           id: props.id,
           type: props.type!,
