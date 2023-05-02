@@ -1,5 +1,6 @@
 import { awscdk } from 'projen';
 import { ArrowParens, NodePackageManager, TrailingComma } from 'projen/lib/javascript';
+import { Husky, Commitlint } from '@mountainpass/cool-bits-for-projen';
 
 const AWS_SDK_VERSION = '^3.316.0';
 const CDK_VERSION = '2.76.0';
@@ -62,14 +63,13 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     `@aws-prototyping-sdk/cdk-graph`,
     '@aws-prototyping-sdk/static-website',
     '@types/js-yaml@^4.0.5',
-    'cdk-ecr-deployment',
     'cdk-nag',
     'js-yaml@4.1.0',
     'sync-request@6.1.0',
     'source-map-support',
     'vm2@3.9.17',
   ],
-  devDeps: ['@types/aws-lambda', 'aws-lambda'],
+  devDeps: ['@types/aws-lambda', 'aws-lambda', '@mountainpass/cool-bits-for-projen'],
   lambdaAutoDiscover: true,
   lambdaOptions: {
     runtime: awscdk.LambdaRuntime.NODEJS_18_X,
@@ -81,6 +81,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   jestOptions: {
     jestConfig: {
       detectOpenHandles: true,
+      testPathIgnorePatterns: ['/node_modules/', '/cdk.out/', '/assets/'],
     },
   },
   // https://github.com/aws/aws-cdk/blob/main/packages/%40aws-cdk/cx-api/FEATURE_FLAGS.mds
@@ -114,4 +115,27 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'acknowledged-issue-numbers': [25356],
   },
 });
+new Husky(project, {
+  huskyHooks: {
+    'pre-commit': ['npx commitlint --edit $1'],
+    'pre-push': [
+      `# Set the viperlight binary directory
+VIPERLIGHT_DIR="../viperlight"
+
+# Check if the viperlight binary exists, and download it if it doesn't
+if [ ! -f "$VIPERLIGHT_DIR/bin/viperlight" ]; then
+  wget -v 'https://s3.amazonaws.com/viperlight-scanner/latest/viperlight.zip'
+  unzip -qo viperlight.zip -d "$VIPERLIGHT_DIR"
+  rm -r ./viperlight.zip
+fi
+
+# Run the viperlight scan
+"$VIPERLIGHT_DIR/bin/viperlight" scan
+
+yarn build
+`,
+    ],
+  },
+});
+new Commitlint(project);
 project.synth();

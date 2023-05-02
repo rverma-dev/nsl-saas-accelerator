@@ -67,3 +67,6 @@ junit.xml
 !/src/constructs/aws-codecommit/secret-gen-function.ts
 !/src/installer/ddb-stream/add-tenant-function.ts
 !/src/pool/eks/find-custer-function.ts
+!/.husky/pre-commit
+!/.husky/pre-push
+!/.commitlintrc.json

@@ -14,6 +14,8 @@ test('ToolChain Stack', () => {
 test('Workload DEMO Stack', () => {
   const app = PDKNag.app();
   app.node.setContext(ASSET_PARAMETER, 'latest');
+  app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
+
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
@@ -29,6 +31,8 @@ test('Workload DEMO Stack', () => {
 test('Workload POOL Stack', () => {
   const app = PDKNag.app();
   app.node.setContext(ASSET_PARAMETER, 'latest');
+  app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
+
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
@@ -44,6 +48,8 @@ test('Workload POOL Stack', () => {
 test('Workload SILO Stack', () => {
   const app = PDKNag.app();
   app.node.setContext(ASSET_PARAMETER, 'latest');
+  app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
+
   const stack = new WorkloadPipelineStack(app, 'workload', {
     tenantId: 'demo',
     id: 'dev-001',
