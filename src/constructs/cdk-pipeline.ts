@@ -142,7 +142,7 @@ export class SaasPipeline extends Construct {
       ...(synthShellStepPartialProps || {}),
     });
 
-    const codePipeline = new Pipeline(this, `CodePipeline`, {
+    const codePipeline = new Pipeline(this, 'CodePipeline', {
       pipelineName: props.pipelineName,
       crossAccountKeys: props.crossAccountKeys,
       enableKeyRotation: props.crossAccountKeys,
@@ -157,7 +157,7 @@ export class SaasPipeline extends Construct {
       synth: synthShellStep,
       pipelineName: undefined,
       codeBuildDefaults: {
-        cache: Cache.local(LocalCacheMode.DOCKER_LAYER),
+        cache: Cache.local(LocalCacheMode.DOCKER_LAYER, LocalCacheMode.SOURCE),
         buildEnvironment: {
           computeType: ComputeType.SMALL,
           buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),

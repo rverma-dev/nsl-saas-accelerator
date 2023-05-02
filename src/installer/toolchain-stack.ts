@@ -63,7 +63,6 @@ export class ToolchainStack extends cdk.Stack {
         buildEnvironment: {
           privileged: true,
         },
-        cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
       },
     });
     const updateDeploymentsRole = new iam.Role(this, 'update-deployments-role', {
