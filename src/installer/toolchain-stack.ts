@@ -37,7 +37,7 @@ export class ToolchainStack extends cdk.Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.'});
+    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
@@ -132,6 +132,7 @@ export class ToolchainStack extends cdk.Stack {
       environment: {
         computeType: codebuild.ComputeType.SMALL,
         buildImage: buildImage,
+        privileged: false,
       },
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
@@ -158,6 +159,14 @@ export class ToolchainStack extends cdk.Stack {
         effect: iam.Effect.ALLOW,
       }),
     );
+
+    const parameter = new StringParameter(this, 'AssetTag', {
+      parameterName: ASSET_PARAMETER,
+      stringValue: image.imageTag,
+    });
+    parameter.grantRead(updateDeploymentsRole);
+    parameter.grantRead(project);
+    parameter.grantWrite(updateDeploymentsRole);
 
     // Allow provision project to get AWS regions.
     // This is required for deployment information validation.
@@ -236,8 +245,6 @@ export class ToolchainStack extends cdk.Stack {
       },
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
-
-    new StringParameter(this, 'AssetTag', { parameterName: ASSET_PARAMETER, stringValue: image.imageTag });
 
     NagSuppressions.addStackSuppressions(
       this,

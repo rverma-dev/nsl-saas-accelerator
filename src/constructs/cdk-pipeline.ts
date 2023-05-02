@@ -146,7 +146,7 @@ export class SaasPipeline extends Construct {
       pipelineName: props.pipelineName,
       crossAccountKeys: props.crossAccountKeys,
       enableKeyRotation: props.crossAccountKeys,
-      restartExecutionOnUpdate: true,
+      restartExecutionOnUpdate: false,
       artifactBucket,
     });
 

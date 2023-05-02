@@ -8,6 +8,7 @@ const CDKSnapshotSerializer = {
       { regex: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, replacement: 'UUID' },
       { regex: /[0-9a-f]{64}\.zip/, replacement: 'ZIP' },
       { regex: /KarpenterNodeInstanceProfile-\w+/g, replacement: 'KARPENTER_INSTANCE_PROFILE' },
+      { regex: /[0-9a-f]{64}/, replacement: 'ASSET_HASH_64' },
     ];
 
     const combinedRegex = new RegExp(patterns.map(p => p.regex.source).join('|'), 'g');

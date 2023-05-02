@@ -26,7 +26,7 @@ export class WorkloadPipelineStack extends Stack {
     };
 
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
-    const SYNTH_PARAMS = ` -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
+    const SYNTH_PARAMS = ` -c tenant_id=${props.tenantId} -c deployment_tier=${props.tier} -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
     const buildImage = codebuild.LinuxArmBuildImage.fromCodeBuildImageId(`${ASSET_ECR}:${toolChainProps.imageTag}`);
 
     const pipeline = new SaasPipeline(this, 'workload', {
@@ -41,11 +41,12 @@ export class WorkloadPipelineStack extends Stack {
       dockerCredentials: [DockerCredential.ecr([toolChainProps.ecrRepo])],
       synthShellStepPartialProps: {
         installCommands: INSTALL_COMMANDS,
-        commands: ['yarn cdk synth -q --verbose -y' + SYNTH_PARAMS],
+        commands: [`yarn cdk synth -q --verbose -y ${SYNTH_PARAMS}`],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
           buildImage: buildImage,
+          privileged: false,
         },
       },
       existingKMSKeyAlias: toolChainProps.toolchainKms,
