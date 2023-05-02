@@ -82,6 +82,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     jestConfig: {
       detectOpenHandles: true,
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out/', '/assets/'],
+      snapshotSerializers: ['./test/cdk-serializer.js'],
     },
   },
   // https://github.com/aws/aws-cdk/blob/main/packages/%40aws-cdk/cx-api/FEATURE_FLAGS.mds
@@ -131,7 +132,6 @@ fi
 
 # Run the viperlight scan
 "$VIPERLIGHT_DIR/bin/viperlight" scan
-
 yarn build
 `,
     ],

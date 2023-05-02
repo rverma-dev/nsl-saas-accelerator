@@ -12,5 +12,4 @@ fi
 
 # Run the viperlight scan
 "$VIPERLIGHT_DIR/bin/viperlight" scan
-
 yarn build
