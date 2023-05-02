@@ -26,3 +26,8 @@ source/test-reports
 # Ignore runtime logs
 combined.log
 error.log
+
+.github/workflows/build.yml:70
+
+# Fix codestart connection hardcoding
+src/constructs/cdk-pipeline.ts:12
