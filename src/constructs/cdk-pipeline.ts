@@ -141,10 +141,6 @@ export class SaasPipeline extends Construct {
       primaryOutputDirectory: props.primarySynthDirectory || 'cdk.out',
       ...(synthShellStepPartialProps || {}),
     });
-    // We are creating a new artificat bucket for toolchain stack only
-    if (!props.existingArtifactBucket) {
-      synthShellStep.addOutputDirectory('.');
-    }
 
     const codePipeline = new Pipeline(this, `CodePipeline`, {
       pipelineName: props.pipelineName,

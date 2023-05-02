@@ -1,6 +1,7 @@
 import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
+  ASSET_PARAMETER,
   CDK_VERSION,
   DEPLOYMENT_TABLE_NAME,
   GITHUB_DOMAIN,
@@ -37,10 +38,6 @@ export class ToolchainStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
-    // new ecrdeploy.ECRDeployment(this, 'DeployDockerImage1', {
-    // src: new ecrdeploy.DockerImageName(image.imageUri),
-    // dest: new ecrdeploy.DockerImageName(image.imageUri, 'latest'),
-    // });
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
@@ -241,7 +238,7 @@ export class ToolchainStack extends cdk.Stack {
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
 
-    new StringParameter(this, 'AssetTag', { parameterName: '/toolchain/asset-tag', stringValue: image.imageTag });
+    new StringParameter(this, 'AssetTag', { parameterName: ASSET_PARAMETER, stringValue: image.imageTag });
 
     NagSuppressions.addStackSuppressions(
       this,

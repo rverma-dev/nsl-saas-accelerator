@@ -3,6 +3,8 @@ import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
 
 export function PipelineStack(pipeline: SaasPipeline, props: DeploymentRecord) {
-  const devStage = new ApplicationStage(pipeline, 'EKS', { env: { account: props.account, region: props.region } });
+  const devStage = new ApplicationStage(pipeline, 'silo-app', {
+    env: { account: props.account, region: props.region },
+  });
   pipeline.addWave([devStage], 'application');
 }

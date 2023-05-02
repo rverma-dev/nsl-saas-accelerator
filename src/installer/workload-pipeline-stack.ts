@@ -10,6 +10,7 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { DockerCredential } from 'aws-cdk-lib/pipelines';
+// import { DockerCredential } from 'aws-cdk-lib/pipelines';
 
 export interface WorkloadPipelineProps extends DeploymentRecord, StackProps {}
 
@@ -28,7 +29,7 @@ export class WorkloadPipelineStack extends Stack {
     const SYNTH_PARAMS = ` -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
     const buildImage = codebuild.LinuxArmBuildImage.fromCodeBuildImageId(`${ASSET_ECR}:${toolChainProps.imageTag}`);
 
-    const pipeline = new SaasPipeline(this, 'install-pipeline', {
+    const pipeline = new SaasPipeline(this, 'workload', {
       pipelineName: id,
       cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
@@ -36,6 +37,7 @@ export class WorkloadPipelineStack extends Stack {
       crossAccountKeys: true,
       synth: {},
       selfMutation: false,
+      dockerEnabledForSynth: true,
       dockerCredentials: [DockerCredential.ecr([toolChainProps.ecrRepo])],
       synthShellStepPartialProps: {
         installCommands: INSTALL_COMMANDS,
@@ -48,7 +50,6 @@ export class WorkloadPipelineStack extends Stack {
       },
       existingKMSKeyAlias: toolChainProps.toolchainKms,
       existingArtifactBucket: toolChainProps.toolchainAssetBucket,
-      dockerEnabledForSynth: true,
     });
 
     switch (props.type) {

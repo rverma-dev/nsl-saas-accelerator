@@ -1,9 +1,9 @@
 import { getPipelineName } from './common';
-import { ApplicationStack } from './demo/application-stack';
 import { TOOLCHAIN_ENV } from './installer/lib/configuration';
 import { ToolchainStack } from './installer/toolchain-stack';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from './installer/workload-pipeline-stack';
-import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
+import { ApplicationStack } from './silo/application-stack';
+// import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 
 const app = PDKNag.app();
@@ -57,8 +57,8 @@ if (!deploymentType) {
   console.log(`Synthesizing stack for ${stackName} in ${componentAccount}/${componentRegion}`);
   new WorkloadPipelineStack(app, stackName, { ...workloadProps });
 } else {
-  new ApplicationStack(app, `${tenantID}-site`, deploymentType, deploymentId, { env: TOOLCHAIN_ENV });
+  new ApplicationStack(app, `${tenantID}-eks`, { env: TOOLCHAIN_ENV });
 }
 
-new CdkGraph(app);
+// new CdkGraph(app);
 app.synth();
