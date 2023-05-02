@@ -37,7 +37,7 @@ export class ToolchainStack extends cdk.Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
+    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.'});
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
     const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
