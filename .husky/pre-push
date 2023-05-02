@@ -1,0 +1,15 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+# Set the viperlight binary directory
+VIPERLIGHT_DIR="../viperlight"
+
+# Check if the viperlight binary exists, and download it if it doesn't
+if [ ! -f "$VIPERLIGHT_DIR/bin/viperlight" ]; then
+  wget -v 'https://s3.amazonaws.com/viperlight-scanner/latest/viperlight.zip'
+  unzip -qo viperlight.zip -d "$VIPERLIGHT_DIR"
+  rm -r ./viperlight.zip
+fi
+
+# Run the viperlight scan
+"$VIPERLIGHT_DIR/bin/viperlight" scan
+yarn build

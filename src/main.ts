@@ -2,7 +2,8 @@ import { getPipelineName } from './common';
 import { TOOLCHAIN_ENV } from './installer/lib/configuration';
 import { ToolchainStack } from './installer/toolchain-stack';
 import { WorkloadPipelineProps, WorkloadPipelineStack } from './installer/workload-pipeline-stack';
-import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
+import { ApplicationStack } from './silo/application-stack';
+// import { CdkGraph } from '@aws-prototyping-sdk/cdk-graph';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
 
 const app = PDKNag.app();
@@ -27,7 +28,7 @@ const app = PDKNag.app();
  *                          : this deployment are deployed to
  *         component_region : the AWS Region, as above
  *         deployment_size  : the size of deployment
- * Mode C: Synthesize a specific pipeline directly for local testing
+ * Mode C: Synthesize a specific Application directly for local testing
  */
 
 const tenantID = <string>app.node.tryGetContext('tenant_id');
@@ -42,7 +43,7 @@ if (!deploymentType) {
   new ToolchainStack(app, 'saas-accelerator', {
     env: TOOLCHAIN_ENV,
   });
-} else if (componentAccount != 'local') {
+} else if (componentRegion != 'local') {
   // Mode B: synthetize the workload pipeline stack
   const workloadProps: WorkloadPipelineProps = {
     id: deploymentId,
@@ -53,20 +54,11 @@ if (!deploymentType) {
     account: componentAccount,
   };
   const stackName = getPipelineName(workloadProps);
-  console.log(`Synthesizing stack for ${stackName}in ${componentAccount}/${componentRegion}`);
-  new WorkloadPipelineStack(app, stackName, { ...workloadProps, env: TOOLCHAIN_ENV });
+  console.log(`Synthesizing stack for ${stackName} in ${componentAccount}/${componentRegion}`);
+  new WorkloadPipelineStack(app, stackName, { ...workloadProps });
 } else {
-  const tenantProps = {
-    id: deploymentId,
-    tenantId: tenantID,
-    type: deploymentType,
-    tier: deploymentTier,
-    account: process.env.CDK_DEFAULT_ACCOUNT!,
-    region: process.env.CDK_DEFAULT_REGION!,
-  };
-  console.log(`Synthesizing stack for ${deploymentType} in ${tenantProps.account}/${tenantProps.region}`);
-  new WorkloadPipelineStack(app, 'PipelineStack', tenantProps);
+  new ApplicationStack(app, `${tenantID}-eks`, { env: TOOLCHAIN_ENV });
 }
 
-new CdkGraph(app);
+// new CdkGraph(app);
 app.synth();

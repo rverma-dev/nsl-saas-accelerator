@@ -1,10 +1,11 @@
-import { Aspects, RemovalPolicy, Stage } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { Aspects, CfnOutput, RemovalPolicy, Stage } from 'aws-cdk-lib';
+import { Cache, ComputeType, LinuxArmBuildImage, LocalCacheMode } from 'aws-cdk-lib/aws-codebuild';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
 
 const DEFAULT_BRANCH_NAME = 'main';
 const CONNECTION =
@@ -65,12 +66,6 @@ export interface SaasPipelineProps extends pipelines.CodePipelineProps {
    * If we want to reuse existing artifact bucket
    * However for cross account access its better to create bucket per tenant
    */
-  readonly existingAccessLogBucket?: string;
-
-  /**
-   * If we want to reuse existing artifact bucket
-   * However for cross account access its better to create bucket per tenant
-   */
   readonly existingArtifactBucket?: string;
 }
 
@@ -90,14 +85,6 @@ export class SaasPipeline extends Construct {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     };
 
-    const accessLogsBucket = props.existingAccessLogBucket
-      ? Bucket.fromBucketName(this, 'AccessLogsBucket', props.existingAccessLogBucket)
-      : new Bucket(this, 'AccessLogsBucket', {
-          ...commonBucketProps,
-          versioned: false,
-          encryption: BucketEncryption.S3_MANAGED,
-        });
-
     const artifactBucket = props.existingArtifactBucket
       ? Bucket.fromBucketName(this, 'ArtifactsBucket', props.existingArtifactBucket)
       : new Bucket(this, 'ArtifactsBucket', {
@@ -114,8 +101,16 @@ export class SaasPipeline extends Construct {
                 })
               : undefined,
           serverAccessLogsPrefix: 'access-logs',
-          serverAccessLogsBucket: accessLogsBucket,
+          serverAccessLogsBucket: new Bucket(this, 'AccessLogsBucket', {
+            ...commonBucketProps,
+            versioned: false,
+            encryption: BucketEncryption.S3_MANAGED,
+          }),
         });
+
+    if (!props.existingArtifactBucket) {
+      new CfnOutput(this, 'ArtifactsBucketOutput', { value: artifactBucket.bucketName, exportName: 'toolchainBucket' });
+    }
 
     const githubInput = pipelines.CodePipelineSource.connection(
       props.repositoryName,
@@ -147,9 +142,7 @@ export class SaasPipeline extends Construct {
       ...(synthShellStepPartialProps || {}),
     });
 
-    synthShellStep.addOutputDirectory('.');
-
-    const codePipeline = new Pipeline(this, `CodePipeline`, {
+    const codePipeline = new Pipeline(this, 'CodePipeline', {
       pipelineName: props.pipelineName,
       crossAccountKeys: props.crossAccountKeys,
       enableKeyRotation: props.crossAccountKeys,
@@ -163,6 +156,13 @@ export class SaasPipeline extends Construct {
       crossAccountKeys: undefined,
       synth: synthShellStep,
       pipelineName: undefined,
+      codeBuildDefaults: {
+        cache: Cache.local(LocalCacheMode.DOCKER_LAYER, LocalCacheMode.SOURCE),
+        buildEnvironment: {
+          computeType: ComputeType.SMALL,
+          buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),
+        },
+      },
     };
 
     this.codePipeline = new pipelines.CodePipeline(this, props.pipelineName || id, codePipelineProps);

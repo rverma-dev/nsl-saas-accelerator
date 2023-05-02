@@ -49,7 +49,7 @@ export function isValidDeploymentRecord(record: DeploymentRecord | Deployment, r
   // Check that attribute type exists and is either of silo or pool
   if (!record.type) {
     throw new Error('Missing required attribute type');
-  } else if (record.type !== 'pool' && record.type !== 'silo') {
+  } else if (!['pool', 'silo', 'demo'].includes(record.type)) {
     throw new Error('Attribute type is not either of pool or silo');
   }
 

@@ -1,5 +1,7 @@
+import { Construct } from 'constructs';
 import { AddTenantFunction } from './ddb-stream/add-tenant-function';
 import {
+  ASSET_PARAMETER,
   CDK_VERSION,
   DEPLOYMENT_TABLE_NAME,
   GITHUB_DOMAIN,
@@ -14,9 +16,9 @@ import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
-import { Construct } from 'constructs';
 
 export class ToolchainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
@@ -35,11 +37,10 @@ export class ToolchainStack extends cdk.Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
-    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.' });
+    const image = new DockerImageAsset(this, 'nsl-installer-image', { directory: '.'});
     const buildImage = codebuild.LinuxArmBuildImage.fromEcrRepository(image.repository, image.imageTag);
-    const INSTALL_COMMANDS = ['yarn install --immutable --check-cache --inline-builds'];
+    const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
     // image asset is taking to long to be provisioned by codebuild
-    // const buildImage = LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0');
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
       pipelineName: 'toolchain',
       cliVersion: CDK_VERSION,
@@ -49,25 +50,18 @@ export class ToolchainStack extends cdk.Stack {
       selfMutation: true,
       synth: {},
       dockerEnabledForSynth: true,
-      dockerEnabledForSelfMutation: true,
-      codeBuildDefaults: {
-        cache: codebuild.Cache.local(codebuild.LocalCacheMode.DOCKER_LAYER),
-      },
       synthShellStepPartialProps: {
         installCommands: INSTALL_COMMANDS,
         commands: ['yarn synth:silent -y'],
       },
       synthCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: codebuild.ComputeType.SMALL,
           buildImage: buildImage,
-          privileged: false,
         },
       },
       selfMutationCodeBuildDefaults: {
         buildEnvironment: {
-          computeType: codebuild.ComputeType.SMALL,
-          buildImage: buildImage,
+          privileged: true,
         },
       },
     });
@@ -85,6 +79,7 @@ export class ToolchainStack extends cdk.Stack {
               resources: [
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-silo-pipeline',
                 'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-pool-pipeline',
+                'arn:aws:codepipeline:' + this.region + ':' + this.account + ':*-demo-pipeline',
               ],
               effect: iam.Effect.ALLOW,
             }),
@@ -141,8 +136,10 @@ export class ToolchainStack extends cdk.Stack {
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
+          install: {
+            commands: INSTALL_COMMANDS,
+          },
           build: {
-            installCommands: INSTALL_COMMANDS,
             commands: ['yarn ts-node src/installer/provision-deployment.ts'],
           },
         },
@@ -239,6 +236,8 @@ export class ToolchainStack extends cdk.Stack {
       },
     });
     new iam.WebIdentityPrincipal(ghProvider.openIdConnectProviderArn, conditions);
+
+    new StringParameter(this, 'AssetTag', { parameterName: ASSET_PARAMETER, stringValue: image.imageTag });
 
     NagSuppressions.addStackSuppressions(
       this,

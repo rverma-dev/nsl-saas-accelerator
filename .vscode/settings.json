@@ -1,7 +1,20 @@
 {
-  "search.exclude": {
+  "files.exclude": {
     "**/.yarn": true,
-    "**/.pnp.*": true
+    "**/.pnp.*": true,
+    "**/test-reports": true,
+    "**/coverage": true,
+    "**/cdk.out": true,
+    "**/assets": true
+  },
+  "search.exclude": {
+    "**/.projen": false,
+    "**/.yarn": true,
+    "**/.pnp.*": true,
+    "**/test-reports": true,
+    "**/coverage": true,
+    "**/cdk.out": true,
+    "**/assets": true
   },
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",

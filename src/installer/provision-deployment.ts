@@ -70,7 +70,7 @@ async function processRecord(record: DeploymentRecord): Promise<void> {
 async function provisionPipelineStack(record: DeploymentRecord): Promise<void> {
   const stackName = getPipelineName(record);
   const command =
-    `yarn cdk deploy ${stackName} --toolkit-stack-name nsl-CDKToolkit --require-approval never` +
+    `yarn cdk deploy ${stackName} --require-approval never` +
     ` -c deployment_id=${record.id}` +
     ` -c tenant_id=${record.tenantId}` +
     ` -c deployment_type=${record.type}` +
