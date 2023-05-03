@@ -53,10 +53,10 @@ export class ProvisioningProject extends Construct {
         version: '0.2',
         phases: {
           install: {
-            commands: ['n 18']
+            commands: [`${YARN} install --immutable`]
           },
           build: {
-            commands: [`${YARN} install --immutable`, `${YARN} synth:silent -y`]
+            commands: [`${YARN} ts-node bin/provision-deployment.ts`]
           }
         },
         cache: {

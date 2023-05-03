@@ -21,7 +21,8 @@ export class ToolchainStack extends cdk.Stack {
       primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       synth: {},
-      commands: [`${YARN} install --immutable`, `${YARN} synth:silent -y`],
+      installCommands: [`${YARN} install --immutable`],
+      commands: [`${YARN} synth:silent -y`],
       isToolchain: true
     });
 
@@ -30,11 +31,10 @@ export class ToolchainStack extends cdk.Stack {
     pipeline.addWave('UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
-          installCommands: ['n 18'],
+          installCommands: [`${YARN} install --immutable`],
           commands: [
-            `${YARN} install --immutable`,
-            `${YARN}} ts-node src/installer/get-deployments.ts`,
-            `${YARN}} ts-node src/installer/update-deployments.ts`
+            `${YARN} ts-node src/installer/get-deployments.ts`,
+            `${YARN} ts-node src/installer/update-deployments.ts`
           ],
           buildEnvironment: {
             computeType: ComputeType.SMALL

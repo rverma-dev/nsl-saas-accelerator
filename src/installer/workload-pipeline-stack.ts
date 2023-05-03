@@ -26,7 +26,8 @@ export class WorkloadPipelineStack extends Stack {
       crossAccountKeys: true,
       synth: {},
       selfMutation: false,
-      commands: [`${YARN} install --immutable`, `${YARN} cdk synth -q --verbose -y ${SYNTH_PARAMS}`],
+      installCommands: [`${YARN} install --immutable`],
+      commands: [`${YARN} cdk synth -q --verbose -y ${SYNTH_PARAMS}`],
       isToolchain: false
     });
 

@@ -120,7 +120,6 @@ export class SaasPipeline extends Construct {
         props.installCommands && props.installCommands.length > 0
           ? props.installCommands!
           : [
-              'n 18',
               'corepack enable',
               'corepack prepare yarn@3.5.1 --activate',
               'yarn set version 3.5.1',
