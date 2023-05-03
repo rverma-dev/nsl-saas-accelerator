@@ -966,16 +966,11 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18",
-        "corepack enable",
-        "corepack prepare yarn@3.5.1 --activate",
-        "yarn set version 3.5.1",
-        "yarn install --immutable"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
         "./.yarn/releases/yarn-3.5.1.cjs synth:silent -y"
       ]
     }
@@ -1427,14 +1422,13 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
-        "./.yarn/releases/yarn-3.5.1.cjs} ts-node src/installer/get-deployments.ts",
-        "./.yarn/releases/yarn-3.5.1.cjs} ts-node src/installer/update-deployments.ts"
+        "./.yarn/releases/yarn-3.5.1.cjs ts-node src/installer/get-deployments.ts",
+        "./.yarn/releases/yarn-3.5.1.cjs ts-node src/installer/update-deployments.ts"
       ]
     }
   }
@@ -1802,13 +1796,12 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
-        "./.yarn/releases/yarn-3.5.1.cjs synth:silent -y"
+        "./.yarn/releases/yarn-3.5.1.cjs ts-node bin/provision-deployment.ts"
       ]
     }
   },
@@ -3578,16 +3571,11 @@ exports[`Workload DEMO Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18",
-        "corepack enable",
-        "corepack prepare yarn@3.5.1 --activate",
-        "yarn set version 3.5.1",
-        "yarn install --immutable"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
         "./.yarn/releases/yarn-3.5.1.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=demo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
@@ -4412,16 +4400,11 @@ exports[`Workload POOL Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18",
-        "corepack enable",
-        "corepack prepare yarn@3.5.1 --activate",
-        "yarn set version 3.5.1",
-        "yarn install --immutable"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
         "./.yarn/releases/yarn-3.5.1.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=pool -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
@@ -6434,16 +6417,11 @@ exports[`Workload SILO Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "n 18",
-        "corepack enable",
-        "corepack prepare yarn@3.5.1 --activate",
-        "yarn set version 3.5.1",
-        "yarn install --immutable"
+        "./.yarn/releases/yarn-3.5.1.cjs install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "./.yarn/releases/yarn-3.5.1.cjs install --immutable",
         "./.yarn/releases/yarn-3.5.1.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=silo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
