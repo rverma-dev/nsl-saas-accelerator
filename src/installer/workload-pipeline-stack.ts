@@ -1,4 +1,4 @@
-import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_OWNER } from './lib/configuration';
+import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_OWNER, YARN } from './lib/configuration';
 import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
 import * as demo from '../demo/pipeline-stack';
@@ -15,8 +15,8 @@ export class WorkloadPipelineStack extends Stack {
     super(scope, id, { env: { account: props.account, region: props.region } });
     const repositoryName = `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`;
 
-    // const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
-    const SYNTH_PARAMS = ` -c tenant_id=${props.tenantId} -c deployment_tier=${props.tier} -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
+    const SYNTH_PARAMS = ` -c tenant_id=${props.tenantId} -c deployment_tier=${props.tier}\
+     -c deployment_type=${props.type} -c deployment_id=${props.id} -c component_account=${props.account} -c component_region=${props.region}`;
 
     const pipeline = new SaasPipeline(this, 'workload', {
       pipelineName: id,
@@ -26,7 +26,7 @@ export class WorkloadPipelineStack extends Stack {
       crossAccountKeys: true,
       synth: {},
       selfMutation: false,
-      commands: [`yarn cdk synth -q --verbose -y ${SYNTH_PARAMS}`],
+      commands: [`${YARN} install --immutable`, `${YARN} cdk synth -q --verbose -y ${SYNTH_PARAMS}`],
       isToolchain: false
     });
 

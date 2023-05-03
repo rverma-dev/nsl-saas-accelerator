@@ -1,4 +1,4 @@
-import { ASSET_PARAMETER, TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
+import { TOOLCHAIN_ENV } from '../src/installer/lib/configuration';
 import { ToolchainStack } from '../src/installer/toolchain-stack';
 import { WorkloadPipelineStack } from '../src/installer/workload-pipeline-stack';
 import { PDKNag } from '@aws-prototyping-sdk/pdk-nag';
@@ -13,7 +13,6 @@ test('ToolChain Stack', () => {
 
 test('Workload DEMO Stack', () => {
   const app = PDKNag.app();
-  app.node.setContext(ASSET_PARAMETER, 'latest');
   app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
 
   const stack = new WorkloadPipelineStack(app, 'workload', {
@@ -30,7 +29,6 @@ test('Workload DEMO Stack', () => {
 
 test('Workload POOL Stack', () => {
   const app = PDKNag.app();
-  app.node.setContext(ASSET_PARAMETER, 'latest');
   app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
 
   const stack = new WorkloadPipelineStack(app, 'workload', {
@@ -47,7 +45,6 @@ test('Workload POOL Stack', () => {
 
 test('Workload SILO Stack', () => {
   const app = PDKNag.app();
-  app.node.setContext(ASSET_PARAMETER, 'latest');
   app.node.setContext('PLATFORM_TEAM_ROLE', 'Admin');
 
   const stack = new WorkloadPipelineStack(app, 'workload', {

@@ -1,9 +1,9 @@
 import { ProvisioningProject } from './lib/cb-provisioner';
-import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, REPOSITORY_NAME, REPOSITORY_OWNER } from './lib/configuration';
+import { CDK_VERSION, DEPLOYMENT_TABLE_NAME, REPOSITORY_NAME, REPOSITORY_OWNER, YARN } from './lib/configuration';
 import { GitHubEcrPushAction } from './lib/ghcr';
 import { SaasPipeline } from '../constructs';
 import * as cdk from 'aws-cdk-lib';
-import { ComputeType } from 'aws-cdk-lib/aws-codebuild';
+import { BuildSpec, Cache, ComputeType } from 'aws-cdk-lib/aws-codebuild';
 import { AttributeType, BillingMode, StreamViewType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { CodeBuildStep } from 'aws-cdk-lib/pipelines';
@@ -13,8 +13,6 @@ import { Construct } from 'constructs';
 export class ToolchainStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: cdk.StackProps) {
     super(scope, id, props);
-    const INSTALL_COMMANDS = ['yarn install --immutable --immutable-cache'];
-    const BUILD_COMMANDS = ['yarn synth:silent -y'];
 
     const deploymentTable = new DeploymentTable(this, 'deployment-table', { tableName: DEPLOYMENT_TABLE_NAME });
     const pipeline = new SaasPipeline(this, 'install-pipeline', {
@@ -23,7 +21,7 @@ export class ToolchainStack extends cdk.Stack {
       primarySynthDirectory: 'cdk.out',
       repositoryName: this.node.tryGetContext('repositoryName') || `${REPOSITORY_OWNER}/${REPOSITORY_NAME}`,
       synth: {},
-      commands: BUILD_COMMANDS,
+      commands: [`${YARN} install --immutable`, `${YARN} synth:silent -y`],
       isToolchain: true
     });
 
@@ -32,26 +30,33 @@ export class ToolchainStack extends cdk.Stack {
     pipeline.addWave('UpdateDeployments', {
       post: [
         new CodeBuildStep('update-deployments', {
-          installCommands: INSTALL_COMMANDS,
+          installCommands: ['n 18'],
           commands: [
-            'yarn ts-node src/installer/get-deployments.ts',
-            'yarn ts-node src/installer/update-deployments.ts'
+            `${YARN} install --immutable`,
+            `${YARN}} ts-node src/installer/get-deployments.ts`,
+            `${YARN}} ts-node src/installer/update-deployments.ts`
           ],
           buildEnvironment: {
             computeType: ComputeType.SMALL
-            // buildImage: buildImage,
           },
-          role: updateDeploymentsRole
+          role: updateDeploymentsRole,
+          partialBuildSpec: BuildSpec.fromObject({
+            cache: {
+              paths: ['.yarn/cache/**/*', 'node_modules/**/*']
+            }
+          }),
+          cache: Cache.bucket(pipeline.cacheBucket)
         })
       ]
     });
+
+    pipeline.buildPipeline(); // for cdk-nag
 
     new ProvisioningProject(this, 'provisioning-project', {
       owner: REPOSITORY_OWNER,
       repo: REPOSITORY_NAME,
       deploymentTable,
-      installCommands: INSTALL_COMMANDS,
-      buildCommands: BUILD_COMMANDS
+      cacheBucket: pipeline.cacheBucket
     });
 
     new GitHubEcrPushAction(this, 'gitHub-ecrpush-role', { owner: REPOSITORY_OWNER, repo: REPOSITORY_NAME });

@@ -1,3 +1,4 @@
+import { YARN } from './configuration';
 import { AddTenantFunction } from '../ddb-stream/add-tenant-function';
 import * as cdk from 'aws-cdk-lib';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
@@ -5,6 +6,7 @@ import { Table } from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+import { IBucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 
 export class ProvisioningProject extends Construct {
@@ -16,8 +18,7 @@ export class ProvisioningProject extends Construct {
       repo: string;
       branchOrRef?: string;
       deploymentTable: Table;
-      installCommands: string[];
-      buildCommands: string[];
+      cacheBucket: IBucket;
     }
   ) {
     super(scope, id);
@@ -47,15 +48,19 @@ export class ProvisioningProject extends Construct {
         computeType: codebuild.ComputeType.SMALL,
         privileged: false
       },
+      cache: codebuild.Cache.bucket(props.cacheBucket),
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
           install: {
-            commands: props.installCommands
+            commands: ['n 18']
           },
           build: {
-            commands: props.buildCommands
+            commands: [`${YARN} install --immutable`, `${YARN} synth:silent -y`]
           }
+        },
+        cache: {
+          paths: ['.yarn/cache/**/*', 'node_modules/**/*']
         }
       })
     });

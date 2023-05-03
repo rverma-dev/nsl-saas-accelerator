@@ -1,8 +1,8 @@
-import { Aspects, CfnOutput, FileSystem, Fn, RemovalPolicy, Stage } from 'aws-cdk-lib';
+import { Aspects, CfnOutput, Fn, RemovalPolicy, Stage } from 'aws-cdk-lib';
 import { BuildSpec, Cache, ComputeType, LinuxArmBuildImage } from 'aws-cdk-lib/aws-codebuild';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
 import { Key } from 'aws-cdk-lib/aws-kms';
-import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
+import { BlockPublicAccess, Bucket, BucketEncryption, IBucket, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
@@ -41,6 +41,7 @@ export interface SaasPipelineProps extends pipelines.CodePipelineProps {
 
 export class SaasPipeline extends Construct {
   readonly codePipeline: pipelines.CodePipeline;
+  readonly cacheBucket: IBucket;
 
   public constructor(scope: Construct, id: string, props: SaasPipelineProps) {
     super(scope, id);
@@ -55,7 +56,7 @@ export class SaasPipeline extends Construct {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL
     };
 
-    let artifactBucket, cacheBucket;
+    let artifactBucket: IBucket, cacheBucket: IBucket;
 
     // 1. Create Artifact Bucket
     // we intend to define all this for just toolchain account
@@ -121,17 +122,17 @@ export class SaasPipeline extends Construct {
           : [
               'n 18',
               'corepack enable',
-              'corepack prepare yarn@stable --activate',
-              'yarn set version stable',
+              'corepack prepare yarn@3.5.1 --activate',
+              'yarn set version 3.5.1',
               'yarn install --immutable'
             ],
-      commands: props.commands && props.commands.length > 0 ? props.commands : ['yarn synth:silent -y'],
+      commands: props.commands && props.commands.length > 0 ? props.commands : ['yarn run synth'],
       partialBuildSpec: BuildSpec.fromObject({
         cache: {
-          paths: ['.yarn/cache/**/*']
+          paths: ['.yarn/cache/**/*', 'node_modules/**/*']
         }
       }),
-      cache: Cache.bucket(cacheBucket, { prefix: FileSystem.fingerprint('./yarn.lock') })
+      cache: Cache.bucket(cacheBucket)
     });
 
     // 4. low-level AWS CDK
@@ -160,6 +161,7 @@ export class SaasPipeline extends Construct {
 
     // 5. a higher-level pipelines.CodePipeline construct is instantiated using the previously created Pipeline
     this.codePipeline = new pipelines.CodePipeline(this, props.pipelineName || id, codePipelineProps);
+    this.cacheBucket = cacheBucket;
   }
 
   /**

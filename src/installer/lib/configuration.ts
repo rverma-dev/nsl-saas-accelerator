@@ -14,4 +14,4 @@ export const TOOLCHAIN_ENV = {
 };
 
 export const ASSET_ECR = `${TOOLCHAIN_ENV.account}.dkr.ecr.${TOOLCHAIN_ENV.region}.amazonaws.com/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-container-assets-${TOOLCHAIN_ENV.account}-${TOOLCHAIN_ENV.region}`;
-export const ASSET_PARAMETER = '/toolchain/asset-tag';
+export const YARN = './.yarn/releases/yarn-3.5.0.cjs';

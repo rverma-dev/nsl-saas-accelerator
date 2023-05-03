@@ -20,6 +20,24 @@ exports[`ToolChain Stack 1`] = `
       ],
     },
   },
+  Outputs: {
+    installpipelineArtifactsBucketOutput718D50F5: {
+      Export: {
+        Name: toolchainBucket,
+      },
+      Value: {
+        Ref: installpipelineArtifactsBucketBEF15C5E,
+      },
+    },
+    installpipelineCdkCacheBucketOutput954D4B49: {
+      Export: {
+        Name: cdkCacheBucket,
+      },
+      Value: {
+        Ref: installpipelineCdkCacheBucketC712E0E7,
+      },
+    },
+  },
   Parameters: {
     BootstrapVersion: {
       Default: /cdk-bootstrap/hnb659fds/version,
@@ -90,6 +108,64 @@ exports[`ToolChain Stack 1`] = `
               Version: 2012-10-17,
             },
             PolicyName: Inline,
+          },
+        ],
+      },
+      Type: AWS::IAM::Role,
+    },
+    CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F: {
+      DependsOn: [
+        CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
+      ],
+      Properties: {
+        Code: {
+          S3Bucket: {
+            Fn::Sub: cdk-hnb659fds-assets-\${AWS::AccountId}-ap-south-1,
+          },
+          S3Key: ZIP,
+        },
+        Description: {
+          Fn::Join: [
+            ,
+            [
+              Lambda function for auto-deleting objects in ,
+              {
+                Ref: installpipelineAccessLogsBucketC0C7CACD,
+              },
+               S3 bucket.,
+            ],
+          ],
+        },
+        Handler: __entrypoint__.handler,
+        MemorySize: 128,
+        Role: {
+          Fn::GetAtt: [
+            CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
+            Arn,
+          ],
+        },
+        Runtime: nodejs14.x,
+        Timeout: 900,
+      },
+      Type: AWS::Lambda::Function,
+    },
+    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092: {
+      Properties: {
+        AssumeRolePolicyDocument: {
+          Statement: [
+            {
+              Action: sts:AssumeRole,
+              Effect: Allow,
+              Principal: {
+                Service: lambda.amazonaws.com,
+              },
+            },
+          ],
+          Version: 2012-10-17,
+        },
+        ManagedPolicyArns: [
+          {
+            Fn::Sub: arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole,
           },
         ],
       },
@@ -206,6 +282,485 @@ exports[`ToolChain Stack 1`] = `
       Type: Custom::AWSCDKOpenIdConnectProvider,
       UpdateReplacePolicy: Delete,
     },
+    installpipelineAccessLogsBucketAutoDeleteObjectsCustomResource44E6A4E7: {
+      DeletionPolicy: Delete,
+      DependsOn: [
+        installpipelineAccessLogsBucketPolicy53F09539,
+      ],
+      Properties: {
+        BucketName: {
+          Ref: installpipelineAccessLogsBucketC0C7CACD,
+        },
+        ServiceToken: {
+          Fn::GetAtt: [
+            CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F,
+            Arn,
+          ],
+        },
+      },
+      Type: Custom::S3AutoDeleteObjects,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineAccessLogsBucketC0C7CACD: {
+      DeletionPolicy: Delete,
+      Metadata: {
+        cdk_nag: {
+          rules_to_suppress: [
+            {
+              id: AwsSolutions-S1,
+              reason: Cache bucket should not have s3 bucket logging,
+            },
+          ],
+        },
+      },
+      Properties: {
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
+            {
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: AES256,
+              },
+            },
+          ],
+        },
+        OwnershipControls: {
+          Rules: [
+            {
+              ObjectOwnership: BucketOwnerEnforced,
+            },
+          ],
+        },
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
+        },
+        Tags: [
+          {
+            Key: aws-cdk:auto-delete-objects,
+            Value: true,
+          },
+        ],
+      },
+      Type: AWS::S3::Bucket,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineAccessLogsBucketPolicy53F09539: {
+      Properties: {
+        Bucket: {
+          Ref: installpipelineAccessLogsBucketC0C7CACD,
+        },
+        PolicyDocument: {
+          Statement: [
+            {
+              Action: s3:*,
+              Condition: {
+                Bool: {
+                  aws:SecureTransport: false,
+                },
+              },
+              Effect: Deny,
+              Principal: {
+                AWS: *,
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineAccessLogsBucketC0C7CACD,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineAccessLogsBucketC0C7CACD,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              Action: [
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+              ],
+              Effect: Allow,
+              Principal: {
+                AWS: {
+                  Fn::GetAtt: [
+                    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
+                    Arn,
+                  ],
+                },
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineAccessLogsBucketC0C7CACD,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineAccessLogsBucketC0C7CACD,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              Action: s3:PutObject,
+              Condition: {
+                ArnLike: {
+                  aws:SourceArn: {
+                    Fn::GetAtt: [
+                      installpipelineArtifactsBucketBEF15C5E,
+                      Arn,
+                    ],
+                  },
+                },
+                StringEquals: {
+                  aws:SourceAccount: {
+                    Ref: AWS::AccountId,
+                  },
+                },
+              },
+              Effect: Allow,
+              Principal: {
+                Service: logging.s3.amazonaws.com,
+              },
+              Resource: {
+                Fn::Join: [
+                  ,
+                  [
+                    {
+                      Fn::GetAtt: [
+                        installpipelineAccessLogsBucketC0C7CACD,
+                        Arn,
+                      ],
+                    },
+                    /access-logs*,
+                  ],
+                ],
+              },
+            },
+          ],
+          Version: 2012-10-17,
+        },
+      },
+      Type: AWS::S3::BucketPolicy,
+    },
+    installpipelineArtifactsBucketAutoDeleteObjectsCustomResourceEC86D026: {
+      DeletionPolicy: Delete,
+      DependsOn: [
+        installpipelineArtifactsBucketPolicy83D44F64,
+      ],
+      Properties: {
+        BucketName: {
+          Ref: installpipelineArtifactsBucketBEF15C5E,
+        },
+        ServiceToken: {
+          Fn::GetAtt: [
+            CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F,
+            Arn,
+          ],
+        },
+      },
+      Type: Custom::S3AutoDeleteObjects,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineArtifactsBucketBEF15C5E: {
+      DeletionPolicy: Delete,
+      Properties: {
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
+            {
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: AES256,
+              },
+            },
+          ],
+        },
+        LoggingConfiguration: {
+          DestinationBucketName: {
+            Ref: installpipelineAccessLogsBucketC0C7CACD,
+          },
+          LogFilePrefix: access-logs,
+        },
+        OwnershipControls: {
+          Rules: [
+            {
+              ObjectOwnership: BucketOwnerEnforced,
+            },
+          ],
+        },
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
+        },
+        Tags: [
+          {
+            Key: aws-cdk:auto-delete-objects,
+            Value: true,
+          },
+        ],
+      },
+      Type: AWS::S3::Bucket,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineArtifactsBucketPolicy83D44F64: {
+      Properties: {
+        Bucket: {
+          Ref: installpipelineArtifactsBucketBEF15C5E,
+        },
+        PolicyDocument: {
+          Statement: [
+            {
+              Action: s3:*,
+              Condition: {
+                Bool: {
+                  aws:SecureTransport: false,
+                },
+              },
+              Effect: Deny,
+              Principal: {
+                AWS: *,
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              Action: [
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+              ],
+              Effect: Allow,
+              Principal: {
+                AWS: {
+                  Fn::GetAtt: [
+                    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
+                    Arn,
+                  ],
+                },
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          Version: 2012-10-17,
+        },
+      },
+      Type: AWS::S3::BucketPolicy,
+    },
+    installpipelineCdkCacheBucketAutoDeleteObjectsCustomResource7BD23795: {
+      DeletionPolicy: Delete,
+      DependsOn: [
+        installpipelineCdkCacheBucketPolicyD8C7B901,
+      ],
+      Properties: {
+        BucketName: {
+          Ref: installpipelineCdkCacheBucketC712E0E7,
+        },
+        ServiceToken: {
+          Fn::GetAtt: [
+            CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F,
+            Arn,
+          ],
+        },
+      },
+      Type: Custom::S3AutoDeleteObjects,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineCdkCacheBucketC712E0E7: {
+      DeletionPolicy: Delete,
+      Metadata: {
+        cdk_nag: {
+          rules_to_suppress: [
+            {
+              id: AwsSolutions-S1,
+              reason: Cache bucket should not have s3 bucket logging,
+            },
+          ],
+        },
+      },
+      Properties: {
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
+            {
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: AES256,
+              },
+            },
+          ],
+        },
+        OwnershipControls: {
+          Rules: [
+            {
+              ObjectOwnership: BucketOwnerEnforced,
+            },
+          ],
+        },
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
+        },
+        Tags: [
+          {
+            Key: aws-cdk:auto-delete-objects,
+            Value: true,
+          },
+        ],
+      },
+      Type: AWS::S3::Bucket,
+      UpdateReplacePolicy: Delete,
+    },
+    installpipelineCdkCacheBucketPolicyD8C7B901: {
+      Properties: {
+        Bucket: {
+          Ref: installpipelineCdkCacheBucketC712E0E7,
+        },
+        PolicyDocument: {
+          Statement: [
+            {
+              Action: s3:*,
+              Condition: {
+                Bool: {
+                  aws:SecureTransport: false,
+                },
+              },
+              Effect: Deny,
+              Principal: {
+                AWS: *,
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineCdkCacheBucketC712E0E7,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineCdkCacheBucketC712E0E7,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              Action: [
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+              ],
+              Effect: Allow,
+              Principal: {
+                AWS: {
+                  Fn::GetAtt: [
+                    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
+                    Arn,
+                  ],
+                },
+              },
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineCdkCacheBucketC712E0E7,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineCdkCacheBucketC712E0E7,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          Version: 2012-10-17,
+        },
+      },
+      Type: AWS::S3::BucketPolicy,
+    },
     installpipelineCodePipeline1DB150A2: {
       DependsOn: [
         installpipelineCodePipelineRoleDefaultPolicy2CE1856D,
@@ -214,7 +769,7 @@ exports[`ToolChain Stack 1`] = `
       Properties: {
         ArtifactStore: {
           Location: {
-            Fn::ImportValue: toolchainBucket,
+            Ref: installpipelineArtifactsBucketBEF15C5E,
           },
           Type: S3,
         },
@@ -374,9 +929,11 @@ exports[`ToolChain Stack 1`] = `
               /,
               [
                 {
-                  Fn::ImportValue: cdkCacheBucket,
+                  Ref: installpipelineCdkCacheBucketC712E0E7,
                 },
-                ASSET_HASH_64/,
+                {
+                  Ref: AWS::NoValue,
+                },
               ],
             ],
           },
@@ -401,7 +958,8 @@ exports[`ToolChain Stack 1`] = `
           BuildSpec: {
   "cache": {
     "paths": [
-      ".yarn/cache/**/*"
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
     ]
   },
   "version": "0.2",
@@ -410,14 +968,15 @@ exports[`ToolChain Stack 1`] = `
       "commands": [
         "n 18",
         "corepack enable",
-        "corepack prepare yarn@stable --activate",
-        "yarn set version stable",
+        "corepack prepare yarn@3.5.1 --activate",
+        "yarn set version 3.5.1",
         "yarn install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "yarn synth:silent -y"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs synth:silent -y"
       ]
     }
   },
@@ -470,31 +1029,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: cdkCacheBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineCdkCacheBucketC712E0E7,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: cdkCacheBucket,
+                        Fn::GetAtt: [
+                          installpipelineCdkCacheBucketC712E0E7,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -597,31 +1145,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -678,31 +1215,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -799,31 +1325,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -841,13 +1356,11 @@ exports[`ToolChain Stack 1`] = `
                 Fn::Join: [
                   ,
                   [
-                    arn:,
                     {
-                      Ref: AWS::Partition,
-                    },
-                    :s3:::,
-                    {
-                      Fn::ImportValue: toolchainBucket,
+                      Fn::GetAtt: [
+                        installpipelineArtifactsBucketBEF15C5E,
+                        Arn,
+                      ],
                     },
                     /*,
                   ],
@@ -872,11 +1385,20 @@ exports[`ToolChain Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Location: {
+            Fn::Join: [
+              /,
+              [
+                {
+                  Ref: installpipelineCdkCacheBucketC712E0E7,
+                },
+                {
+                  Ref: AWS::NoValue,
+                },
+              ],
+            ],
+          },
+          Type: S3,
         },
         Description: Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments,
         EncryptionKey: alias/aws/s3,
@@ -895,17 +1417,24 @@ exports[`ToolChain Stack 1`] = `
         },
         Source: {
           BuildSpec: {
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
+    ]
+  },
   "version": "0.2",
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18"
       ]
     },
     "build": {
       "commands": [
-        "yarn ts-node src/installer/get-deployments.ts",
-        "yarn ts-node src/installer/update-deployments.ts"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs} ts-node src/installer/get-deployments.ts",
+        "./.yarn/releases/yarn-3.5.0.cjs} ts-node src/installer/update-deployments.ts"
       ]
     }
   }
@@ -1016,11 +1545,7 @@ exports[`ToolChain Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step toolchain/CodePipeline/UpdatePipeline/SelfMutate,
         EncryptionKey: alias/aws/s3,
@@ -1185,31 +1710,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -1252,7 +1766,20 @@ exports[`ToolChain Stack 1`] = `
           Type: NO_ARTIFACTS,
         },
         Cache: {
-          Type: NO_CACHE,
+          Location: {
+            Fn::Join: [
+              /,
+              [
+                {
+                  Ref: installpipelineCdkCacheBucketC712E0E7,
+                },
+                {
+                  Ref: AWS::NoValue,
+                },
+              ],
+            ],
+          },
+          Type: S3,
         },
         EncryptionKey: alias/aws/s3,
         Environment: {
@@ -1275,14 +1802,21 @@ exports[`ToolChain Stack 1`] = `
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18"
       ]
     },
     "build": {
       "commands": [
-        "yarn synth:silent -y"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs synth:silent -y"
       ]
     }
+  },
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
+    ]
   }
 },
           GitCloneDepth: 1,
@@ -1315,6 +1849,43 @@ exports[`ToolChain Stack 1`] = `
       Properties: {
         PolicyDocument: {
           Statement: [
+            {
+              Action: [
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
+              ],
+              Effect: Allow,
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineCdkCacheBucketC712E0E7,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineCdkCacheBucketC712E0E7,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -1745,6 +2316,43 @@ exports[`ToolChain Stack 1`] = `
           Statement: [
             {
               Action: [
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
+              ],
+              Effect: Allow,
+              Resource: [
+                {
+                  Fn::GetAtt: [
+                    installpipelineCdkCacheBucketC712E0E7,
+                    Arn,
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      {
+                        Fn::GetAtt: [
+                          installpipelineCdkCacheBucketC712E0E7,
+                          Arn,
+                        ],
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              Action: [
                 logs:CreateLogGroup,
                 logs:CreateLogStream,
                 logs:PutLogEvents,
@@ -1831,31 +2439,20 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
-                      },
-                    ],
+                  Fn::GetAtt: [
+                    installpipelineArtifactsBucketBEF15C5E,
+                    Arn,
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
-                      arn:,
                       {
-                        Ref: AWS::Partition,
-                      },
-                      :s3:::,
-                      {
-                        Fn::ImportValue: toolchainBucket,
+                        Fn::GetAtt: [
+                          installpipelineArtifactsBucketBEF15C5E,
+                          Arn,
+                        ],
                       },
                       /*,
                     ],
@@ -1922,11 +2519,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset1,
         EncryptionKey: alias/aws/s3,
@@ -1970,11 +2563,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset2,
         EncryptionKey: alias/aws/s3,
@@ -2018,11 +2607,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset3,
         EncryptionKey: alias/aws/s3,
@@ -2066,11 +2651,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset4,
         EncryptionKey: alias/aws/s3,
@@ -2114,11 +2695,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset5,
         EncryptionKey: alias/aws/s3,
@@ -2162,11 +2739,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset6,
         EncryptionKey: alias/aws/s3,
@@ -2210,11 +2783,7 @@ exports[`Workload DEMO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset7,
         EncryptionKey: alias/aws/s3,
@@ -2974,7 +3543,9 @@ exports[`Workload DEMO Stack 1`] = `
                 {
                   Fn::ImportValue: cdkCacheBucket,
                 },
-                ASSET_HASH_64/,
+                {
+                  Ref: AWS::NoValue,
+                },
               ],
             ],
           },
@@ -2999,19 +3570,25 @@ exports[`Workload DEMO Stack 1`] = `
           BuildSpec: {
   "cache": {
     "paths": [
-      ".yarn/cache/**/*"
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
     ]
   },
   "version": "0.2",
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18",
+        "corepack enable",
+        "corepack prepare yarn@3.5.1 --activate",
+        "yarn set version 3.5.1",
+        "yarn install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=demo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=demo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
@@ -3800,7 +4377,9 @@ exports[`Workload POOL Stack 1`] = `
                 {
                   Fn::ImportValue: cdkCacheBucket,
                 },
-                ASSET_HASH_64/,
+                {
+                  Ref: AWS::NoValue,
+                },
               ],
             ],
           },
@@ -3825,19 +4404,25 @@ exports[`Workload POOL Stack 1`] = `
           BuildSpec: {
   "cache": {
     "paths": [
-      ".yarn/cache/**/*"
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
     ]
   },
   "version": "0.2",
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18",
+        "corepack enable",
+        "corepack prepare yarn@3.5.1 --activate",
+        "yarn set version 3.5.1",
+        "yarn install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=pool -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=pool -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
@@ -4357,11 +4942,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset10,
         EncryptionKey: alias/aws/s3,
@@ -4405,11 +4986,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset11,
         EncryptionKey: alias/aws/s3,
@@ -4453,11 +5030,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset1,
         EncryptionKey: alias/aws/s3,
@@ -4501,11 +5074,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset2,
         EncryptionKey: alias/aws/s3,
@@ -4549,11 +5118,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset3,
         EncryptionKey: alias/aws/s3,
@@ -4597,11 +5162,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset4,
         EncryptionKey: alias/aws/s3,
@@ -4645,11 +5206,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset5,
         EncryptionKey: alias/aws/s3,
@@ -4693,11 +5250,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset6,
         EncryptionKey: alias/aws/s3,
@@ -4741,11 +5294,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset7,
         EncryptionKey: alias/aws/s3,
@@ -4789,11 +5338,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset8,
         EncryptionKey: alias/aws/s3,
@@ -4837,11 +5382,7 @@ exports[`Workload SILO Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_CUSTOM_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Type: NO_CACHE,
         },
         Description: Pipeline step workload/CodePipeline/Assets/FileAsset9,
         EncryptionKey: alias/aws/s3,
@@ -5858,7 +6399,9 @@ exports[`Workload SILO Stack 1`] = `
                 {
                   Fn::ImportValue: cdkCacheBucket,
                 },
-                ASSET_HASH_64/,
+                {
+                  Ref: AWS::NoValue,
+                },
               ],
             ],
           },
@@ -5883,19 +6426,25 @@ exports[`Workload SILO Stack 1`] = `
           BuildSpec: {
   "cache": {
     "paths": [
-      ".yarn/cache/**/*"
+      ".yarn/cache/**/*",
+      "node_modules/**/*"
     ]
   },
   "version": "0.2",
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18",
+        "corepack enable",
+        "corepack prepare yarn@3.5.1 --activate",
+        "yarn set version 3.5.1",
+        "yarn install --immutable"
       ]
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=silo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "./.yarn/releases/yarn-3.5.0.cjs install --immutable",
+        "./.yarn/releases/yarn-3.5.0.cjs cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small     -c deployment_type=silo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
