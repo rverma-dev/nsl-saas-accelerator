@@ -1,9 +1,9 @@
 import { YARN } from './configuration';
 import { AddTenantFunction } from '../ddb-stream/add-tenant-function';
-import * as cdk from 'aws-cdk-lib';
-import * as codebuild from 'aws-cdk-lib/aws-codebuild';
+import { Aws, DefaultStackSynthesizer } from 'aws-cdk-lib';
+import { Project, Source, ComputeType, LinuxArmBuildImage, Cache, BuildSpec } from 'aws-cdk-lib/aws-codebuild';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
-import * as iam from 'aws-cdk-lib/aws-iam';
+import { PolicyStatement, Effect, Policy, PolicyDocument } from 'aws-cdk-lib/aws-iam';
 import { StartingPosition } from 'aws-cdk-lib/aws-lambda';
 import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { IBucket } from 'aws-cdk-lib/aws-s3';
@@ -36,20 +36,21 @@ export class ProvisioningProject extends Construct {
       })
     );
 
-    const project = new codebuild.Project(this, 'provisioning-project', {
+    const project = new Project(this, 'provisioning-project', {
       projectName: 'provisioning-project',
-      source: codebuild.Source.gitHub({
+      source: Source.gitHub({
         owner: props.owner,
         repo: props.repo,
         branchOrRef: props.branchOrRef || 'main',
         cloneDepth: 1
       }),
       environment: {
-        computeType: codebuild.ComputeType.SMALL,
+        computeType: ComputeType.SMALL,
+        buildImage: LinuxArmBuildImage.fromCodeBuildImageId('aws/codebuild/amazonlinux2-aarch64-standard:3.0'),
         privileged: false
       },
-      cache: codebuild.Cache.bucket(props.cacheBucket),
-      buildSpec: codebuild.BuildSpec.fromObject({
+      cache: Cache.bucket(props.cacheBucket),
+      buildSpec: BuildSpec.fromObject({
         version: '0.2',
         phases: {
           install: {
@@ -65,33 +66,33 @@ export class ProvisioningProject extends Construct {
       })
     });
     project.addToRolePolicy(
-      new iam.PolicyStatement({
+      new PolicyStatement({
         actions: ['sts:AssumeRole'],
         resources: [
-          `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${cdk.Aws.ACCOUNT_ID}-${cdk.Aws.REGION}}`,
-          `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${cdk.Aws.ACCOUNT_ID}-${cdk.Aws.REGION}}`,
-          `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/cdk-${cdk.DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${cdk.Aws.ACCOUNT_ID}-${cdk.Aws.REGION}}`
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`,
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`,
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`
         ],
-        effect: iam.Effect.ALLOW
+        effect: Effect.ALLOW
       })
     );
 
     // Allow provision project to get AWS regions.
     project.addToRolePolicy(
-      new iam.PolicyStatement({
+      new PolicyStatement({
         actions: ['ec2:DescribeRegions'],
-        effect: iam.Effect.ALLOW,
+        effect: Effect.ALLOW,
         resources: ['*']
       })
     );
 
     // Allow lambda to start codebuild
     streamTenant.role?.attachInlinePolicy(
-      new iam.Policy(this, 'start-pipeline-policy', {
-        document: new iam.PolicyDocument({
+      new Policy(this, 'start-pipeline-policy', {
+        document: new PolicyDocument({
           statements: [
-            new iam.PolicyStatement({
-              effect: iam.Effect.ALLOW,
+            new PolicyStatement({
+              effect: Effect.ALLOW,
               resources: [project.projectArn],
               actions: ['codebuild:StartBuild']
             })
