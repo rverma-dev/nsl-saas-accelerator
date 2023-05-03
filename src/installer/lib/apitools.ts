@@ -4,7 +4,7 @@ import {
   CloudFormationClient,
   ListStacksCommandInput,
   paginateListStacks,
-  StackSummary,
+  StackSummary
 } from '@aws-sdk/client-cloudformation';
 import {
   CodePipelineClient,
@@ -14,7 +14,7 @@ import {
   GetPipelineStateCommandInput,
   StartPipelineExecutionCommand,
   StartPipelineExecutionCommandInput,
-  StartPipelineExecutionCommandOutput,
+  StartPipelineExecutionCommandOutput
 } from '@aws-sdk/client-codepipeline';
 import { DynamoDBClient, paginateScan, ScanCommandInput } from '@aws-sdk/client-dynamodb';
 import { DescribeRegionsCommand, DescribeRegionsCommandInput, EC2Client } from '@aws-sdk/client-ec2';
@@ -28,7 +28,7 @@ export async function scanDynamoDB(): Promise<Array<DeploymentRecord>> {
 
   const records: Array<DeploymentRecord> = [];
   const params: ScanCommandInput = {
-    TableName: DEPLOYMENT_TABLE_NAME,
+    TableName: DEPLOYMENT_TABLE_NAME
   };
 
   const paginator = paginateScan({ client: client }, params);
@@ -40,7 +40,7 @@ export async function scanDynamoDB(): Promise<Array<DeploymentRecord>> {
         type: item.type.S!,
         tier: item.tier.S!,
         account: item.account.S!,
-        region: item.region.S!,
+        region: item.region.S!
       };
       records.push(record);
     });
@@ -54,7 +54,7 @@ export async function getCloudFormationStacks(): Promise<Array<string>> {
 
   const stacks: Array<string> = [];
   const params: ListStacksCommandInput = {
-    StackStatusFilter: ['CREATE_COMPLETE', 'ROLLBACK_COMPLETE', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_COMPLETE'],
+    StackStatusFilter: ['CREATE_COMPLETE', 'ROLLBACK_COMPLETE', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_COMPLETE']
   };
 
   const paginator = paginateListStacks({ client: client }, params);
@@ -77,12 +77,12 @@ export async function startPipelineExecution(pipeline: string): Promise<StartPip
 export async function waitPipelineExecution(
   pipeline: string,
   executionId: string,
-  maxWaitSeconds: number = 30 * 60,
+  maxWaitSeconds: number = 30 * 60
 ): Promise<boolean> {
   const client = new CodePipelineClient({ region: process.env.AWS_REGION });
   const input: GetPipelineExecutionCommandInput = {
     pipelineName: pipeline,
-    pipelineExecutionId: executionId,
+    pipelineExecutionId: executionId
   };
 
   console.log('Waiting for pipeline execution to complete.');

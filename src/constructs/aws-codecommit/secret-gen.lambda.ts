@@ -10,7 +10,6 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
   const username = event.ResourceProperties.username;
   const secretName = event.ResourceProperties.secretName;
   const solutionId: string = process.env.SOLUTION_ID ?? '';
-
   const iam = new IAM({ customUserAgent: solutionId });
   const secretsManager = new SecretsManager({ customUserAgent: solutionId });
 
@@ -22,7 +21,7 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
         let gitPassword = '';
         const listCred = await iam.listServiceSpecificCredentials({
           UserName: username,
-          ServiceName: 'codecommit.amazonaws.com',
+          ServiceName: 'codecommit.amazonaws.com'
         });
         if (listCred.ServiceSpecificCredentials && listCred.ServiceSpecificCredentials?.length > 0) {
           const codeCommitCredsMeta = listCred.ServiceSpecificCredentials.pop();
@@ -33,7 +32,7 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
         } else {
           const codeCommitCreds = await iam.createServiceSpecificCredential({
             UserName: username,
-            ServiceName: 'codecommit.amazonaws.com',
+            ServiceName: 'codecommit.amazonaws.com'
           });
 
           gitUser = codeCommitCreds.ServiceSpecificCredential!.ServiceUserName!;
@@ -41,18 +40,18 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
           gitCredId = codeCommitCreds.ServiceSpecificCredential!.ServiceSpecificCredentialId!;
 
           const listSecret = await secretsManager.listSecrets({
-            Filters: [{ Key: 'name', Values: [secretName] }],
+            Filters: [{ Key: 'name', Values: [secretName] }]
           });
           // Try to Create the secret in Secrets Manager if secret doesn't exists
           if (listSecret.SecretList && listSecret.SecretList.length === 0) {
             await secretsManager.createSecret({
               Name: secretName,
-              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
+              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId })
             });
           } else {
             await secretsManager.putSecretValue({
               SecretId: secretName,
-              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId }),
+              SecretString: JSON.stringify({ Username: gitUser, Password: gitPassword, credId: gitCredId })
             });
           }
         }
@@ -60,8 +59,8 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
           PhysicalResourceId: gitCredId,
           Data: {
             Username: gitUser,
-            Password: gitPassword,
-          },
+            Password: gitPassword
+          }
         };
       } catch (e) {
         console.error(e);
@@ -73,11 +72,11 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
         const gitCredId = JSON.parse(secretValue.SecretString!).credId;
         await iam.deleteServiceSpecificCredential({
           UserName: username,
-          ServiceSpecificCredentialId: gitCredId,
+          ServiceSpecificCredentialId: gitCredId
         });
         await secretsManager.deleteSecret({
           SecretId: secretName,
-          RecoveryWindowInDays: 7,
+          RecoveryWindowInDays: 7
         });
       } catch (e) {
         console.error(e);
@@ -86,6 +85,6 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
   }
 
   return {
-    PhysicalResourceId: 'Not Defined',
+    PhysicalResourceId: 'Not Defined'
   };
 }

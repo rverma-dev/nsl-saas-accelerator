@@ -41,7 +41,7 @@ const componentRegion = <string>app.node.tryGetContext('component_region');
 if (!deploymentType) {
   // Mode A: synthesize the main toolchain stack
   new ToolchainStack(app, 'saas-accelerator', {
-    env: TOOLCHAIN_ENV,
+    env: TOOLCHAIN_ENV
   });
 } else if (componentRegion != 'local') {
   // Mode B: synthetize the workload pipeline stack
@@ -51,7 +51,7 @@ if (!deploymentType) {
     type: deploymentType,
     tier: deploymentTier,
     region: componentRegion,
-    account: componentAccount,
+    account: componentAccount
   };
   const stackName = getPipelineName(workloadProps);
   console.log(`Synthesizing stack for ${stackName} in ${componentAccount}/${componentRegion}`);

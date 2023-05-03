@@ -22,7 +22,7 @@ test('Workload DEMO Stack', () => {
     type: 'demo',
     tier: 'small',
     account: TOOLCHAIN_ENV.account,
-    region: TOOLCHAIN_ENV.region,
+    region: TOOLCHAIN_ENV.region
   });
   const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
@@ -39,7 +39,7 @@ test('Workload POOL Stack', () => {
     type: 'pool',
     tier: 'small',
     account: TOOLCHAIN_ENV.account,
-    region: TOOLCHAIN_ENV.region,
+    region: TOOLCHAIN_ENV.region
   });
   const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();
@@ -56,7 +56,7 @@ test('Workload SILO Stack', () => {
     type: 'silo',
     tier: 'small',
     account: TOOLCHAIN_ENV.account,
-    region: TOOLCHAIN_ENV.region,
+    region: TOOLCHAIN_ENV.region
   });
   const template = Template.fromStack(stack);
   expect(template.toJSON()).toMatchSnapshot();

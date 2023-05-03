@@ -22,7 +22,7 @@ async function startBuildCommand(record: DeploymentDynamoRecord): Promise<void> 
     { name: 'DEPLOYMENT_TYPE', value: record.type },
     { name: 'DEPLOYMENT_TIER', value: record.tier },
     { name: 'COMPONENT_ACCOUNT', value: record.account },
-    { name: 'COMPONENT_REGION', value: record.region },
+    { name: 'COMPONENT_REGION', value: record.region }
   ];
 
   console.log(`Calling startBuild() on CodeBuild project ${projectName}, env ${env}`);
@@ -30,7 +30,7 @@ async function startBuildCommand(record: DeploymentDynamoRecord): Promise<void> 
   try {
     const result = await codebuild.startBuild({
       projectName: projectName!,
-      environmentVariablesOverride: env,
+      environmentVariablesOverride: env
     });
     console.log('Build started successfully:', result);
   } catch (error) {
@@ -48,7 +48,7 @@ const processInsertRecord = async (record: DynamoDBRecord): Promise<void> => {
       type: input.type.S!,
       tier: input.tier.S!,
       account: input.account.S!,
-      region: input.region.S!,
+      region: input.region.S!
     };
     console.log('Processing record:', newRecord);
     await startBuildCommand(newRecord);

@@ -1,6 +1,6 @@
+import { Husky, Commitlint } from '@mountainpass/cool-bits-for-projen';
 import { awscdk } from 'projen';
 import { ArrowParens, NodePackageManager, TrailingComma } from 'projen/lib/javascript';
-import { Husky, Commitlint } from '@mountainpass/cool-bits-for-projen';
 
 const AWS_SDK_VERSION = '^3.316.0';
 const CDK_VERSION = '2.76.0';
@@ -19,14 +19,15 @@ const project = new awscdk.AwsCdkTypeScriptApp({
       singleQuote: true,
       tabWidth: 2,
       printWidth: 120,
-      trailingComma: TrailingComma.ALL,
+      trailingComma: TrailingComma.NONE,
       arrowParens: ArrowParens.AVOID,
-    },
+      bracketSameLine: true
+    }
   },
   stale: true,
   autoApproveUpgrades: true,
   autoApproveOptions: {
-    allowedUsernames: ['rverma-nsl'],
+    allowedUsernames: ['rverma-nsl']
   },
   autoMerge: true,
   buildWorkflow: true,
@@ -37,7 +38,9 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   packageManager: NodePackageManager.YARN2,
   eslintOptions: {
     dirs: [],
-    ignorePatterns: ['*.js', '*.d.ts', 'node_modules/', '*.generated.ts', 'coverage', '*.gen-function.ts'],
+    prettier: true,
+    yaml: true,
+    ignorePatterns: ['*.js', '*.d.ts', 'node_modules/', '*.generated.ts', 'coverage', '*.gen-function.ts']
   },
   gitignore: [
     '.idea',
@@ -48,7 +51,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '!.yarn/versions',
     '!.yarn/sdks',
     'build_output',
-    'cdk.context.json',
+    'cdk.context.json'
   ],
   deps: [
     '@aws-quickstart/eks-blueprints',
@@ -67,7 +70,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'js-yaml@4.1.0',
     'sync-request@6.1.0',
     'source-map-support',
-    'vm2@3.9.17',
+    'vm2@3.9.17'
   ],
   devDeps: ['@types/aws-lambda', 'aws-lambda', '@mountainpass/cool-bits-for-projen'],
   lambdaAutoDiscover: true,
@@ -75,15 +78,15 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     runtime: awscdk.LambdaRuntime.NODEJS_18_X,
     bundlingOptions: {
       externals: ['aws-sdk'],
-      sourcemap: true,
-    },
+      sourcemap: true
+    }
   },
   jestOptions: {
     jestConfig: {
       detectOpenHandles: true,
       testPathIgnorePatterns: ['/node_modules/', '/cdk.out/', '/assets/'],
-      snapshotSerializers: ['./test/cdk-serializer.js'],
-    },
+      snapshotSerializers: ['./test/cdk-serializer.js']
+    }
   },
   // https://github.com/aws/aws-cdk/blob/main/packages/%40aws-cdk/cx-api/FEATURE_FLAGS.mds
   context: {
@@ -113,8 +116,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@aws-cdk/aws-redshift:columnId': true,
     '@aws-cdk/aws-stepfunctions-tasks:enableEmrServicePolicyV2': true,
     '@aws-cdk/core:newStyleStackSynthesis': true,
-    'acknowledged-issue-numbers': [25356],
-  },
+    'acknowledged-issue-numbers': [25356]
+  }
 });
 new Husky(project, {
   huskyHooks: {
@@ -133,9 +136,9 @@ fi
 # Run the viperlight scan
 "$VIPERLIGHT_DIR/bin/viperlight" scan
 yarn build
-`,
-    ],
-  },
+`
+    ]
+  }
 });
 new Commitlint(project);
 project.synth();

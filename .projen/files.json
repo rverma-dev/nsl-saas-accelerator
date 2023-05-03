@@ -1,7 +1,7 @@
 {
   "files": [
     ".commitlintrc.json",
-    ".eslintrc.json",
+    ".eslintrc.yml",
     ".gitattributes",
     ".github/dependabot.yml",
     ".github/pull_request_template.md",

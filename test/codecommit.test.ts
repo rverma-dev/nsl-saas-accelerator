@@ -8,7 +8,7 @@ describe('GitopsSecret', () => {
   test('Snapshot test', () => {
     new CreateGitopsSecretResource(stack, 'codeCommitSecret', {
       username: 'XXXX',
-      secretName: 'demo',
+      secretName: 'demo'
     });
     const template = Template.fromStack(stack);
     expect(template.toJSON()).toMatchSnapshot();

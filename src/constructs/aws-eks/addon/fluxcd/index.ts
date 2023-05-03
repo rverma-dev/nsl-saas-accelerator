@@ -1,10 +1,10 @@
+import { createSecretRef } from './manifest-utils';
 import { ClusterAddOn, ClusterInfo, SecretProviderClass, utils } from '@aws-quickstart/eks-blueprints';
+import { aws_eks as eks } from 'aws-cdk-lib';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import * as yaml from 'js-yaml';
 import * as request from 'sync-request';
-import { createSecretRef } from './manifest-utils';
-import { aws_eks as eks } from 'aws-cdk-lib';
-import * as iam from 'aws-cdk-lib/aws-iam';
 
 export class FluxV2Props {
   readonly fluxVersion?: string;
@@ -19,7 +19,7 @@ export class FluxV2Props {
 const defaultProps = {
   k8secret: 'flux-system',
   repoBranch: 'main',
-  repoPath: '/',
+  repoPath: '/'
 };
 
 export class FluxRelease {
@@ -41,11 +41,11 @@ export class FluxRelease {
       request
         .default('GET', metadataUrl, {
           headers: {
-            'User-Agent': 'CDK', // GH API requires us to set UA
-          },
+            'User-Agent': 'CDK' // GH API requires us to set UA
+          }
         })
         .getBody()
-        .toString(),
+        .toString()
     );
 
     return releaseMetadata.tag_name;
@@ -76,11 +76,11 @@ export class FluxV2Addon implements ClusterAddOn {
     const csiSecret = createSecretRef(
       this.fluxV2Props.credentialsType!,
       this.fluxV2Props.secretName,
-      this.fluxV2Props.k8secret,
+      this.fluxV2Props.k8secret
     );
     const sa = this.createIRSA(cluster);
     const secretProviderClassVM = new SecretProviderClass(clusterInfo, sa, 'flux-system', csiSecret).getVolumeMounts(
-      'flux-system',
+      'flux-system'
     );
 
     const secretSync = cluster.addManifest('FluxSyncSecret', {
@@ -88,7 +88,7 @@ export class FluxV2Addon implements ClusterAddOn {
       kind: 'Pod',
       metadata: {
         name: 'flux-gitrepository-sync',
-        namespace: 'flux-system',
+        namespace: 'flux-system'
       },
       spec: {
         serviceAccountName: 'flux-system-git-sa',
@@ -97,11 +97,11 @@ export class FluxV2Addon implements ClusterAddOn {
             name: 'busybox',
             image: 'registry.k8s.io/e2e-test-images/busybox:1.29',
             command: ['/bin/sleep', '10000'],
-            volumeMounts: secretProviderClassVM.volumeMounts,
-          },
+            volumeMounts: secretProviderClassVM.volumeMounts
+          }
         ],
-        volumes: secretProviderClassVM.volumes,
-      },
+        volumes: secretProviderClassVM.volumes
+      }
     });
 
     /**
@@ -134,18 +134,18 @@ export class FluxV2Addon implements ClusterAddOn {
       kind: 'GitRepository',
       metadata: {
         name: 'flux-system',
-        namespace: 'flux-system',
+        namespace: 'flux-system'
       },
       spec: {
         interval: '10m0s',
         ref: {
-          branch: this.fluxV2Props.repoBranch,
+          branch: this.fluxV2Props.repoBranch
         },
         secretRef: {
-          name: csiSecret.kubernetesSecret?.secretName,
+          name: csiSecret.kubernetesSecret?.secretName
         },
-        url: this.fluxV2Props.repoUrl,
-      },
+        url: this.fluxV2Props.repoUrl
+      }
     });
     gitRepoManifest.node.addDependency(fluxResourceNodes[fluxResourceNodes.length - 1]);
 
@@ -154,7 +154,7 @@ export class FluxV2Addon implements ClusterAddOn {
       kind: 'Kustomization',
       metadata: {
         name: 'flux-system',
-        namespace: 'flux-system',
+        namespace: 'flux-system'
       },
       spec: {
         interval: '10m0s',
@@ -162,10 +162,10 @@ export class FluxV2Addon implements ClusterAddOn {
         prune: true,
         sourceRef: {
           kind: 'GitRepository',
-          name: 'flux-system',
+          name: 'flux-system'
         },
-        validation: 'client',
-      },
+        validation: 'client'
+      }
     });
     kustomizationManifest.node.addDependency(fluxResourceNodes[fluxResourceNodes.length - 1]);
   }
@@ -176,7 +176,7 @@ export class FluxV2Addon implements ClusterAddOn {
     readSecretStatement.addActions('secretsmanager:Get*');
 
     const sourceControllerPolicy = new iam.PolicyDocument({
-      statements: [readSecretStatement],
+      statements: [readSecretStatement]
     });
     return utils.createServiceAccount(cluster, 'flux-system-git-sa', 'flux-system', sourceControllerPolicy);
   }

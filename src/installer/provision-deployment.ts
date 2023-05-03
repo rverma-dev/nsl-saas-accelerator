@@ -46,7 +46,7 @@ const newRecord: DeploymentRecord = {
   type: process.env.DEPLOYMENT_TYPE,
   tier: process.env.DEPLOYMENT_TIER,
   account: process.env.COMPONENT_ACCOUNT,
-  region: process.env.COMPONENT_REGION,
+  region: process.env.COMPONENT_REGION
 };
 
 console.log('New deployment record:');

@@ -1,11 +1,11 @@
-import * as blueprints from '@aws-quickstart/eks-blueprints';
-import { Construct } from 'constructs';
 import { FluxV2Addon } from './addon';
+import * as blueprints from '@aws-quickstart/eks-blueprints';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { CapacityType, KubernetesVersion, NodegroupAmiType } from 'aws-cdk-lib/aws-eks';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 const BOTTLEROCKET_ON_DEMAND_INSTANCES: ec2.InstanceType[] = [new ec2.InstanceType('t4g.xlarge')];
 
@@ -24,8 +24,8 @@ export class EksCluster {
     const teams = [
       new blueprints.PlatformTeam({
         name: 'platform',
-        userRoleArn: `arn:aws:iam::${props.account}:role/${props.platformTeamRole}`,
-      }),
+        userRoleArn: `arn:aws:iam::${props.account}:role/${props.platformTeamRole}`
+      })
     ];
 
     blueprints.HelmAddOn.validateHelmVersions = true;
@@ -37,8 +37,8 @@ export class EksCluster {
       [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEKSWorkerNodePolicy'),
         iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEC2ContainerRegistryReadOnly'),
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'),
-      ],
+        iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore')
+      ]
     );
 
     // AddOns for the cluster.
@@ -50,24 +50,24 @@ export class EksCluster {
             context =>
               new kms.Key(context.scope, `blueprint-${scope.node.id}-ebs-csi-driver`, {
                 alias: `blueprint-${scope.node.id}/csi-driver`,
-                enableKeyRotation: true,
-              }),
-          ),
-        ],
+                enableKeyRotation: true
+              })
+          )
+        ]
       }),
       new blueprints.addons.KarpenterAddOn({
         consolidation: { enabled: true },
         subnetTags: {
-          ['kubernetes.io/role/internal-elb']: '1',
+          ['kubernetes.io/role/internal-elb']: '1'
         },
         securityGroupTags: {
-          [`kubernetes.io/cluster/blueprint-${scope.node.id}`]: 'owned',
-        },
+          [`kubernetes.io/cluster/blueprint-${scope.node.id}`]: 'owned'
+        }
       }),
       new blueprints.addons.AwsLoadBalancerControllerAddOn(),
       new blueprints.addons.VpcCniAddOn({
         eniConfigLabelDef: 'topology.kubernetes.io/zone',
-        serviceAccountPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEKS_CNI_Policy')],
+        serviceAccountPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonEKS_CNI_Policy')]
       }),
       new blueprints.addons.CoreDnsAddOn(),
       new blueprints.addons.KubeProxyAddOn(),
@@ -77,8 +77,8 @@ export class EksCluster {
         podSecurityContextFsGroup: 1001,
         securityContextRunAsGroup: 1001,
         securityContextRunAsUser: 1001,
-        irsaRoles: ['CloudWatchFullAccess', 'AmazonSQSFullAccess'],
-      }),
+        irsaRoles: ['CloudWatchFullAccess', 'AmazonSQSFullAccess']
+      })
     ];
 
     if (props.gitopsRepoBranch && props.gitopsRepoUrl && props.gitopsRepoSecret) {
@@ -86,7 +86,7 @@ export class EksCluster {
         credentialsType: 'USERNAME',
         repoBranch: props.gitopsRepoBranch,
         repoUrl: props.gitopsRepoUrl,
-        secretName: props.gitopsRepoSecret,
+        secretName: props.gitopsRepoSecret
       });
       addOns.push(flux);
     }
@@ -102,9 +102,9 @@ export class EksCluster {
           nodeGroupCapacityType: CapacityType.ON_DEMAND,
           amiType: NodegroupAmiType.BOTTLEROCKET_ARM_64,
           nodeRole: blueprints.getNamedResource('node-role') as iam.Role,
-          nodeGroupSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-        },
-      ],
+          nodeGroupSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }
+        }
+      ]
     });
 
     const cluster = blueprints.EksBlueprint.builder()
@@ -113,7 +113,7 @@ export class EksCluster {
         blueprints.GlobalResources.Vpc,
         props.vpcID
           ? new blueprints.VpcProvider(props.vpcID)
-          : new blueprints.VpcProvider(undefined, '100.64.0.0/16', ['100.64.0.0/24', '100.64.1.0/24', '100.64.2.0/24']),
+          : new blueprints.VpcProvider(undefined, '100.64.0.0/16', ['100.64.0.0/24', '100.64.1.0/24', '100.64.2.0/24'])
       )
       .resourceProvider('node-role', nodeRole)
       .clusterProvider(clusterProvider)
@@ -133,9 +133,9 @@ export class EksCluster {
         { id: 'AwsSolutions-EKS2', reason: 'Public access for demo purposes' },
         { id: 'AwsSolutions-AS3', reason: 'Notifications disabled' },
         { id: 'AwsSolutions-VPC7', reason: 'Sample code for demo purposes, flow logs disabled' },
-        { id: 'AwsSolutions-KMS5', reason: 'Sample code for demo purposes, flow logs disabled' },
+        { id: 'AwsSolutions-KMS5', reason: 'Sample code for demo purposes, flow logs disabled' }
       ],
-      true,
+      true
     );
   }
 }

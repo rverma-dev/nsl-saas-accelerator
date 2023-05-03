@@ -6,14 +6,6 @@ exports[`ToolChain Stack 1`] = `
     cdk_nag: {
       rules_to_suppress: [
         {
-          id: AwsSolutions-S1,
-          reason: Internal codebuild bucket,
-        },
-        {
-          id: AwsSolutions-L1,
-          reason: Internal codebuild bucket,
-        },
-        {
           id: AwsSolutions-IAM4,
           reason: Managed IAM Policies,
         },
@@ -28,16 +20,6 @@ exports[`ToolChain Stack 1`] = `
       ],
     },
   },
-  Outputs: {
-    installpipelineArtifactsBucketOutput718D50F5: {
-      Export: {
-        Name: toolchainBucket,
-      },
-      Value: {
-        Ref: installpipelineArtifactsBucketBEF15C5E,
-      },
-    },
-  },
   Parameters: {
     BootstrapVersion: {
       Default: /cdk-bootstrap/hnb659fds/version,
@@ -46,14 +28,6 @@ exports[`ToolChain Stack 1`] = `
     },
   },
   Resources: {
-    AssetTagF8174CE3: {
-      Properties: {
-        Name: /toolchain/asset-tag,
-        Type: String,
-        Value: ASSET_HASH_64,
-      },
-      Type: AWS::SSM::Parameter,
-    },
     CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0: {
       DependsOn: [
         CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65,
@@ -121,176 +95,6 @@ exports[`ToolChain Stack 1`] = `
       },
       Type: AWS::IAM::Role,
     },
-    CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F: {
-      DependsOn: [
-        CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
-      ],
-      Properties: {
-        Code: {
-          S3Bucket: {
-            Fn::Sub: cdk-hnb659fds-assets-\${AWS::AccountId}-ap-south-1,
-          },
-          S3Key: ZIP,
-        },
-        Description: {
-          Fn::Join: [
-            ,
-            [
-              Lambda function for auto-deleting objects in ,
-              {
-                Ref: installpipelineAccessLogsBucketC0C7CACD,
-              },
-               S3 bucket.,
-            ],
-          ],
-        },
-        Handler: __entrypoint__.handler,
-        MemorySize: 128,
-        Role: {
-          Fn::GetAtt: [
-            CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
-            Arn,
-          ],
-        },
-        Runtime: nodejs14.x,
-        Timeout: 900,
-      },
-      Type: AWS::Lambda::Function,
-    },
-    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092: {
-      Properties: {
-        AssumeRolePolicyDocument: {
-          Statement: [
-            {
-              Action: sts:AssumeRole,
-              Effect: Allow,
-              Principal: {
-                Service: lambda.amazonaws.com,
-              },
-            },
-          ],
-          Version: 2012-10-17,
-        },
-        ManagedPolicyArns: [
-          {
-            Fn::Sub: arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole,
-          },
-        ],
-      },
-      Type: AWS::IAM::Role,
-    },
-    addtenantfunctionA8F9C8F8: {
-      DependsOn: [
-        addtenantfunctionServiceRoleDefaultPolicy8378E252,
-        addtenantfunctionServiceRole17A72CD1,
-      ],
-      Properties: {
-        Code: {
-          S3Bucket: {
-            Fn::Sub: cdk-hnb659fds-assets-\${AWS::AccountId}-ap-south-1,
-          },
-          S3Key: ZIP,
-        },
-        Description: src/installer/ddb-stream/add-tenant.lambda.ts,
-        Environment: {
-          Variables: {
-            AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1,
-            PROJECT_NAME: provisioning-project,
-          },
-        },
-        Handler: index.handler,
-        Role: {
-          Fn::GetAtt: [
-            addtenantfunctionServiceRole17A72CD1,
-            Arn,
-          ],
-        },
-        Runtime: nodejs18.x,
-      },
-      Type: AWS::Lambda::Function,
-    },
-    addtenantfunctionDynamoDBEventSourcetoolchaindeploymenttable3225D94FA999B1A4: {
-      Properties: {
-        BatchSize: 100,
-        EventSourceArn: {
-          Fn::GetAtt: [
-            deploymenttableC3BF9083,
-            StreamArn,
-          ],
-        },
-        FunctionName: {
-          Ref: addtenantfunctionA8F9C8F8,
-        },
-        StartingPosition: LATEST,
-      },
-      Type: AWS::Lambda::EventSourceMapping,
-    },
-    addtenantfunctionServiceRole17A72CD1: {
-      Properties: {
-        AssumeRolePolicyDocument: {
-          Statement: [
-            {
-              Action: sts:AssumeRole,
-              Effect: Allow,
-              Principal: {
-                Service: lambda.amazonaws.com,
-              },
-            },
-          ],
-          Version: 2012-10-17,
-        },
-        ManagedPolicyArns: [
-          {
-            Fn::Join: [
-              ,
-              [
-                arn:,
-                {
-                  Ref: AWS::Partition,
-                },
-                :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole,
-              ],
-            ],
-          },
-        ],
-      },
-      Type: AWS::IAM::Role,
-    },
-    addtenantfunctionServiceRoleDefaultPolicy8378E252: {
-      Properties: {
-        PolicyDocument: {
-          Statement: [
-            {
-              Action: dynamodb:ListStreams,
-              Effect: Allow,
-              Resource: *,
-            },
-            {
-              Action: [
-                dynamodb:DescribeStream,
-                dynamodb:GetRecords,
-                dynamodb:GetShardIterator,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  deploymenttableC3BF9083,
-                  StreamArn,
-                ],
-              },
-            },
-          ],
-          Version: 2012-10-17,
-        },
-        PolicyName: addtenantfunctionServiceRoleDefaultPolicy8378E252,
-        Roles: [
-          {
-            Ref: addtenantfunctionServiceRole17A72CD1,
-          },
-        ],
-      },
-      Type: AWS::IAM::Policy,
-    },
     deploymenttableC3BF9083: {
       DeletionPolicy: Delete,
       Properties: {
@@ -323,7 +127,7 @@ exports[`ToolChain Stack 1`] = `
       Type: AWS::DynamoDB::Table,
       UpdateReplacePolicy: Delete,
     },
-    gitHubecrpushrole86E6D381: {
+    gitHubecrpushroleBB7A75BA: {
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -337,44 +141,54 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Principal: {
                 Federated: {
-                  Ref: githuboidcprovider510B14A8,
+                  Ref: gitHubecrpushrolegithuboidcprovider7BAC8B56,
                 },
               },
             },
           ],
           Version: 2012-10-17,
         },
-        Description: This role is used via GitHub Actions to deploy with AWS CDK or Terraform on the target AWS account,
-        MaxSessionDuration: 3600,
         Policies: [
           {
             PolicyDocument: {
               Statement: [
                 {
                   Action: [
-                    ecr:BatchGetImage,
                     ecr:BatchCheckLayerAvailability,
-                    ecr:CompleteLayerUpload,
                     ecr:GetDownloadUrlForLayer,
-                    ecr:InitiateLayerUpload,
+                    ecr:BatchGetImage,
                     ecr:PutImage,
-                    ecr:UploadLayerPart,
                     ecr:GetAuthorizationToken,
                   ],
                   Effect: Allow,
-                  Resource: *,
+                  Resource: {
+                    Fn::Join: [
+                      ,
+                      [
+                        arn:aws:ecr:,
+                        {
+                          Ref: AWS::Region,
+                        },
+                        :,
+                        {
+                          Ref: AWS::AccountId,
+                        },
+                        :repository/rverma-nsl/nsl-saas-accelerator/*,
+                      ],
+                    ],
+                  },
                 },
               ],
               Version: 2012-10-17,
             },
-            PolicyName: githubAction,
+            PolicyName: ecr-push,
           },
         ],
         RoleName: gitHubSaasDeployRole,
       },
       Type: AWS::IAM::Role,
     },
-    githuboidcprovider510B14A8: {
+    gitHubecrpushrolegithuboidcprovider7BAC8B56: {
       DeletionPolicy: Delete,
       Properties: {
         ClientIDList: [
@@ -392,380 +206,6 @@ exports[`ToolChain Stack 1`] = `
       Type: Custom::AWSCDKOpenIdConnectProvider,
       UpdateReplacePolicy: Delete,
     },
-    installpipelineAccessLogsBucketAutoDeleteObjectsCustomResource44E6A4E7: {
-      DeletionPolicy: Delete,
-      DependsOn: [
-        installpipelineAccessLogsBucketPolicy53F09539,
-      ],
-      Properties: {
-        BucketName: {
-          Ref: installpipelineAccessLogsBucketC0C7CACD,
-        },
-        ServiceToken: {
-          Fn::GetAtt: [
-            CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F,
-            Arn,
-          ],
-        },
-      },
-      Type: Custom::S3AutoDeleteObjects,
-      UpdateReplacePolicy: Delete,
-    },
-    installpipelineAccessLogsBucketC0C7CACD: {
-      DeletionPolicy: Delete,
-      Properties: {
-        BucketEncryption: {
-          ServerSideEncryptionConfiguration: [
-            {
-              ServerSideEncryptionByDefault: {
-                SSEAlgorithm: AES256,
-              },
-            },
-          ],
-        },
-        OwnershipControls: {
-          Rules: [
-            {
-              ObjectOwnership: BucketOwnerEnforced,
-            },
-          ],
-        },
-        PublicAccessBlockConfiguration: {
-          BlockPublicAcls: true,
-          BlockPublicPolicy: true,
-          IgnorePublicAcls: true,
-          RestrictPublicBuckets: true,
-        },
-        Tags: [
-          {
-            Key: aws-cdk:auto-delete-objects,
-            Value: true,
-          },
-        ],
-      },
-      Type: AWS::S3::Bucket,
-      UpdateReplacePolicy: Delete,
-    },
-    installpipelineAccessLogsBucketPolicy53F09539: {
-      Properties: {
-        Bucket: {
-          Ref: installpipelineAccessLogsBucketC0C7CACD,
-        },
-        PolicyDocument: {
-          Statement: [
-            {
-              Action: s3:*,
-              Condition: {
-                Bool: {
-                  aws:SecureTransport: false,
-                },
-              },
-              Effect: Deny,
-              Principal: {
-                AWS: *,
-              },
-              Resource: [
-                {
-                  Fn::GetAtt: [
-                    installpipelineAccessLogsBucketC0C7CACD,
-                    Arn,
-                  ],
-                },
-                {
-                  Fn::Join: [
-                    ,
-                    [
-                      {
-                        Fn::GetAtt: [
-                          installpipelineAccessLogsBucketC0C7CACD,
-                          Arn,
-                        ],
-                      },
-                      /*,
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              Action: [
-                s3:GetBucket*,
-                s3:List*,
-                s3:DeleteObject*,
-              ],
-              Effect: Allow,
-              Principal: {
-                AWS: {
-                  Fn::GetAtt: [
-                    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
-                    Arn,
-                  ],
-                },
-              },
-              Resource: [
-                {
-                  Fn::GetAtt: [
-                    installpipelineAccessLogsBucketC0C7CACD,
-                    Arn,
-                  ],
-                },
-                {
-                  Fn::Join: [
-                    ,
-                    [
-                      {
-                        Fn::GetAtt: [
-                          installpipelineAccessLogsBucketC0C7CACD,
-                          Arn,
-                        ],
-                      },
-                      /*,
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              Action: s3:PutObject,
-              Condition: {
-                ArnLike: {
-                  aws:SourceArn: {
-                    Fn::GetAtt: [
-                      installpipelineArtifactsBucketBEF15C5E,
-                      Arn,
-                    ],
-                  },
-                },
-                StringEquals: {
-                  aws:SourceAccount: {
-                    Ref: AWS::AccountId,
-                  },
-                },
-              },
-              Effect: Allow,
-              Principal: {
-                Service: logging.s3.amazonaws.com,
-              },
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    {
-                      Fn::GetAtt: [
-                        installpipelineAccessLogsBucketC0C7CACD,
-                        Arn,
-                      ],
-                    },
-                    /access-logs*,
-                  ],
-                ],
-              },
-            },
-          ],
-          Version: 2012-10-17,
-        },
-      },
-      Type: AWS::S3::BucketPolicy,
-    },
-    installpipelineArtifactKey26F37951: {
-      DeletionPolicy: Delete,
-      Properties: {
-        EnableKeyRotation: true,
-        KeyPolicy: {
-          Statement: [
-            {
-              Action: kms:*,
-              Effect: Allow,
-              Principal: {
-                AWS: {
-                  Fn::Join: [
-                    ,
-                    [
-                      arn:,
-                      {
-                        Ref: AWS::Partition,
-                      },
-                      :iam::,
-                      {
-                        Ref: AWS::AccountId,
-                      },
-                      :root,
-                    ],
-                  ],
-                },
-              },
-              Resource: *,
-            },
-          ],
-          Version: 2012-10-17,
-        },
-      },
-      Type: AWS::KMS::Key,
-      UpdateReplacePolicy: Delete,
-    },
-    installpipelineArtifactKeyAliasAB1E9C4D: {
-      Properties: {
-        AliasName: alias/pipeline/toolchain,
-        TargetKeyId: {
-          Fn::GetAtt: [
-            installpipelineArtifactKey26F37951,
-            Arn,
-          ],
-        },
-      },
-      Type: AWS::KMS::Alias,
-    },
-    installpipelineArtifactsBucketAutoDeleteObjectsCustomResourceEC86D026: {
-      DeletionPolicy: Delete,
-      DependsOn: [
-        installpipelineArtifactsBucketPolicy83D44F64,
-      ],
-      Properties: {
-        BucketName: {
-          Ref: installpipelineArtifactsBucketBEF15C5E,
-        },
-        ServiceToken: {
-          Fn::GetAtt: [
-            CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F,
-            Arn,
-          ],
-        },
-      },
-      Type: Custom::S3AutoDeleteObjects,
-      UpdateReplacePolicy: Delete,
-    },
-    installpipelineArtifactsBucketBEF15C5E: {
-      DeletionPolicy: Delete,
-      Properties: {
-        BucketEncryption: {
-          ServerSideEncryptionConfiguration: [
-            {
-              ServerSideEncryptionByDefault: {
-                KMSMasterKeyID: {
-                  Fn::GetAtt: [
-                    installpipelineArtifactKey26F37951,
-                    Arn,
-                  ],
-                },
-                SSEAlgorithm: aws:kms,
-              },
-            },
-          ],
-        },
-        LoggingConfiguration: {
-          DestinationBucketName: {
-            Ref: installpipelineAccessLogsBucketC0C7CACD,
-          },
-          LogFilePrefix: access-logs,
-        },
-        OwnershipControls: {
-          Rules: [
-            {
-              ObjectOwnership: BucketOwnerEnforced,
-            },
-          ],
-        },
-        PublicAccessBlockConfiguration: {
-          BlockPublicAcls: true,
-          BlockPublicPolicy: true,
-          IgnorePublicAcls: true,
-          RestrictPublicBuckets: true,
-        },
-        Tags: [
-          {
-            Key: aws-cdk:auto-delete-objects,
-            Value: true,
-          },
-        ],
-      },
-      Type: AWS::S3::Bucket,
-      UpdateReplacePolicy: Delete,
-    },
-    installpipelineArtifactsBucketPolicy83D44F64: {
-      Properties: {
-        Bucket: {
-          Ref: installpipelineArtifactsBucketBEF15C5E,
-        },
-        PolicyDocument: {
-          Statement: [
-            {
-              Action: s3:*,
-              Condition: {
-                Bool: {
-                  aws:SecureTransport: false,
-                },
-              },
-              Effect: Deny,
-              Principal: {
-                AWS: *,
-              },
-              Resource: [
-                {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
-                  ],
-                },
-                {
-                  Fn::Join: [
-                    ,
-                    [
-                      {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
-                      },
-                      /*,
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              Action: [
-                s3:GetBucket*,
-                s3:List*,
-                s3:DeleteObject*,
-              ],
-              Effect: Allow,
-              Principal: {
-                AWS: {
-                  Fn::GetAtt: [
-                    CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092,
-                    Arn,
-                  ],
-                },
-              },
-              Resource: [
-                {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
-                  ],
-                },
-                {
-                  Fn::Join: [
-                    ,
-                    [
-                      {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
-                      },
-                      /*,
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          Version: 2012-10-17,
-        },
-      },
-      Type: AWS::S3::BucketPolicy,
-    },
     installpipelineCodePipeline1DB150A2: {
       DependsOn: [
         installpipelineCodePipelineRoleDefaultPolicy2CE1856D,
@@ -773,17 +213,8 @@ exports[`ToolChain Stack 1`] = `
       ],
       Properties: {
         ArtifactStore: {
-          EncryptionKey: {
-            Id: {
-              Fn::GetAtt: [
-                installpipelineArtifactKey26F37951,
-                Arn,
-              ],
-            },
-            Type: KMS,
-          },
           Location: {
-            Ref: installpipelineArtifactsBucketBEF15C5E,
+            Fn::ImportValue: toolchainBucket,
           },
           Type: S3,
         },
@@ -938,42 +369,26 @@ exports[`ToolChain Stack 1`] = `
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
-        },
-        Description: Pipeline step toolchain/CodePipeline/Build/Synth,
-        EncryptionKey: {
-          Fn::GetAtt: [
-            installpipelineArtifactKey26F37951,
-            Arn,
-          ],
-        },
-        Environment: {
-          ComputeType: BUILD_GENERAL1_SMALL,
-          Image: {
+          Location: {
             Fn::Join: [
-              ,
+              /,
               [
                 {
-                  Ref: AWS::AccountId,
+                  Fn::ImportValue: cdkCacheBucket,
                 },
-                .dkr.ecr.ap-south-1.,
-                {
-                  Ref: AWS::URLSuffix,
-                },
-                /,
-                {
-                  Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                },
-                :ASSET_HASH_64,
+                ASSET_HASH_64/,
               ],
             ],
           },
-          ImagePullCredentialsType: SERVICE_ROLE,
-          PrivilegedMode: true,
+          Type: S3,
+        },
+        Description: Pipeline step toolchain/CodePipeline/Build/Synth,
+        EncryptionKey: alias/aws/s3,
+        Environment: {
+          ComputeType: BUILD_GENERAL1_SMALL,
+          Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
+          ImagePullCredentialsType: CODEBUILD,
+          PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
         ServiceRole: {
@@ -984,11 +399,20 @@ exports[`ToolChain Stack 1`] = `
         },
         Source: {
           BuildSpec: {
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*"
+    ]
+  },
   "version": "0.2",
   "phases": {
     "install": {
       "commands": [
-        "yarn install --immutable --immutable-cache"
+        "n 18",
+        "corepack enable",
+        "corepack prepare yarn@stable --activate",
+        "yarn set version stable",
+        "yarn install --immutable"
       ]
     },
     "build": {
@@ -999,7 +423,9 @@ exports[`ToolChain Stack 1`] = `
   },
   "artifacts": {
     "base-directory": "cdk.out",
-    "files": "**/*"
+    "files": [
+      "**/*"
+    ]
   }
 },
           Type: CODEPIPELINE,
@@ -1030,35 +456,51 @@ exports[`ToolChain Stack 1`] = `
           Statement: [
             {
               Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
               ],
               Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/,
-                    {
-                      Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                    },
+              Resource: [
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                    ],
                   ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
             },
             {
               Action: [
@@ -1155,57 +597,37 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
+                      },
+                    ],
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
+                      arn:,
                       {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
                       },
                       /*,
                     ],
                   ],
                 },
               ],
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:DescribeKey,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
             },
           ],
           Version: 2012-10-17,
@@ -1256,42 +678,37 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
+                      },
+                    ],
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
+                      arn:,
                       {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
                       },
                       /*,
                     ],
                   ],
                 },
               ],
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:DescribeKey,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
             },
             {
               Action: sts:AssumeRole,
@@ -1382,42 +799,37 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
+                      },
+                    ],
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
+                      arn:,
                       {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
                       },
                       /*,
                     ],
                   ],
                 },
               ],
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:DescribeKey,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
             },
             {
               Action: [
@@ -1429,11 +841,13 @@ exports[`ToolChain Stack 1`] = `
                 Fn::Join: [
                   ,
                   [
+                    arn:,
                     {
-                      Fn::GetAtt: [
-                        installpipelineArtifactsBucketBEF15C5E,
-                        Arn,
-                      ],
+                      Ref: AWS::Partition,
+                    },
+                    :s3:::,
+                    {
+                      Fn::ImportValue: toolchainBucket,
                     },
                     /*,
                   ],
@@ -1459,40 +873,17 @@ exports[`ToolChain Stack 1`] = `
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
         },
         Description: Pipeline step toolchain/CodePipeline/UpdateDeployments/update-deployments,
-        EncryptionKey: {
-          Fn::GetAtt: [
-            installpipelineArtifactKey26F37951,
-            Arn,
-          ],
-        },
+        EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
-          Image: {
-            Fn::Join: [
-              ,
-              [
-                {
-                  Ref: AWS::AccountId,
-                },
-                .dkr.ecr.ap-south-1.,
-                {
-                  Ref: AWS::URLSuffix,
-                },
-                /,
-                {
-                  Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                },
-                :ASSET_HASH_64,
-              ],
-            ],
-          },
-          ImagePullCredentialsType: SERVICE_ROLE,
+          Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
+          ImagePullCredentialsType: CODEBUILD,
           PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
@@ -1626,23 +1017,18 @@ exports[`ToolChain Stack 1`] = `
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
         },
         Description: Pipeline step toolchain/CodePipeline/UpdatePipeline/SelfMutate,
-        EncryptionKey: {
-          Fn::GetAtt: [
-            installpipelineArtifactKey26F37951,
-            Arn,
-          ],
-        },
+        EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
           Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
           ImagePullCredentialsType: CODEBUILD,
-          PrivilegedMode: true,
+          PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
         ServiceRole: {
@@ -1799,54 +1185,37 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
+                      },
+                    ],
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
+                      arn:,
                       {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
                       },
                       /*,
                     ],
                   ],
                 },
               ],
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:DescribeKey,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
             },
           ],
           Version: 2012-10-17,
@@ -1877,7 +1246,7 @@ exports[`ToolChain Stack 1`] = `
       },
       Type: AWS::IAM::Role,
     },
-    provisioningproject655EF8AC: {
+    provisioningproject7C320C04: {
       Properties: {
         Artifacts: {
           Type: NO_ARTIFACTS,
@@ -1888,33 +1257,15 @@ exports[`ToolChain Stack 1`] = `
         EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
-          Image: {
-            Fn::Join: [
-              ,
-              [
-                {
-                  Ref: AWS::AccountId,
-                },
-                .dkr.ecr.ap-south-1.,
-                {
-                  Ref: AWS::URLSuffix,
-                },
-                /,
-                {
-                  Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                },
-                :ASSET_HASH_64,
-              ],
-            ],
-          },
-          ImagePullCredentialsType: SERVICE_ROLE,
+          Image: aws/codebuild/standard:1.0,
+          ImagePullCredentialsType: CODEBUILD,
           PrivilegedMode: false,
-          Type: ARM_CONTAINER,
+          Type: LINUX_CONTAINER,
         },
         Name: provisioning-project,
         ServiceRole: {
           Fn::GetAtt: [
-            provisioningprojectRole66955F67,
+            provisioningprojectRole5F1DD74A,
             Arn,
           ],
         },
@@ -1929,7 +1280,7 @@ exports[`ToolChain Stack 1`] = `
     },
     "build": {
       "commands": [
-        "yarn ts-node src/installer/provision-deployment.ts"
+        "yarn synth:silent -y"
       ]
     }
   }
@@ -1939,11 +1290,11 @@ exports[`ToolChain Stack 1`] = `
           ReportBuildStatus: true,
           Type: GITHUB,
         },
-        SourceVersion: refs/heads/main,
+        SourceVersion: main,
       },
       Type: AWS::CodeBuild::Project,
     },
-    provisioningprojectRole66955F67: {
+    provisioningprojectRole5F1DD74A: {
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -1960,42 +1311,10 @@ exports[`ToolChain Stack 1`] = `
       },
       Type: AWS::IAM::Role,
     },
-    provisioningprojectRoleDefaultPolicy84DFA3D7: {
+    provisioningprojectRoleDefaultPolicyFDADEBE8: {
       Properties: {
         PolicyDocument: {
           Statement: [
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/,
-                    {
-                      Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -2018,7 +1337,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       :log-group:/aws/codebuild/,
                       {
-                        Ref: provisioningproject655EF8AC,
+                        Ref: provisioningproject7C320C04,
                       },
                     ],
                   ],
@@ -2037,7 +1356,7 @@ exports[`ToolChain Stack 1`] = `
                       },
                       :log-group:/aws/codebuild/,
                       {
-                        Ref: provisioningproject655EF8AC,
+                        Ref: provisioningproject7C320C04,
                       },
                       :*,
                     ],
@@ -2068,7 +1387,7 @@ exports[`ToolChain Stack 1`] = `
                     },
                     :report-group/,
                     {
-                      Ref: provisioningproject655EF8AC,
+                      Ref: provisioningproject7C320C04,
                     },
                     -*,
                   ],
@@ -2091,7 +1410,11 @@ exports[`ToolChain Stack 1`] = `
                       {
                         Ref: AWS::AccountId,
                       },
-                      -ap-south-1,
+                      -,
+                      {
+                        Ref: AWS::Region,
+                      },
+                      },
                     ],
                   ],
                 },
@@ -2107,7 +1430,11 @@ exports[`ToolChain Stack 1`] = `
                       {
                         Ref: AWS::AccountId,
                       },
-                      -ap-south-1,
+                      -,
+                      {
+                        Ref: AWS::Region,
+                      },
+                      },
                     ],
                   ],
                 },
@@ -2123,7 +1450,11 @@ exports[`ToolChain Stack 1`] = `
                       {
                         Ref: AWS::AccountId,
                       },
-                      -ap-south-1,
+                      -,
+                      {
+                        Ref: AWS::Region,
+                      },
+                      },
                     ],
                   ],
                 },
@@ -2137,16 +1468,128 @@ exports[`ToolChain Stack 1`] = `
           ],
           Version: 2012-10-17,
         },
-        PolicyName: provisioningprojectRoleDefaultPolicy84DFA3D7,
+        PolicyName: provisioningprojectRoleDefaultPolicyFDADEBE8,
         Roles: [
           {
-            Ref: provisioningprojectRole66955F67,
+            Ref: provisioningprojectRole5F1DD74A,
           },
         ],
       },
       Type: AWS::IAM::Policy,
     },
-    startpipelinepolicyD2D8BBE5: {
+    provisioningprojectaddtenantfunctionADF4D121: {
+      DependsOn: [
+        provisioningprojectaddtenantfunctionServiceRoleDefaultPolicy9BC5D474,
+        provisioningprojectaddtenantfunctionServiceRole550D119D,
+      ],
+      Properties: {
+        Code: {
+          S3Bucket: {
+            Fn::Sub: cdk-hnb659fds-assets-\${AWS::AccountId}-ap-south-1,
+          },
+          S3Key: ZIP,
+        },
+        Description: src/installer/ddb-stream/add-tenant.lambda.ts,
+        Environment: {
+          Variables: {
+            AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1,
+            PROJECT_NAME: provisioning-project,
+          },
+        },
+        Handler: index.handler,
+        Role: {
+          Fn::GetAtt: [
+            provisioningprojectaddtenantfunctionServiceRole550D119D,
+            Arn,
+          ],
+        },
+        Runtime: nodejs18.x,
+      },
+      Type: AWS::Lambda::Function,
+    },
+    provisioningprojectaddtenantfunctionDynamoDBEventSourcetoolchaindeploymenttable3225D94FAFF39FD6: {
+      Properties: {
+        BatchSize: 100,
+        EventSourceArn: {
+          Fn::GetAtt: [
+            deploymenttableC3BF9083,
+            StreamArn,
+          ],
+        },
+        FunctionName: {
+          Ref: provisioningprojectaddtenantfunctionADF4D121,
+        },
+        StartingPosition: LATEST,
+      },
+      Type: AWS::Lambda::EventSourceMapping,
+    },
+    provisioningprojectaddtenantfunctionServiceRole550D119D: {
+      Properties: {
+        AssumeRolePolicyDocument: {
+          Statement: [
+            {
+              Action: sts:AssumeRole,
+              Effect: Allow,
+              Principal: {
+                Service: lambda.amazonaws.com,
+              },
+            },
+          ],
+          Version: 2012-10-17,
+        },
+        ManagedPolicyArns: [
+          {
+            Fn::Join: [
+              ,
+              [
+                arn:,
+                {
+                  Ref: AWS::Partition,
+                },
+                :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole,
+              ],
+            ],
+          },
+        ],
+      },
+      Type: AWS::IAM::Role,
+    },
+    provisioningprojectaddtenantfunctionServiceRoleDefaultPolicy9BC5D474: {
+      Properties: {
+        PolicyDocument: {
+          Statement: [
+            {
+              Action: dynamodb:ListStreams,
+              Effect: Allow,
+              Resource: *,
+            },
+            {
+              Action: [
+                dynamodb:DescribeStream,
+                dynamodb:GetRecords,
+                dynamodb:GetShardIterator,
+              ],
+              Effect: Allow,
+              Resource: {
+                Fn::GetAtt: [
+                  deploymenttableC3BF9083,
+                  StreamArn,
+                ],
+              },
+            },
+          ],
+          Version: 2012-10-17,
+        },
+        PolicyName: provisioningprojectaddtenantfunctionServiceRoleDefaultPolicy9BC5D474,
+        Roles: [
+          {
+            Ref: provisioningprojectaddtenantfunctionServiceRole550D119D,
+          },
+        ],
+      },
+      Type: AWS::IAM::Policy,
+    },
+    provisioningprojectstartpipelinepolicy08AF93E3: {
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -2155,7 +1598,7 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: {
                 Fn::GetAtt: [
-                  provisioningproject655EF8AC,
+                  provisioningproject7C320C04,
                   Arn,
                 ],
               },
@@ -2163,10 +1606,10 @@ exports[`ToolChain Stack 1`] = `
           ],
           Version: 2012-10-17,
         },
-        PolicyName: startpipelinepolicyD2D8BBE5,
+        PolicyName: provisioningprojectstartpipelinepolicy08AF93E3,
         Roles: [
           {
-            Ref: addtenantfunctionServiceRole17A72CD1,
+            Ref: provisioningprojectaddtenantfunctionServiceRole550D119D,
           },
         ],
       },
@@ -2202,7 +1645,11 @@ exports[`ToolChain Stack 1`] = `
                       Fn::Join: [
                         ,
                         [
-                          arn:aws:codepipeline:ap-south-1:,
+                          arn:aws:codepipeline:,
+                          {
+                            Ref: AWS::Region,
+                          },
+                          :,
                           {
                             Ref: AWS::AccountId,
                           },
@@ -2214,7 +1661,11 @@ exports[`ToolChain Stack 1`] = `
                       Fn::Join: [
                         ,
                         [
-                          arn:aws:codepipeline:ap-south-1:,
+                          arn:aws:codepipeline:,
+                          {
+                            Ref: AWS::Region,
+                          },
+                          :,
                           {
                             Ref: AWS::AccountId,
                           },
@@ -2226,7 +1677,11 @@ exports[`ToolChain Stack 1`] = `
                       Fn::Join: [
                         ,
                         [
-                          arn:aws:codepipeline:ap-south-1:,
+                          arn:aws:codepipeline:,
+                          {
+                            Ref: AWS::Region,
+                          },
+                          :,
                           {
                             Ref: AWS::AccountId,
                           },
@@ -2288,89 +1743,6 @@ exports[`ToolChain Stack 1`] = `
       Properties: {
         PolicyDocument: {
           Statement: [
-            {
-              Action: [
-                ssm:DescribeParameters,
-                ssm:GetParameters,
-                ssm:GetParameter,
-                ssm:GetParameterHistory,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ssm:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :parameter,
-                    {
-                      Ref: AssetTagF8174CE3,
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ssm:PutParameter,
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ssm:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :parameter,
-                    {
-                      Ref: AssetTagF8174CE3,
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/,
-                    {
-                      Fn::Sub: cdk-hnb659fds-container-assets-\${AWS::AccountId}-ap-south-1,
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -2459,54 +1831,37 @@ exports[`ToolChain Stack 1`] = `
               Effect: Allow,
               Resource: [
                 {
-                  Fn::GetAtt: [
-                    installpipelineArtifactsBucketBEF15C5E,
-                    Arn,
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
+                      },
+                    ],
                   ],
                 },
                 {
                   Fn::Join: [
                     ,
                     [
+                      arn:,
                       {
-                        Fn::GetAtt: [
-                          installpipelineArtifactsBucketBEF15C5E,
-                          Arn,
-                        ],
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: toolchainBucket,
                       },
                       /*,
                     ],
                   ],
                 },
               ],
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:DescribeKey,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
-            },
-            {
-              Action: [
-                kms:Decrypt,
-                kms:Encrypt,
-                kms:ReEncrypt*,
-                kms:GenerateDataKey*,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::GetAtt: [
-                  installpipelineArtifactKey26F37951,
-                  Arn,
-                ],
-              },
             },
           ],
           Version: 2012-10-17,
@@ -2562,43 +1917,13 @@ exports[`Workload DEMO Stack 1`] = `
   },
   Resources: {
     workloadAssetsFileAsset1376C31D3: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -2620,44 +1945,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -2670,52 +1959,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset2BFC1CD83: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -2737,44 +1993,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -2787,52 +2007,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset3D01038B4: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -2854,44 +2041,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -2904,52 +2055,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset420AE620E: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -2971,44 +2089,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -3021,52 +2103,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset53FE3925A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -3088,44 +2137,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -3138,52 +2151,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset6BA9827AD: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -3205,44 +2185,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -3255,52 +2199,19 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset77B1A9064: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -3322,44 +2233,8 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -3372,45 +2247,12 @@ exports[`Workload DEMO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileRoleDefaultPolicyBF836F94: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -3521,35 +2363,6 @@ exports[`Workload DEMO Stack 1`] = `
                 },
               ],
             },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
           ],
           Version: 2012-10-17,
         },
@@ -3563,36 +2376,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadAssetsFileRoleF9D3DB43: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -3632,36 +2415,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodeBuildActionRole6C3D131A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -3699,36 +2452,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodeBuildActionRoleDefaultPolicyA8B93142: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -3861,36 +2584,6 @@ exports[`Workload DEMO Stack 1`] = `
         workloadCodePipelineRoleDefaultPolicyE4529485,
         workloadCodePipelineRole40DCE8D3,
       ],
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         ArtifactStore: {
           Location: {
@@ -4269,54 +2962,31 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::CodePipeline::Pipeline,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectCE5FD61B: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Location: {
+            Fn::Join: [
+              /,
+              [
+                {
+                  Fn::ImportValue: cdkCacheBucket,
+                },
+                ASSET_HASH_64/,
+              ],
+            ],
+          },
+          Type: S3,
         },
         Description: Pipeline step workload/CodePipeline/Build/Synth,
         EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
-          Image: undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1:latest,
+          Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
           ImagePullCredentialsType: CODEBUILD,
-          PrivilegedMode: true,
+          PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
         ServiceRole: {
@@ -4327,44 +2997,13 @@ exports[`Workload DEMO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*"
+    ]
+  },
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "yarn install --immutable --immutable-cache"
@@ -4372,7 +3011,7 @@ exports[`Workload DEMO Stack 1`] = `
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y -c deployment_type=demo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=demo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
@@ -4383,45 +3022,12 @@ exports[`Workload DEMO Stack 1`] = `
     ]
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRole11AA1585: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -4439,39 +3045,57 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy2C20BD9F: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
+            {
+              Action: [
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
+              ],
+              Effect: Allow,
+              Resource: [
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                    ],
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -4599,35 +3223,6 @@ exports[`Workload DEMO Stack 1`] = `
                 },
               ],
             },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
           ],
           Version: 2012-10-17,
         },
@@ -4641,36 +3236,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineRole40DCE8D3: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -4688,36 +3253,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineRoleDefaultPolicyE4529485: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -4826,36 +3361,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleCA12EEFB: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -4888,36 +3393,6 @@ exports[`Workload DEMO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleDefaultPolicy30252708: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -5051,36 +3526,6 @@ exports[`Workload POOL Stack 1`] = `
   },
   Resources: {
     workloadCodeBuildActionRole6C3D131A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -5118,36 +3563,6 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodeBuildActionRoleDefaultPolicyA8B93142: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -5182,36 +3597,6 @@ exports[`Workload POOL Stack 1`] = `
         workloadCodePipelineRoleDefaultPolicyE4529485,
         workloadCodePipelineRole40DCE8D3,
       ],
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         ArtifactStore: {
           Location: {
@@ -5403,54 +3788,31 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::CodePipeline::Pipeline,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectCE5FD61B: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Location: {
+            Fn::Join: [
+              /,
+              [
+                {
+                  Fn::ImportValue: cdkCacheBucket,
+                },
+                ASSET_HASH_64/,
+              ],
+            ],
+          },
+          Type: S3,
         },
         Description: Pipeline step workload/CodePipeline/Build/Synth,
         EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
-          Image: undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1:latest,
+          Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
           ImagePullCredentialsType: CODEBUILD,
-          PrivilegedMode: true,
+          PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
         ServiceRole: {
@@ -5461,44 +3823,13 @@ exports[`Workload POOL Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*"
+    ]
+  },
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "yarn install --immutable --immutable-cache"
@@ -5506,7 +3837,7 @@ exports[`Workload POOL Stack 1`] = `
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y -c deployment_type=pool -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=pool -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
@@ -5517,45 +3848,12 @@ exports[`Workload POOL Stack 1`] = `
     ]
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRole11AA1585: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -5573,39 +3871,57 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy2C20BD9F: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
+            {
+              Action: [
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
+              ],
+              Effect: Allow,
+              Resource: [
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                    ],
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -5733,35 +4049,6 @@ exports[`Workload POOL Stack 1`] = `
                 },
               ],
             },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
           ],
           Version: 2012-10-17,
         },
@@ -5775,36 +4062,6 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineRole40DCE8D3: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -5822,36 +4079,6 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineRoleDefaultPolicyE4529485: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -5960,36 +4187,6 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleCA12EEFB: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -6022,36 +4219,6 @@ exports[`Workload POOL Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleDefaultPolicy30252708: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -6185,43 +4352,13 @@ exports[`Workload SILO Stack 1`] = `
   },
   Resources: {
     workloadAssetsFileAsset10ADDA3900: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6243,44 +4380,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6293,52 +4394,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset1196430E2E: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6360,44 +4428,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6410,52 +4442,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset1376C31D3: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6477,44 +4476,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6527,52 +4490,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset2BFC1CD83: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6594,44 +4524,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6644,52 +4538,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset3D01038B4: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6711,44 +4572,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6761,52 +4586,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset420AE620E: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6828,44 +4620,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6878,52 +4634,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset53FE3925A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -6945,44 +4668,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -6995,52 +4682,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset6BA9827AD: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -7062,44 +4716,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -7112,52 +4730,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset77B1A9064: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -7179,44 +4764,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -7229,52 +4778,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset899CF498A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -7296,44 +4812,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -7346,52 +4826,19 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileAsset9B17A13C2: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
           Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
+            LOCAL_CUSTOM_CACHE,
             LOCAL_SOURCE_CACHE,
           ],
           Type: LOCAL,
@@ -7413,44 +4860,8 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "npm install -g cdk-assets@2.76.0"
@@ -7463,45 +4874,12 @@ exports[`Workload SILO Stack 1`] = `
     }
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadAssetsFileRoleDefaultPolicyBF836F94: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -7612,35 +4990,6 @@ exports[`Workload SILO Stack 1`] = `
                 },
               ],
             },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
           ],
           Version: 2012-10-17,
         },
@@ -7654,36 +5003,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadAssetsFileRoleF9D3DB43: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -7723,36 +5042,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodeBuildActionRole6C3D131A: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -7790,36 +5079,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodeBuildActionRoleDefaultPolicyA8B93142: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -8008,36 +5267,6 @@ exports[`Workload SILO Stack 1`] = `
         workloadCodePipelineRoleDefaultPolicyE4529485,
         workloadCodePipelineRole40DCE8D3,
       ],
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         ArtifactStore: {
           Location: {
@@ -8617,54 +5846,31 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::CodePipeline::Pipeline,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectCE5FD61B: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         Artifacts: {
           Type: CODEPIPELINE,
         },
         Cache: {
-          Modes: [
-            LOCAL_DOCKER_LAYER_CACHE,
-            LOCAL_SOURCE_CACHE,
-          ],
-          Type: LOCAL,
+          Location: {
+            Fn::Join: [
+              /,
+              [
+                {
+                  Fn::ImportValue: cdkCacheBucket,
+                },
+                ASSET_HASH_64/,
+              ],
+            ],
+          },
+          Type: S3,
         },
         Description: Pipeline step workload/CodePipeline/Build/Synth,
         EncryptionKey: alias/aws/s3,
         Environment: {
           ComputeType: BUILD_GENERAL1_SMALL,
-          Image: undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1:latest,
+          Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0,
           ImagePullCredentialsType: CODEBUILD,
-          PrivilegedMode: true,
+          PrivilegedMode: false,
           Type: ARM_CONTAINER,
         },
         ServiceRole: {
@@ -8675,44 +5881,13 @@ exports[`Workload SILO Stack 1`] = `
         },
         Source: {
           BuildSpec: {
-            Fn::Join: [
-              ,
-              [
-                {
+  "cache": {
+    "paths": [
+      ".yarn/cache/**/*"
+    ]
+  },
   "version": "0.2",
   "phases": {
-    "pre_build": {
-      "commands": [
-        "mkdir $HOME/.cdk",
-        "echo '{\\"version\\":\\"1.0\\",\\"domainCredentials\\":{\\",
-                {
-                  Fn::Select: [
-                    0,
-                    {
-                      Fn::Split: [
-                        /,
-                        {
-                          Fn::Join: [
-                            ,
-                            [
-                              {
-                                Ref: AWS::AccountId,
-                              },
-                              .dkr.ecr.ap-south-1.,
-                              {
-                                Ref: AWS::URLSuffix,
-                              },
-                              /undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                            ],
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                \\":{\\"ecrRepository\\":true}}}' > $HOME/.cdk/cdk-docker-GREEDY_JSON"
-      ]
-    },
     "install": {
       "commands": [
         "yarn install --immutable --immutable-cache"
@@ -8720,7 +5895,7 @@ exports[`Workload SILO Stack 1`] = `
     },
     "build": {
       "commands": [
-        "yarn cdk synth -q --verbose -y -c deployment_type=silo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
+        "yarn cdk synth -q --verbose -y  -c tenant_id=demo -c deployment_tier=small -c deployment_type=silo -c deployment_id=dev-001 -c component_account=undefined -c component_region=ap-south-1"
       ]
     }
   },
@@ -8731,45 +5906,12 @@ exports[`Workload SILO Stack 1`] = `
     ]
   }
 },
-              ],
-            ],
-          },
           Type: CODEPIPELINE,
         },
       },
       Type: AWS::CodeBuild::Project,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRole11AA1585: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -8787,39 +5929,57 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineBuildSynthCdkBuildProjectRoleDefaultPolicy2C20BD9F: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
+            {
+              Action: [
+                s3:GetObject*,
+                s3:GetBucket*,
+                s3:List*,
+                s3:DeleteObject*,
+                s3:PutObject,
+                s3:PutObjectLegalHold,
+                s3:PutObjectRetention,
+                s3:PutObjectTagging,
+                s3:PutObjectVersionTagging,
+                s3:Abort*,
+              ],
+              Effect: Allow,
+              Resource: [
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                    ],
+                  ],
+                },
+                {
+                  Fn::Join: [
+                    ,
+                    [
+                      arn:,
+                      {
+                        Ref: AWS::Partition,
+                      },
+                      :s3:::,
+                      {
+                        Fn::ImportValue: cdkCacheBucket,
+                      },
+                      /*,
+                    ],
+                  ],
+                },
+              ],
+            },
             {
               Action: [
                 logs:CreateLogGroup,
@@ -8947,35 +6107,6 @@ exports[`Workload SILO Stack 1`] = `
                 },
               ],
             },
-            {
-              Action: [
-                ecr:BatchCheckLayerAvailability,
-                ecr:GetDownloadUrlForLayer,
-                ecr:BatchGetImage,
-              ],
-              Effect: Allow,
-              Resource: {
-                Fn::Join: [
-                  ,
-                  [
-                    arn:,
-                    {
-                      Ref: AWS::Partition,
-                    },
-                    :ecr:ap-south-1:,
-                    {
-                      Ref: AWS::AccountId,
-                    },
-                    :repository/undefined.dkr.ecr.ap-south-1.amazonaws.com/cdk-hnb659fds-container-assets-undefined-ap-south-1,
-                  ],
-                ],
-              },
-            },
-            {
-              Action: ecr:GetAuthorizationToken,
-              Effect: Allow,
-              Resource: *,
-            },
           ],
           Version: 2012-10-17,
         },
@@ -8989,36 +6120,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineRole40DCE8D3: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -9036,36 +6137,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineRoleDefaultPolicyE4529485: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [
@@ -9174,36 +6245,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Policy,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleCA12EEFB: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         AssumeRolePolicyDocument: {
           Statement: [
@@ -9236,36 +6277,6 @@ exports[`Workload SILO Stack 1`] = `
       Type: AWS::IAM::Role,
     },
     workloadCodePipelineSourcervermanslnslsaasacceleratorCodePipelineActionRoleDefaultPolicy30252708: {
-      Metadata: {
-        cdk_nag: {
-          rules_to_suppress: [
-            {
-              id: AwsSolutions-IAM5,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsPrototyping-IAMNoWildcardPermissions,
-              reason: Wildcards are needed for dynamically created resources.,
-            },
-            {
-              id: AwsSolutions-CB4,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsPrototyping-CodeBuildProjectKMSEncryptedArtifacts,
-              reason: Encryption of Codebuild is not required.,
-            },
-            {
-              id: AwsSolutions-S1,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-            {
-              id: AwsPrototyping-S3BucketLoggingEnabled,
-              reason: Access Log buckets should not have s3 bucket logging,
-            },
-          ],
-        },
-      },
       Properties: {
         PolicyDocument: {
           Statement: [

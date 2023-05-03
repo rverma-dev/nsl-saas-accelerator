@@ -26,7 +26,7 @@ processDeployments(allDeployments).then(
   (error: Error) => {
     console.error(error);
     process.exit(1);
-  },
+  }
 );
 
 function incrementErrors() {

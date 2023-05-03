@@ -14,8 +14,8 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
         return {
           PhysicalResourceId: seedStack,
           Data: {
-            Username: '22',
-          },
+            Username: '22'
+          }
         };
       } catch (e) {
         console.error(e);
@@ -30,6 +30,6 @@ export async function handler(event: CloudFormationCustomResourceEvent) {
   }
 
   return {
-    PhysicalResourceId: 'Not Defined',
+    PhysicalResourceId: 'Not Defined'
   };
 }

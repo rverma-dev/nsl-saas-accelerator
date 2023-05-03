@@ -58,7 +58,7 @@ junit.xml
 !/src/
 /lib
 /dist/
-!/.eslintrc.json
+!/.eslintrc.yml
 /assets/
 !/cdk.json
 /cdk.out/

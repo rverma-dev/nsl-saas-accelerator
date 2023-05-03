@@ -1,7 +1,7 @@
-import { Construct } from 'constructs';
 import { SecretGenFunction } from './secret-gen-function';
 import * as cdk from 'aws-cdk-lib';
 import { RemovalPolicy } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
 export interface CreateGitopsSecretProps {
   /**
@@ -28,30 +28,30 @@ export class CreateGitopsSecretResource extends Construct {
     const assetsAccessRole = new cdk.aws_iam.Role(this, accessRoleResourceName, {
       roleName: `AWSLambdaBasicExecutionRole-${this.node.id}`,
       assumedBy: new cdk.aws_iam.ServicePrincipal('lambda.amazonaws.com'),
-      description: 'AWS Accelerator assets access role in workload accounts to bootstrap gitops credentials',
+      description: 'AWS Accelerator assets access role in workload accounts to bootstrap gitops credentials'
     });
     assetsAccessRole.addManagedPolicy(
-      cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+      cdk.aws_iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
     );
     assetsAccessRole.addToPolicy(
       new cdk.aws_iam.PolicyStatement({
         resources: [`arn:${cdk.Aws.PARTITION}:logs:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:*`],
-        actions: ['logs:CreateLogGroup'],
-      }),
+        actions: ['logs:CreateLogGroup']
+      })
     );
     assetsAccessRole.addToPolicy(
       new cdk.aws_iam.PolicyStatement({
         resources: [
-          `arn:${cdk.Aws.PARTITION}:secretsmanager:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:secret:${props.secretName}`,
+          `arn:${cdk.Aws.PARTITION}:secretsmanager:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:secret:${props.secretName}`
         ],
-        actions: ['secretsmanager:*'],
-      }),
+        actions: ['secretsmanager:*']
+      })
     );
     assetsAccessRole.addToPolicy(
       new cdk.aws_iam.PolicyStatement({
         resources: ['*'],
-        actions: ['kms:Decrypt', 'kms:DescribeKey'],
-      }),
+        actions: ['kms:Decrypt', 'kms:DescribeKey']
+      })
     );
     assetsAccessRole.addToPolicy(
       new cdk.aws_iam.PolicyStatement({
@@ -59,9 +59,9 @@ export class CreateGitopsSecretResource extends Construct {
         actions: [
           'iam:CreateServiceSpecificCredential',
           'iam:DeleteServiceSpecificCredential',
-          'iam:ListServiceSpecificCredentials',
-        ],
-      }),
+          'iam:ListServiceSpecificCredentials'
+        ]
+      })
     );
     //
     // Function definition for the custom resource
@@ -71,11 +71,11 @@ export class CreateGitopsSecretResource extends Construct {
     // Custom resource lambda log group
     new cdk.aws_logs.LogGroup(this, `${providerLambda.node.id}LogGroup`, {
       logGroupName: `/aws/lambda/${providerLambda.functionName}`,
-      removalPolicy: RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.DESTROY
     });
 
     const provider = new cdk.custom_resources.Provider(this, 'Custom::GitopsSecrets', {
-      onEventHandler: providerLambda,
+      onEventHandler: providerLambda
     });
 
     const resource = new cdk.CustomResource(this, 'Resource', {
@@ -83,8 +83,8 @@ export class CreateGitopsSecretResource extends Construct {
       serviceToken: provider.serviceToken,
       properties: {
         username: props.username,
-        secretName: props.secretName,
-      },
+        secretName: props.secretName
+      }
     });
 
     this.id = resource.ref;

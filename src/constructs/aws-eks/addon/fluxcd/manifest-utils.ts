@@ -36,8 +36,8 @@ export function createSshSecretRef(secretName: string, k8secret: string): CsiSec
     jmesPath: [{ path: 'sshPrivateKey', objectAlias: 'sshPrivateKey' }],
     kubernetesSecret: {
       secretName: k8secret,
-      data: [{ key: 'sshPrivateKey', objectName: 'sshPrivateKey' }],
-    },
+      data: [{ key: 'sshPrivateKey', objectName: 'sshPrivateKey' }]
+    }
   };
 }
 
@@ -52,14 +52,14 @@ export function createUserNameSecretRef(secretName: string, k8secret: string): C
     secretProvider: new LookupSecretsManagerSecretByName(secretName),
     jmesPath: [
       { path: 'username', objectAlias: 'username' },
-      { path: 'password', objectAlias: 'password' },
+      { path: 'password', objectAlias: 'password' }
     ],
     kubernetesSecret: {
       secretName: k8secret,
       data: [
         { key: 'username', objectName: 'username' },
-        { key: 'password', objectName: 'password' },
-      ],
-    },
+        { key: 'password', objectName: 'password' }
+      ]
+    }
   };
 }

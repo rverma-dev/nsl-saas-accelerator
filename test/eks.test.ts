@@ -1,13 +1,13 @@
-import { EksBlueprint, SecretsStoreAddOn } from '@aws-quickstart/eks-blueprints';
 import { EksCluster } from '../src/constructs';
 import { FluxV2Addon } from '../src/constructs/aws-eks/addon';
+import { EksBlueprint, SecretsStoreAddOn } from '@aws-quickstart/eks-blueprints';
 import * as cdk from 'aws-cdk-lib';
 
 const flux = new FluxV2Addon({
   credentialsType: 'USERNAME',
   repoBranch: 'repoBranch',
   repoUrl: 'CodeCommitRepoUrlExport',
-  secretName: 'AAA/CodeCommitSecretNameExport',
+  secretName: 'AAA/CodeCommitSecretNameExport'
 });
 const account = '123456789012';
 const region = 'us-east-1';
