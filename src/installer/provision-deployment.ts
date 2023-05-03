@@ -3,6 +3,7 @@ import * as console from 'console';
 import * as process from 'process';
 import { getRegions } from './lib/apitools';
 import { isValidDeploymentRecord } from './lib/configtools';
+import { YARN } from './lib/configuration';
 import { DeploymentRecord, getPipelineName } from '../common';
 
 /*
@@ -70,7 +71,7 @@ async function processRecord(record: DeploymentRecord): Promise<void> {
 async function provisionPipelineStack(record: DeploymentRecord): Promise<void> {
   const stackName = getPipelineName(record);
   const command =
-    `yarn cdk deploy ${stackName} --require-approval never` +
+    `${YARN} cdk deploy ${stackName} --require-approval never` +
     ` -c deployment_id=${record.id}` +
     ` -c tenant_id=${record.tenantId}` +
     ` -c deployment_type=${record.type}` +

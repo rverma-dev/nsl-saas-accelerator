@@ -57,7 +57,7 @@ export class ProvisioningProject extends Construct {
             commands: [`${YARN} install --immutable`]
           },
           build: {
-            commands: [`${YARN} ts-node bin/provision-deployment.ts`]
+            commands: [`${YARN} ts-node src/installer/provision-deployment.ts`]
           }
         },
         cache: {
