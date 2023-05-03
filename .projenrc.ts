@@ -54,7 +54,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'cdk.context.json'
   ],
   deps: [
-    '@aws-quickstart/eks-blueprints',
+    '@aws-quickstart/eks-blueprints@^1.7.1',
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-cloudformation@${AWS_SDK_VERSION}`,

@@ -31,7 +31,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-prototyping-sdk/cdk-graph", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
             ["@aws-prototyping-sdk/pdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
             ["@aws-prototyping-sdk/static-website", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
-            ["@aws-quickstart/eks-blueprints", "npm:1.7.0"],\
+            ["@aws-quickstart/eks-blueprints", "npm:1.7.1"],\
             ["@aws-sdk/client-cloudformation", "npm:3.321.1"],\
             ["@aws-sdk/client-codebuild", "npm:3.321.1"],\
             ["@aws-sdk/client-codepipeline", "npm:3.321.1"],\
@@ -49,7 +49,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["@typescript-eslint/parser", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["aws-cdk", "npm:2.76.0"],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.9"],\
             ["constructs", "npm:10.2.10"],\
@@ -122,13 +122,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.7", {\
-          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v23-virtual-4606e06d67/0/cache/@aws-cdk-lambda-layer-kubectl-v23-npm-2.0.7-c8de1b374e-7c268988b0.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v23/",\
+        ["virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.7", {\
+          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v23-virtual-28c8d9b6da/0/cache/@aws-cdk-lambda-layer-kubectl-v23-npm-2.0.7-c8de1b374e-7c268988b0.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v23/",\
           "packageDependencies": [\
-            ["@aws-cdk/lambda-layer-kubectl-v23", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.7"],\
+            ["@aws-cdk/lambda-layer-kubectl-v23", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.7"],\
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["constructs", "npm:10.2.10"]\
           ],\
           "packagePeers": [\
@@ -148,13 +148,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.177", {\
-          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v24-virtual-24f8febb36/0/cache/@aws-cdk-lambda-layer-kubectl-v24-npm-2.0.177-4887f9ff98-f43a0ff4c4.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v24/",\
+        ["virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.177", {\
+          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v24-virtual-a5332fad67/0/cache/@aws-cdk-lambda-layer-kubectl-v24-npm-2.0.177-4887f9ff98-f43a0ff4c4.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v24/",\
           "packageDependencies": [\
-            ["@aws-cdk/lambda-layer-kubectl-v24", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.177"],\
+            ["@aws-cdk/lambda-layer-kubectl-v24", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.177"],\
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["constructs", "npm:10.2.10"]\
           ],\
           "packagePeers": [\
@@ -174,13 +174,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.3", {\
-          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v25-virtual-17838f89eb/0/cache/@aws-cdk-lambda-layer-kubectl-v25-npm-2.0.3-96988f89c7-168c5b6c18.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v25/",\
+        ["virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.3", {\
+          "packageLocation": "./.yarn/__virtual__/@aws-cdk-lambda-layer-kubectl-v25-virtual-30d06d7bf4/0/cache/@aws-cdk-lambda-layer-kubectl-v25-npm-2.0.3-96988f89c7-168c5b6c18.zip/node_modules/@aws-cdk/lambda-layer-kubectl-v25/",\
           "packageDependencies": [\
-            ["@aws-cdk/lambda-layer-kubectl-v25", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.3"],\
+            ["@aws-cdk/lambda-layer-kubectl-v25", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.3"],\
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["constructs", "npm:10.2.10"]\
           ],\
           "packagePeers": [\
@@ -268,7 +268,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["@types/projen", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["chalk", "npm:4.1.2"],\
             ["constructs", "npm:10.2.10"],\
             ["find-up", "npm:4.1.0"],\
@@ -310,7 +310,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/cdk-nag", null],\
             ["@types/constructs", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.9"],\
             ["constructs", "npm:10.2.10"]\
           ],\
@@ -342,7 +342,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cdk-nag", null],\
             ["@types/constructs", null],\
             ["@types/projen", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.9"],\
             ["constructs", "npm:10.2.10"],\
             ["projen", "npm:0.71.32"]\
@@ -361,19 +361,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@aws-quickstart/eks-blueprints", [\
-        ["npm:1.7.0", {\
-          "packageLocation": "./.yarn/cache/@aws-quickstart-eks-blueprints-npm-1.7.0-abb679b98f-8e229ba56d.zip/node_modules/@aws-quickstart/eks-blueprints/",\
+        ["npm:1.7.1", {\
+          "packageLocation": "./.yarn/cache/@aws-quickstart-eks-blueprints-npm-1.7.1-5ab64e5c77-9e38ac214b.zip/node_modules/@aws-quickstart/eks-blueprints/",\
           "packageDependencies": [\
-            ["@aws-quickstart/eks-blueprints", "npm:1.7.0"],\
-            ["@aws-cdk/lambda-layer-kubectl-v23", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.7"],\
-            ["@aws-cdk/lambda-layer-kubectl-v24", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.177"],\
-            ["@aws-cdk/lambda-layer-kubectl-v25", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.0.3"],\
+            ["@aws-quickstart/eks-blueprints", "npm:1.7.1"],\
+            ["@aws-cdk/lambda-layer-kubectl-v23", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.7"],\
+            ["@aws-cdk/lambda-layer-kubectl-v24", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.177"],\
+            ["@aws-cdk/lambda-layer-kubectl-v25", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.0.3"],\
             ["@aws-sdk/client-secrets-manager", "npm:3.321.1"],\
             ["@types/assert", "npm:1.5.6"],\
             ["@types/bcrypt", "npm:5.0.0"],\
             ["@types/lodash.clonedeep", "npm:4.5.7"],\
             ["@types/uuid", "npm:9.0.1"],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["bcrypt", "npm:5.1.0"],\
             ["constructs", "npm:10.2.10"],\
             ["dot-object", "npm:2.1.4"],\
@@ -4040,7 +4040,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-prototyping-sdk/cdk-graph", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
             ["@aws-prototyping-sdk/pdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
             ["@aws-prototyping-sdk/static-website", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.17.4"],\
-            ["@aws-quickstart/eks-blueprints", "npm:1.7.0"],\
+            ["@aws-quickstart/eks-blueprints", "npm:1.7.1"],\
             ["@aws-sdk/client-cloudformation", "npm:3.321.1"],\
             ["@aws-sdk/client-codebuild", "npm:3.321.1"],\
             ["@aws-sdk/client-codepipeline", "npm:3.321.1"],\
@@ -4058,7 +4058,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typescript-eslint/eslint-plugin", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["@typescript-eslint/parser", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["aws-cdk", "npm:2.76.0"],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.9"],\
             ["constructs", "npm:10.2.10"],\
@@ -5113,10 +5113,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0", {\
-          "packageLocation": "./.yarn/__virtual__/aws-cdk-lib-virtual-40efc6893e/0/cache/aws-cdk-lib-npm-2.76.0-cafda08d39-63c9dd34e7.zip/node_modules/aws-cdk-lib/",\
+        ["virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0", {\
+          "packageLocation": "./.yarn/__virtual__/aws-cdk-lib-virtual-1b96674e75/0/cache/aws-cdk-lib-npm-2.76.0-cafda08d39-63c9dd34e7.zip/node_modules/aws-cdk-lib/",\
           "packageDependencies": [\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["@aws-cdk/asset-awscli-v1", "npm:2.2.155"],\
             ["@aws-cdk/asset-kubectl-v20", "npm:2.1.1"],\
             ["@aws-cdk/asset-node-proxy-agent-v5", "npm:2.0.130"],\
@@ -5546,7 +5546,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.9"],\
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
-            ["aws-cdk-lib", "virtual:abb679b98f1e0016aab0f6821350e5d5875d1b76c1d22304c30f6d62e20af3c33ba0031179245249bfff84d8db55efe77f4da30f741f49736ed1f60a68e76249#npm:2.76.0"],\
+            ["aws-cdk-lib", "virtual:5ab64e5c779e4479172cd19deed897e393d38ac4dd9e109922abc4e3a44c7211e78ef423498a6657cc82ed77d5445e0e78398a48ab4a3a452ae8845d084cadb5#npm:2.76.0"],\
             ["constructs", "npm:10.2.10"]\
           ],\
           "packagePeers": [\

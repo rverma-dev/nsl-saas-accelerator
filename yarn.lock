@@ -171,9 +171,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-quickstart/eks-blueprints@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@aws-quickstart/eks-blueprints@npm:1.7.0"
+"@aws-quickstart/eks-blueprints@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "@aws-quickstart/eks-blueprints@npm:1.7.1"
   dependencies:
     "@aws-cdk/lambda-layer-kubectl-v23": ^2.0.7
     "@aws-cdk/lambda-layer-kubectl-v24": ^2.0.167
@@ -199,7 +199,7 @@ __metadata:
     uuid: ^9.0.0
     yaml: ^2.2.1
     zod: ^3.21.4
-  checksum: 8e229ba56dbe03157fd8d923c956885f6188daffbec8458e644838d9fb1cfda60d8a707d4dbd8f8fca6a918ae8eb8e100e0a32cb4207b009d707f583572c08da
+  checksum: 9e38ac214b485a2c0ce22bfbc6fe0605abef8b4986cc9384ff0bcb76f3730bc618ed21a97154d4f4b6f5127221c34c0e56d453ea1828a3b8074fd06e3da88d62
   languageName: node
   linkType: hard
 
@@ -3160,7 +3160,7 @@ __metadata:
     "@aws-prototyping-sdk/cdk-graph": ^0.17.4
     "@aws-prototyping-sdk/pdk-nag": ^0.17.4
     "@aws-prototyping-sdk/static-website": ^0.17.4
-    "@aws-quickstart/eks-blueprints": ^1.7.0
+    "@aws-quickstart/eks-blueprints": ^1.7.1
     "@aws-sdk/client-cloudformation": ^3.316.0
     "@aws-sdk/client-codebuild": ^3.316.0
     "@aws-sdk/client-codepipeline": ^3.316.0

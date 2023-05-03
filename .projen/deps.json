@@ -121,6 +121,7 @@
     },
     {
       "name": "@aws-quickstart/eks-blueprints",
+      "version": "^1.7.1",
       "type": "runtime"
     },
     {
