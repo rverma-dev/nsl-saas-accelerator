@@ -56,12 +56,12 @@ export class SaasPipeline extends Construct {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL
     };
 
-    let artifactBucket: IBucket, cacheBucket: IBucket, bucketKey: IKey;
+    let logBucket: IBucket, cacheBucket: IBucket, bucketKey: IKey;
 
     // 1. Create Artifact Bucket
     // we intend to define all this for just toolchain account
     if (props.isToolchain) {
-      const logBucket = new Bucket(this, 'AccessLogsBucket', {
+      logBucket = new Bucket(this, 'AccessLogsBucket', {
         ...commonBucketProps,
         versioned: false,
         encryption: BucketEncryption.S3_MANAGED
@@ -71,26 +71,27 @@ export class SaasPipeline extends Construct {
         removalPolicy: RemovalPolicy.DESTROY,
         alias: `pipeline/${props.pipelineName}`
       });
-      artifactBucket = new Bucket(this, 'ArtifactsBucket', {
-        ...commonBucketProps,
-        encryption: BucketEncryption.KMS,
-        encryptionKey: bucketKey,
-        serverAccessLogsPrefix: 'access-logs',
-        serverAccessLogsBucket: logBucket
-      });
       cacheBucket = new Bucket(this, 'CdkCacheBucket', {
         ...commonBucketProps,
         versioned: false,
         encryption: BucketEncryption.S3_MANAGED
       });
-      new CfnOutput(this, 'ArtifactsBucketOutput', { value: artifactBucket.bucketName, exportName: 'toolchainBucket' });
+      new CfnOutput(this, 'LogBucketOutput', { value: logBucket.bucketName, exportName: 'toolchainLogBucket' });
       new CfnOutput(this, 'CdkCacheBucketOutput', { value: cacheBucket.bucketName, exportName: 'cdkCacheBucket' });
       new CfnOutput(this, 'ToolchainBucketKey', { value: bucketKey.keyArn, exportName: 'toolchainBucketKey' });
     } else {
-      artifactBucket = Bucket.fromBucketName(this, 'ArtifactsBucket', Fn.importValue('toolchainBucket'));
       cacheBucket = Bucket.fromBucketName(this, 'CdkCacheBucket', Fn.importValue('cdkCacheBucket'));
+      logBucket = Bucket.fromBucketName(this, 'LogBucketOutput', Fn.importValue('toolchainLogBucket'));
       bucketKey = Key.fromKeyArn(this, 'ArtifactKey', Fn.importValue('toolchainBucketKey'));
     }
+
+    const artifactBucket = new Bucket(this, 'ArtifactsBucket', {
+      ...commonBucketProps,
+      encryption: BucketEncryption.KMS,
+      encryptionKey: bucketKey,
+      serverAccessLogsPrefix: 'access-logs',
+      serverAccessLogsBucket: logBucket
+    });
 
     // 2. Create Pipeline Input
     const githubInput = pipelines.CodePipelineSource.connection(
