@@ -2405,7 +2405,6 @@ exports[`ToolChain Stack 1`] = `
                       {
                         Ref: AWS::Region,
                       },
-                      },
                     ],
                   ],
                 },
@@ -2425,7 +2424,6 @@ exports[`ToolChain Stack 1`] = `
                       {
                         Ref: AWS::Region,
                       },
-                      },
                     ],
                   ],
                 },
@@ -2444,7 +2442,6 @@ exports[`ToolChain Stack 1`] = `
                       -,
                       {
                         Ref: AWS::Region,
-                      },
                       },
                     ],
                   ],

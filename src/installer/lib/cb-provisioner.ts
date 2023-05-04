@@ -69,9 +69,9 @@ export class ProvisioningProject extends Construct {
       new PolicyStatement({
         actions: ['sts:AssumeRole'],
         resources: [
-          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`,
-          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`,
-          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}}`
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-deploy-role-${Aws.ACCOUNT_ID}-${Aws.REGION}`,
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-file-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}`,
+          `arn:aws:iam::${Aws.ACCOUNT_ID}:role/cdk-${DefaultStackSynthesizer.DEFAULT_QUALIFIER}-image-publishing-role-${Aws.ACCOUNT_ID}-${Aws.REGION}`
         ],
         effect: Effect.ALLOW
       })
