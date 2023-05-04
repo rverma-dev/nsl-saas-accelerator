@@ -1,7 +1,7 @@
 import { Aspects, CfnOutput, Fn, RemovalPolicy, Stage } from 'aws-cdk-lib';
 import { BuildSpec, Cache, ComputeType, LinuxArmBuildImage } from 'aws-cdk-lib/aws-codebuild';
 import { Pipeline } from 'aws-cdk-lib/aws-codepipeline';
-import { Key } from 'aws-cdk-lib/aws-kms';
+import { IKey, Key } from 'aws-cdk-lib/aws-kms';
 import { BlockPublicAccess, Bucket, BucketEncryption, IBucket, ObjectOwnership } from 'aws-cdk-lib/aws-s3';
 import * as pipelines from 'aws-cdk-lib/pipelines';
 import { NagSuppressions } from 'cdk-nag';
@@ -56,7 +56,7 @@ export class SaasPipeline extends Construct {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL
     };
 
-    let artifactBucket: IBucket, cacheBucket: IBucket;
+    let artifactBucket: IBucket, cacheBucket: IBucket, bucketKey: IKey;
 
     // 1. Create Artifact Bucket
     // we intend to define all this for just toolchain account
@@ -66,16 +66,15 @@ export class SaasPipeline extends Construct {
         versioned: false,
         encryption: BucketEncryption.S3_MANAGED
       });
+      bucketKey = new Key(this, 'ArtifactKey', {
+        enableKeyRotation: true,
+        removalPolicy: RemovalPolicy.DESTROY,
+        alias: `pipeline/${props.pipelineName}`
+      });
       artifactBucket = new Bucket(this, 'ArtifactsBucket', {
         ...commonBucketProps,
-        encryption: props.crossAccountKeys ? BucketEncryption.KMS : BucketEncryption.S3_MANAGED,
-        encryptionKey: props.crossAccountKeys
-          ? new Key(this, 'ArtifactKey', {
-              enableKeyRotation: true,
-              removalPolicy: RemovalPolicy.DESTROY,
-              alias: `pipeline/${props.pipelineName}`
-            })
-          : undefined,
+        encryption: BucketEncryption.KMS,
+        encryptionKey: bucketKey,
         serverAccessLogsPrefix: 'access-logs',
         serverAccessLogsBucket: logBucket
       });
@@ -86,9 +85,11 @@ export class SaasPipeline extends Construct {
       });
       new CfnOutput(this, 'ArtifactsBucketOutput', { value: artifactBucket.bucketName, exportName: 'toolchainBucket' });
       new CfnOutput(this, 'CdkCacheBucketOutput', { value: cacheBucket.bucketName, exportName: 'cdkCacheBucket' });
+      new CfnOutput(this, 'ToolchainBucketKey', { value: bucketKey.keyArn, exportName: 'toolchainBucketKey' });
     } else {
       artifactBucket = Bucket.fromBucketName(this, 'ArtifactsBucket', Fn.importValue('toolchainBucket'));
       cacheBucket = Bucket.fromBucketName(this, 'CdkCacheBucket', Fn.importValue('cdkCacheBucket'));
+      bucketKey = Key.fromKeyArn(this, 'ArtifactKey', Fn.importValue('toolchainBucketKey'));
     }
 
     // 2. Create Pipeline Input
@@ -146,6 +147,7 @@ export class SaasPipeline extends Construct {
       }
     };
 
+    bucketKey.grantEncryptDecrypt(codePipeline.role);
     NagSuppressions.addResourceSuppressions(
       this,
       [

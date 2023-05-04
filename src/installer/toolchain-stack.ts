@@ -23,6 +23,7 @@ export class ToolchainStack extends cdk.Stack {
       synth: {},
       installCommands: [`${YARN} install --immutable`],
       commands: [`${YARN} synth:silent -y`],
+      crossAccountKeys: true,
       isToolchain: true
     });
 
