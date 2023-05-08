@@ -37,7 +37,7 @@
     },
     {
       "name": "aws-cdk",
-      "version": "2.76.0",
+      "version": "2.78.0",
       "type": "build"
     },
     {
@@ -121,42 +121,42 @@
     },
     {
       "name": "@aws-quickstart/eks-blueprints",
-      "version": "^1.7.1",
+      "version": "file:.yarn/library/aws-quickstart-eks-blueprints-1.7.2.tgz",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-cloudformation",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-codebuild",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-codepipeline",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-dynamodb",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-ec2",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-iam",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
       "name": "@aws-sdk/client-secrets-manager",
-      "version": "^3.316.0",
+      "version": "^3.328.0",
       "type": "runtime"
     },
     {
@@ -166,7 +166,7 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "2.76.0",
+      "version": "2.78.0",
       "type": "runtime"
     },
     {

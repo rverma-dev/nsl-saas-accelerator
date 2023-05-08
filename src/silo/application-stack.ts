@@ -10,7 +10,7 @@ export class ApplicationStack extends Stack {
       account: props!.env!.account!,
       region: props!.env!.region!,
       platformTeamRole:
-        scope.node.tryGetContext('PLATFORM_TEAM_ROLE') ?? StringParameter.valueFromLookup(this, 'devops/admin-role'),
+        scope.node.tryGetContext('PLATFORM_TEAM_ROLE') ?? StringParameter.valueFromLookup(this, '/devops/admin-role'),
       vpcID: scope.node.tryGetContext('VPC_ID')
     });
   }

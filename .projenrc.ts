@@ -2,8 +2,8 @@ import { Husky, Commitlint } from '@mountainpass/cool-bits-for-projen';
 import { awscdk } from 'projen';
 import { ArrowParens, NodePackageManager, TrailingComma } from 'projen/lib/javascript';
 
-const AWS_SDK_VERSION = '^3.316.0';
-const CDK_VERSION = '2.76.0';
+const AWS_SDK_VERSION = '^3.328.0';
+const CDK_VERSION = '2.78.0';
 
 const project = new awscdk.AwsCdkTypeScriptApp({
   cdkVersion: CDK_VERSION,
@@ -54,7 +54,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     'cdk.context.json'
   ],
   deps: [
-    '@aws-quickstart/eks-blueprints@^1.7.1',
+    '@aws-quickstart/eks-blueprints@file:.yarn/library/aws-quickstart-eks-blueprints-1.7.2.tgz',
     `@aws-sdk/client-iam@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-secrets-manager@${AWS_SDK_VERSION}`,
     `@aws-sdk/client-cloudformation@${AWS_SDK_VERSION}`,

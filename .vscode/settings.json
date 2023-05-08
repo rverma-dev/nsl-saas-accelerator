@@ -1,11 +1,10 @@
 {
   "files.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true,
-    "**/test-reports": true,
-    "**/coverage": true,
-    "**/cdk.out": true,
-    "**/assets": true
+    "**/.yarn": false,
+    "**/test-reports": false,
+    "**/coverage": false,
+    "**/cdk.out": false,
+    "**/assets": false
   },
   "search.exclude": {
     "**/.projen": false,
