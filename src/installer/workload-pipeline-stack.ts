@@ -1,4 +1,4 @@
-import { REPOSITORY_NAME, REPOSITORY_OWNER, YARN } from './lib/configuration';
+import { CDK_VERSION, REPOSITORY_NAME, REPOSITORY_OWNER, YARN } from './lib/configuration';
 import { DeploymentRecord } from '../common';
 import { SaasPipeline } from '../constructs';
 import * as demo from '../demo/pipeline-stack';
@@ -21,7 +21,7 @@ export class WorkloadPipelineStack extends Stack {
 
     const pipeline = new SaasPipeline(this, 'workload', {
       pipelineName: id,
-      cliVersion: '2.77.0',
+      cliVersion: CDK_VERSION,
       primarySynthDirectory: 'cdk.out',
       repositoryName: repositoryName,
       crossAccountKeys: true,

@@ -5,7 +5,7 @@ export const REPOSITORY_OWNER = 'rverma-nsl'; // CodeCommit repository name that
 export const REPOSITORY_NAME = 'nsl-saas-accelerator'; // CodeCommit repository name that holds the code
 export const GITHUB_DOMAIN = 'token.actions.githubusercontent.com';
 
-export const CDK_VERSION = '2.76.0'; // Used to set CodePipeline CLI version
+export const CDK_VERSION = '2.78.0'; // Used to set CodePipeline CLI version
 
 // For production use, specifying exact account and region here is recommended
 export const TOOLCHAIN_ENV = {
