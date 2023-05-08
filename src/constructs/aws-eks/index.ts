@@ -92,7 +92,7 @@ export class EksCluster {
     }
 
     const clusterProvider = new blueprints.GenericClusterProvider({
-      version: KubernetesVersion.V1_25,
+      version: KubernetesVersion.V1_26,
       managedNodeGroups: [
         {
           id: 'system',
