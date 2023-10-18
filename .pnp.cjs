@@ -44,7 +44,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mountainpass/cool-bits-for-projen", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.2.8"],\
             ["@types/aws-lambda", "npm:8.10.115"],\
             ["@types/jest", "npm:29.5.1"],\
-            ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/js-yaml", "npm:4.0.8"],\
             ["@types/node", "npm:18.16.5"],\
             ["@typescript-eslint/eslint-plugin", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["@typescript-eslint/parser", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
@@ -4490,7 +4490,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mountainpass/cool-bits-for-projen", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.2.8"],\
             ["@types/aws-lambda", "npm:8.10.115"],\
             ["@types/jest", "npm:29.5.1"],\
-            ["@types/js-yaml", "npm:4.0.5"],\
+            ["@types/js-yaml", "npm:4.0.8"],\
             ["@types/node", "npm:18.16.5"],\
             ["@typescript-eslint/eslint-plugin", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
             ["@typescript-eslint/parser", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:5.59.1"],\
@@ -4797,10 +4797,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/js-yaml", [\
-        ["npm:4.0.5", {\
-          "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.5-bb64d71397-7dcac8c50f.zip/node_modules/@types/js-yaml/",\
+        ["npm:4.0.8", {\
+          "packageLocation": "./.yarn/cache/@types-js-yaml-npm-4.0.8-9956f51f10-a5a77a5a1e.zip/node_modules/@types/js-yaml/",\
           "packageDependencies": [\
-            ["@types/js-yaml", "npm:4.0.5"]\
+            ["@types/js-yaml", "npm:4.0.8"]\
           ],\
           "linkType": "HARD"\
         }]\
