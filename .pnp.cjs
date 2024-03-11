@@ -52,7 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["esbuild", "npm:0.17.18"],\
             ["eslint", "npm:8.39.0"],\
             ["eslint-config-prettier", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:8.8.0"],\
@@ -129,7 +129,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -155,7 +155,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -181,7 +181,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -270,7 +270,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/projen", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["chalk", "npm:4.1.2"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["find-up", "npm:4.1.0"],\
             ["fs-extra", "npm:11.1.1"],\
             ["lodash.clonedeep", "npm:4.5.0"],\
@@ -319,7 +319,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -340,7 +340,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -372,7 +372,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/projen", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["projen", "npm:0.71.46"]\
           ],\
           "packagePeers": [\
@@ -403,7 +403,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:9.0.1"],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["bcrypt", "npm:5.1.0"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["dot-object", "npm:2.1.4"],\
             ["js-yaml", "npm:4.1.0"],\
             ["lodash", "npm:4.17.21"],\
@@ -4498,7 +4498,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["aws-lambda", "npm:1.0.7"],\
             ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["esbuild", "npm:0.17.18"],\
             ["eslint", "npm:8.39.0"],\
             ["eslint-config-prettier", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:8.8.0"],\
@@ -5567,7 +5567,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@balena/dockerignore", "npm:1.0.2"],\
             ["@types/constructs", null],\
             ["case", "npm:1.6.3"],\
-            ["constructs", "npm:10.2.17"],\
+            ["constructs", "npm:10.3.0"],\
             ["fs-extra", "npm:9.1.0"],\
             ["ignore", "npm:5.2.4"],\
             ["jsonschema", "npm:1.4.1"],\
@@ -5991,7 +5991,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "packagePeers": [\
             "@types/aws-cdk-lib",\
@@ -6269,10 +6269,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["constructs", [\
-        ["npm:10.2.17", {\
-          "packageLocation": "./.yarn/cache/constructs-npm-10.2.17-9e484ca62b-cb4e8c9bee.zip/node_modules/constructs/",\
+        ["npm:10.3.0", {\
+          "packageLocation": "./.yarn/cache/constructs-npm-10.3.0-5bd9fbc3a8-d8d4ea4e46.zip/node_modules/constructs/",\
           "packageDependencies": [\
-            ["constructs", "npm:10.2.17"]\
+            ["constructs", "npm:10.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
