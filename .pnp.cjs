@@ -51,7 +51,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-cdk", "npm:2.78.0"],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["constructs", "npm:10.2.17"],\
             ["esbuild", "npm:0.17.18"],\
             ["eslint", "npm:8.39.0"],\
@@ -318,7 +318,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cdk-nag", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["constructs", "npm:10.2.17"]\
           ],\
           "packagePeers": [\
@@ -339,7 +339,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/cdk-nag", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["constructs", "npm:10.2.17"]\
           ],\
           "packagePeers": [\
@@ -371,7 +371,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/constructs", null],\
             ["@types/projen", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["constructs", "npm:10.2.17"],\
             ["projen", "npm:0.71.46"]\
           ],\
@@ -4497,7 +4497,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-cdk", "npm:2.78.0"],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
             ["aws-lambda", "npm:1.0.7"],\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["constructs", "npm:10.2.17"],\
             ["esbuild", "npm:0.17.18"],\
             ["eslint", "npm:8.39.0"],\
@@ -5977,17 +5977,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["cdk-nag", [\
-        ["npm:2.26.18", {\
-          "packageLocation": "./.yarn/cache/cdk-nag-npm-2.26.18-9e4868be7a-f49f817099.zip/node_modules/cdk-nag/",\
+        ["npm:2.28.65", {\
+          "packageLocation": "./.yarn/cache/cdk-nag-npm-2.28.65-0d6474f630-4c87a76383.zip/node_modules/cdk-nag/",\
           "packageDependencies": [\
-            ["cdk-nag", "npm:2.26.18"]\
+            ["cdk-nag", "npm:2.28.65"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18", {\
-          "packageLocation": "./.yarn/__virtual__/cdk-nag-virtual-818c52c3d5/0/cache/cdk-nag-npm-2.26.18-9e4868be7a-f49f817099.zip/node_modules/cdk-nag/",\
+        ["virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65", {\
+          "packageLocation": "./.yarn/__virtual__/cdk-nag-virtual-44971b5b17/0/cache/cdk-nag-npm-2.28.65-0d6474f630-4c87a76383.zip/node_modules/cdk-nag/",\
           "packageDependencies": [\
-            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.26.18"],\
+            ["cdk-nag", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:2.28.65"],\
             ["@types/aws-cdk-lib", null],\
             ["@types/constructs", null],\
             ["aws-cdk-lib", "virtual:e12df422e96f89c07d5a81c0943d2b5728a7b984bdbcb73258c4b9bcc602d2d7fc44480027923aec37c84f9c74469b51fe7aeede7a78c00f82f2dc0aa117baf8#npm:2.78.0"],\
