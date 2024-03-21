@@ -40,7 +40,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-sdk/client-iam", "npm:3.328.0"],\
             ["@aws-sdk/client-secrets-manager", "npm:3.328.0"],\
             ["@commitlint/cli", "npm:17.6.3"],\
-            ["@commitlint/config-conventional", "npm:17.6.3"],\
+            ["@commitlint/config-conventional", "npm:17.8.1"],\
             ["@mountainpass/cool-bits-for-projen", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.2.8"],\
             ["@types/aws-lambda", "npm:8.10.115"],\
             ["@types/jest", "npm:29.5.1"],\
@@ -2837,11 +2837,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:17.6.3", {\
-          "packageLocation": "./.yarn/cache/@commitlint-config-conventional-npm-17.6.3-dc84eb5c43-2dbe26cfaf.zip/node_modules/@commitlint/config-conventional/",\
+        ["npm:17.8.1", {\
+          "packageLocation": "./.yarn/cache/@commitlint-config-conventional-npm-17.8.1-580108f79f-ce8ace1a13.zip/node_modules/@commitlint/config-conventional/",\
           "packageDependencies": [\
-            ["@commitlint/config-conventional", "npm:17.6.3"],\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"]\
+            ["@commitlint/config-conventional", "npm:17.8.1"],\
+            ["conventional-changelog-conventionalcommits", "npm:6.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4486,7 +4486,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-sdk/client-iam", "npm:3.328.0"],\
             ["@aws-sdk/client-secrets-manager", "npm:3.328.0"],\
             ["@commitlint/cli", "npm:17.6.3"],\
-            ["@commitlint/config-conventional", "npm:17.6.3"],\
+            ["@commitlint/config-conventional", "npm:17.8.1"],\
             ["@mountainpass/cool-bits-for-projen", "virtual:a42f8365c4fb88471a68deda2b45acafedb669d138a3b60a6e202870f25cec025344c4d4670b95577b90c49afbd540004186c9c4966d63cccca9a0bb93ba4d74#npm:0.2.8"],\
             ["@types/aws-lambda", "npm:8.10.115"],\
             ["@types/jest", "npm:29.5.1"],\
@@ -6308,13 +6308,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:5.0.0", {\
-          "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-5.0.0-a270202fe8-b67d12e4e0.zip/node_modules/conventional-changelog-conventionalcommits/",\
+        ["npm:6.1.0", {\
+          "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-6.1.0-10dd027396-4383a35cdf.zip/node_modules/conventional-changelog-conventionalcommits/",\
           "packageDependencies": [\
-            ["conventional-changelog-conventionalcommits", "npm:5.0.0"],\
-            ["compare-func", "npm:2.0.0"],\
-            ["lodash", "npm:4.17.21"],\
-            ["q", "npm:1.5.1"]\
+            ["conventional-changelog-conventionalcommits", "npm:6.1.0"],\
+            ["compare-func", "npm:2.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
