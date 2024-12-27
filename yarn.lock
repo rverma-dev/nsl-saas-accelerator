@@ -5052,9 +5052,9 @@ __metadata:
   linkType: hard
 
 "constructs@npm:^10.0.5, constructs@npm:^10.2.17":
-  version: 10.2.17
-  resolution: "constructs@npm:10.2.17"
-  checksum: cb4e8c9bee1eb4ed0e8ead88ce32db488b4b65608a05f1d77bc299e74a76e42b615381a67b4a1c11b9a50a8ca27a87175982753c9d8331c488de3355de8ca753
+  version: 10.4.2
+  resolution: "constructs@npm:10.4.2"
+  checksum: f51367c22f948e2f07e0fb1ccee039adf492ff1682ab6d288430f38fe88cf5858748d32be88f1d66200897042808795d738a27e3f1d09e60f250f530925cc6d1
   languageName: node
   linkType: hard
 
