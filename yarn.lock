@@ -4804,12 +4804,12 @@ __metadata:
   linkType: hard
 
 "cdk-nag@npm:^2.26.18":
-  version: 2.26.18
-  resolution: "cdk-nag@npm:2.26.18"
+  version: 2.36.34
+  resolution: "cdk-nag@npm:2.36.34"
   peerDependencies:
-    aws-cdk-lib: ^2.45.0
+    aws-cdk-lib: ^2.156.0
     constructs: ^10.0.5
-  checksum: f49f81709982d671d7b7b29756d9ae0eb9fa14a3f93e4df11d5cacc4a815cf8a3e7fb344efbb38b2cf66980da0d63c33a522c10eb1f839c67b9d69a210ee6378
+  checksum: 4e2b56fc5cac8a2353981effd9b00f5dba1d18980ac1bd2de5916d16ace55654cfe041bdb8afaba7f68de8f2c17f6cabf210035c020c084d5ae751bea5ce9a4e
   languageName: node
   linkType: hard
 
