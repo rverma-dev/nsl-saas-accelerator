@@ -4609,10 +4609,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@tootallnate/once", [\
-        ["npm:2.0.0", {\
-          "packageLocation": "./.yarn/cache/@tootallnate-once-npm-2.0.0-e36cf4f140-ad87447820.zip/node_modules/@tootallnate/once/",\
+        ["npm:2.0.1", {\
+          "packageLocation": "./.yarn/cache/@tootallnate-once-npm-2.0.1-cd8ffd9654-487b59b5ad.zip/node_modules/@tootallnate/once/",\
           "packageDependencies": [\
-            ["@tootallnate/once", "npm:2.0.0"]\
+            ["@tootallnate/once", "npm:2.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -8191,7 +8191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/http-proxy-agent-npm-5.0.0-7f1f121b83-e2ee1ff165.zip/node_modules/http-proxy-agent/",\
           "packageDependencies": [\
             ["http-proxy-agent", "npm:5.0.0"],\
-            ["@tootallnate/once", "npm:2.0.0"],\
+            ["@tootallnate/once", "npm:2.0.1"],\
             ["agent-base", "npm:6.0.2"],\
             ["debug", "virtual:428f325a939c2653ad822eb3d75efb02ac311523dd0d4f9645afc39ea00bd86eceac35a9d59c9b6977d76b670a4ef0ae057ea572338a44729aa592711a8c05a3#npm:4.3.4"]\
           ],\
